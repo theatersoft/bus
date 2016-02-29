@@ -3,6 +3,7 @@
   "main": "src/Bus.js",
   "version": "0.0.1",
   "private": true,
+  "license" : "AGPL-3.0",
   "dependencies": {
     "ws": "^1.0.1"
   },
