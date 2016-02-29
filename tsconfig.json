@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "diagnostics": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "test-client"
+  ]
+}

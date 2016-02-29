@@ -1,0 +1,38 @@
+'use strict'
+
+const
+    EventEmitter = require('./EventEmitter')
+
+class Connection extends EventEmitter {
+    constructor (ws) {
+        super()
+        this.ws = ws
+        const self = this
+        ws.onopen = () =>
+            self.emit('open')
+        ws.onmessage = ev =>
+            self.emit('data', JSON.parse(ev.data))
+        ws.onclose = ev => {
+            console.log('connection close', this.name)
+            self.emit('close')
+        }
+        ws.onerror = ev =>
+            self.emit('error', ev)
+    }
+    send (data) {
+        console.log(`connection ${this.name} send`, data)
+        this.ws.send(JSON.stringify(data))
+    }
+}
+
+module.exports = {
+    createParentConnection (parent) {
+        return new Connection(new WebSocket(parent.url))
+    },
+    createServer ({host, port, server}) {
+        throw ('not implemented')
+    },
+    getContext () {
+        return {parent: {url: `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`}}
+    }
+}
