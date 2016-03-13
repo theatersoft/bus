@@ -1,29 +1,30 @@
 {
   "name": "bus",
   "main": "src/Bus.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
-  "license" : "AGPL-3.0",
+  "license": "AGPL-3.0",
   "dependencies": {
     "ws": "^1.0.1"
   },
   "devDependencies": {
+    "browserify": "^13.0.0",
     "express": "^4.13.4",
     "minimist": "^1.2.0"
   },
   "scripts": {
-    "build": "cd test-client; browserify client.js -d -v -o ../pub/test.js",
+    "build": "cd test; browserify client.js -d -v -o pub/test.js",
     "test-client": "google-chrome-unstable http://localhost:5453/",
     "bus-send": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies bus-send.js",
-    "test-root": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test-root.js",
-    "test-child": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test-child.js",
-    "test-proxy": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test-proxy.js",
-    "test-signal": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test-signal.js",
-    "test-server": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test-server.js",
-    "debug-test-root": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test-root.js",
-    "debug-test-child": "node-debug --no-preload --nodejs --harmony --nodejs  --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test-child.js",
-    "debug-test-proxy": "node-debug --no-preload --nodejs --harmony --nodejs  --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test-proxy.js",
-    "debug-test-signal": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test-signal.js",
-    "debug-test-server": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test-server.js"
+    "test-root": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/root.js",
+    "test-child": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/child.js",
+    "test-proxy": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/proxy.js",
+    "test-signal": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/signal.js",
+    "test-server": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/server.js",
+    "debug-test-root": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test/root.js",
+    "debug-test-child": "node-debug --no-preload --nodejs --harmony --nodejs  --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test/child.js",
+    "debug-test-proxy": "node-debug --no-preload --nodejs --harmony --nodejs  --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test/proxy.js",
+    "debug-test-signal": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test/signal.js",
+    "debug-test-server": "node-debug --no-preload --nodejs --harmony --nodejs --harmony_destructuring --nodejs --harmony_default_parameters --nodejs --harmony_proxies test/server.js"
   }
 }

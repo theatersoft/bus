@@ -2,7 +2,7 @@
 declare var require
 declare var module
 
-const Bus = require('./src/Bus')
+const Bus = require('bus')
 
 class TestService {
     private _names

@@ -1,5 +1,5 @@
 'use strict';
-const Bus = require('./src/Bus');
+const Bus = require('bus');
 class TestService {
     constructor() {
         this._names = [];

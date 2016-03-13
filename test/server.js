@@ -1,6 +1,7 @@
 'use strict'
 
 const
+    Bus = require('bus'),
     http = require('http'),
     express = require('express'),
     app = express(),
@@ -14,10 +15,9 @@ const server = http.createServer(app).listen(port);
 console.log('Listening on port ' + port)
 
 const
-    Bus = require('./src/Bus'),
     TestService = require('./TestService')
 
-Bus.connection = require('./src/Connection')
+Bus.connection = require('bus/src/Connection')
 Bus.context = {children: {server}}
 Bus.start().then(bus => {
     bus.registerObject('TestService', new TestService())
