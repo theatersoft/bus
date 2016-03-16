@@ -88,10 +88,10 @@ const
         } else if (conn === null) {
             let obj = node.objects[req.interface] && node.objects[req.interface].obj
             if (!obj) return Promise.reject(`Error interface ${req.interface} object not found`)
-            let member = obj[req.member]
+            let member = obj[req.member], args = req.args // workaround uglify parse error
             if (!member) return Promise.reject(`Error member ${req.member} not found`)
             try {
-                return Promise.resolve(obj[req.member](...req.args))
+                return Promise.resolve(obj[req.member](...args))
             }
             catch (e) {
                 return Promise.reject(`Exception calling interface ${req.interface} object member ${req.member} ${e}`)
