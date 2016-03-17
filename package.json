@@ -13,11 +13,12 @@
     "minimist": "^1.2.0"
   },
   "scripts": {
-    "build": "cd test; browserify client.js -d -v -o pub/test.js",
+    "build": "cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js",
     "test-client": "google-chrome-unstable http://localhost:5453/",
     "bus-send": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies bus-send.js",
     "test-root": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/root.js",
     "test-child": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/child.js",
+    "test-listen": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/listen.js",
     "test-proxy": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/proxy.js",
     "test-signal": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/signal.js",
     "test-server": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/server.js",

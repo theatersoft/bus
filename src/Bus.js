@@ -20,7 +20,8 @@ const
         connections: [undefined],
         objects: {},
         reqid: 0,
-        requests: {}
+        requests: {},
+        signals: new EventEmitter()
     },
     addChild = child => {
         child.id = node.connections.length
@@ -116,6 +117,7 @@ const
         return r
     },
     signal = (sig, from) => {
+        node.signals.emit(sig.name, sig.args)
         sigroute(sig.name, from).forEach(c => c && c.send({sig}))
     },
     methods = obj => {
@@ -195,8 +197,10 @@ class Bus extends EventEmitter {
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return signal({name, path, interface: iface, member, args})
     }
-    registerListener () {
+    registerListener (name, cb) {
+        //const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         //TODO
+        node.signals.on(name, cb)
     }
     unregisterListener () {
         //TODO
