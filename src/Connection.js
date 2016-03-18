@@ -40,6 +40,8 @@ class Server extends EventEmitter {
     }
 }
 
+let context
+
 module.exports = {
     createParentConnection: function (parent) {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -54,5 +56,16 @@ module.exports = {
 
         let wss = new WebSocketServer(server ? {server} : {host, port})
         return new Server(wss)
+    },
+    create (context) {
+        this.context = context
+        return this
+    },
+    set context (value) {
+        if (context) throw new Error('Cannot change context')
+        context = value
+    },
+    get context () {
+        return context
     }
 }

@@ -1,19 +1,16 @@
 'use strict';
-const Bus = require('bus');
+const bus = require('bus').bus;
 class TestService {
     constructor() {
         this._names = [];
-        //Bus.start().then(bus => {
-        //    this.bus = bus
-        //    setInterval(() => {
-        //        this._names.forEach(name => bus.request(`${name}Local.ping`)
-        //            .then(() =>
-        //                console.log(`ping returned`))
-        //            .catch(e =>
-        //                console.log(`ping rejected ${e}`))
-        //        )
-        //    }, 2000)
-        //})
+            setInterval(() => {
+                for (let name of this._names)
+                    bus.request(`${name}Local.ping`)
+                        .then(() =>
+                            console.log(`ping returned`))
+                        .catch(e =>
+                            console.log(`ping rejected ${e}`))
+            }, 2000)
     }
     addName(name) {
         console.log('TestService.addName');

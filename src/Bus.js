@@ -14,7 +14,6 @@ const
     EventEmitter = require('./EventEmitter'),
     Manager = require('./Manager'),
     node = {
-        //context,
         //name,
         //server,
         connections: [undefined],
@@ -134,15 +133,28 @@ const
         }
     })
 
+const Executor = () => {
+    let resolve, reject
+    return {
+        promise: new Promise((r, j) => {resolve = r; reject = j}),
+        resolve: value =>
+            resolve(value),
+        reject: reason =>
+            reject(reason)
+    }
+}
+let busExecutor = Executor()
+
 class Bus extends EventEmitter {
     static start () {
-        return new Promise((r, j) => {
-            if (node.bus)
-                r(node.bus)
-            else node.bus = new Bus(node.context)
-                .on('connect', () =>
-                    r(node.bus))
-        })
+        if (Connection && !node.bus) {
+            let bus = new Bus(Connection.context)
+                .on('connect', () => {
+                    node.bus = bus
+                    busExecutor.resolve(bus)
+                })
+        }
+        return busExecutor.promise
     }
     constructor (context) {
         super()
@@ -183,7 +195,7 @@ class Bus extends EventEmitter {
     unregisterObject () {
         //TODO
     }
-    request (name, args) {
+    request (name, ...args) {
         console.log('request', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return request({path, interface: iface, member, args})
@@ -213,19 +225,18 @@ class Bus extends EventEmitter {
 var Connection //setConnection
 
 module.exports = {
-    set context (value) {
-        if (node.context) throw new Error('Cannot change context')
-        node.context = value
-    },
     set connection (value) {
         if (Connection) throw new Error('Cannot change Connection')
         Connection = value
     },
-    start () {
-        if (!node.context && !Connection) throw new Error('Cannot start bus')
-        if (!node.context) node.context = Connection.getContext()
-        if (!node.context) throw new Error('Cannot start bus')
+    start (connection) {
+        if (connection)
+            this.connection = connection
         return Bus.start()
+    },
+    get bus () {
+        if (!node.bus) throw new Error('Bus not started')
+        return node.bus
     },
     proxy
 }

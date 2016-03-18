@@ -25,6 +25,8 @@ class Connection extends EventEmitter {
     }
 }
 
+let context
+
 module.exports = {
     createParentConnection (parent) {
         return new Connection(new WebSocket(parent.url))
@@ -32,7 +34,15 @@ module.exports = {
     createServer ({host, port, server}) {
         throw ('not implemented')
     },
-    getContext () {
-        return {parent: {url: `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`}}
+    create (context) {
+        this.context = context
+        return this
+    },
+    set context (value) {
+        if (context) throw new Error('Cannot change context')
+        context = value
+    },
+    get context () {
+        return context || {parent: {url: `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`}}
     }
 }
