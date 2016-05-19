@@ -4,9 +4,9 @@ const
     Bus = require('bus'),
     connection = require('bus/src/Connection'),
     http = require('http'),
+    {port} = require('url').parse(process.env.BUS || 'ws://localhost:5453'),
     express = require('express'),
-    app = express(),
-    port = 5453
+    app = express()
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 

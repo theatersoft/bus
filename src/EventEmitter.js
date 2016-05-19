@@ -31,7 +31,6 @@ class EventEmitter {
     //}
     emit (type, ...args) {
         let events = this.events.get(type)
-
         if (events && events.length) {
             events.forEach(event =>
                 event(...args))

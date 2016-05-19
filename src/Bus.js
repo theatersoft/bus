@@ -48,13 +48,13 @@ const
             r = path === node.name ? null
                 : path.startsWith((node.name)) ? node.connections[parseInt(path.slice(node.name.length))]
                     : node.connections[0]
-        console.log(`routing to ${path} from ${node.name} returns ${r && r.name}`)
+        //console.log(`routing to ${path} from ${node.name} returns ${r && r.name}`)
         return r
     },
     bind = conn => {
         return conn
             .on('data', data => {
-                console.log(`data from ${conn.name}`, data)
+                //console.log(`data from ${conn.name}`, data)
                 if (data.req) {
                     request(data.req).then(
                         res =>
@@ -112,7 +112,7 @@ const
     },
     sigroute = (name, from) => {
         let r = node.connections.filter(c => c && c.id !== from)
-        console.log(`sigrouting ${name} from ${from} returns ${r.map(c => c.id)}`)
+        //console.log(`sigrouting ${name} from ${from} returns ${r.map(c => c.id)}`)
         return r
     },
     signal = (sig, from) => {
@@ -133,16 +133,11 @@ const
         }
     })
 
-const Executor = () => {
-    let resolve, reject
-    return {
-        promise: new Promise((r, j) => {resolve = r; reject = j}),
-        resolve: value =>
-            resolve(value),
-        reject: reason =>
-            reject(reason)
-    }
-}
+const Executor = (_r, _j) => ({
+    promise: new Promise((r, j) => {_r = r; _j = j}),
+    resolve: v => _r(v),
+    reject: e => _j(e)
+})
 let busExecutor = Executor()
 
 class Bus extends EventEmitter {
@@ -169,6 +164,7 @@ class Bus extends EventEmitter {
                         console.log(`bus name is ${data.hello}`)
                         node.name = data.hello
                         conn.name = `${node.name}0`
+                        node.manager = proxy('Manager')
                         startServer(context)
                         this.emit('connect')
                     }
@@ -179,8 +175,8 @@ class Bus extends EventEmitter {
             conn.id = 0
             node.connections[0] = conn
         } else {
-            //this.manager = new (require('./Manager'))(this)
             node.name = '/'
+            node.manager = new Manager(this)
             startServer(context)
             setImmediate(() => this.emit('connect'))
         }
@@ -205,7 +201,7 @@ class Bus extends EventEmitter {
             })
     }
     signal (name, args) {
-        console.log('signal', name, args)
+        //console.log('signal', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return signal({name, path, interface: iface, member, args})
     }

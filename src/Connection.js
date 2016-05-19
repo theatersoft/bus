@@ -3,7 +3,8 @@
 const
     WebSocket = require('ws'),
     WebSocketServer = require('ws').Server,
-    EventEmitter = require('./EventEmitter')
+    EventEmitter = require('./EventEmitter'),
+    url = process.env.BUS || 'ws://localhost:5453'
 
 class Connection extends EventEmitter {
     constructor (ws) {
@@ -18,8 +19,9 @@ class Connection extends EventEmitter {
             .on('error', err =>
                 this.emit('error', err))
     }
+
     send (data) {
-        console.log(`connection ${this.name} send`, data)
+        //console.log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
 }
@@ -27,44 +29,48 @@ class Connection extends EventEmitter {
 class Server extends EventEmitter {
     constructor (wss) {
         super()
-        const self = this
         wss
             .on('connection', ws => {
                 console.log(`new connection to ${ws.upgradeReq.headers.host}`)
-                self.emit('connection', new Connection(ws))
+                this.emit('connection', new Connection(ws)))
             })
             .on('close', (code, msg) =>
-                self.emit('close'))
+                this.emit('close'))
             .on('error', err =>
-                self.emit('error', err))
+                this.emit('error', err))
     }
 }
 
 let context
 
 module.exports = {
-    createParentConnection: function (parent) {
+    createParentConnection (parent) {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
         return new Connection(new WebSocket(parent.url))
     },
-    createServer: function ({host, port, server}) {
-        if (server)
-            console.log(`connecting ws server to http server`)
-        else
-            console.log(`starting ws server on ${host}:${port}`)
 
-        let wss = new WebSocketServer(server ? {server} : {host, port})
-        return new Server(wss)
+    createServer ({host, port, server}) {
+        let options
+        if (server) {
+            options = {server}
+            console.log(`connecting ws server to http server`)
+        } else {
+            options = {host, port}
+            console.log(`starting ws server on ${host}:${port}`)
+        }
+        return new Server(new WebSocketServer(options))
     },
-    create (context) {
+
+    create (context = {parent: {url}}) {
         this.context = context
         return this
     },
+
     set context (value) {
         if (context) throw new Error('Cannot change context')
         context = value
     },
+
     get context () {
         return context
     }

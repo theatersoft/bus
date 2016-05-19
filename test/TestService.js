@@ -1,26 +1,25 @@
 'use strict';
 const bus = require('bus').bus;
 class TestService {
-    constructor() {
+    constructor () {
         this._names = [];
-            setInterval(() => {
-                for (let name of this._names)
-                    bus.request(`${name}Local.ping`)
-                        .then(() =>
-                            console.log(`ping returned`))
-                        .catch(e =>
-                            console.log(`ping rejected ${e}`))
-            }, 2000)
+        setInterval(() => {
+            for (let name of this._names) bus.request(`${name}Local.ping`)
+                .then(() => console.log(`ping returned`), e => console.log(`ping rejected ${e}`))
+        }, 2000)
     }
-    addName(name) {
+
+    addName (name) {
         console.log('TestService.addName');
         this._names.push(name);
     }
-    getNames() {
+
+    getNames () {
         console.log('TestService.getNames');
         return this._names;
     }
-    static test() {
+
+    static test () {
     }
 }
 module.exports = TestService;
