@@ -32,7 +32,7 @@ class Server extends EventEmitter {
         wss
             .on('connection', ws => {
                 console.log(`new connection to ${ws.upgradeReq.headers.host}`)
-                this.emit('connection', new Connection(ws)))
+                this.emit('connection', new Connection(ws))
             })
             .on('close', (code, msg) =>
                 this.emit('close'))

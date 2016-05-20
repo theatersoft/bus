@@ -20,7 +20,7 @@
     "test-root": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/root.js",
     "test-child": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/child.js",
     "test-listen": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/listen.js",
-    "test-listen-bus": "BUS=`cat .bus` node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/listen2.js",
+    "test-listen-bus": "BUS=`cat .bus` node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/listen.js",
     "test-proxy": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/proxy.js",
     "test-signal": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/signal.js",
     "test-server": "node --harmony --harmony_destructuring --harmony_default_parameters --harmony_proxies test/server.js",
