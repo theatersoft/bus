@@ -15,8 +15,8 @@ const server = http.createServer(app).listen(port);
 console.log('Listening on port ' + port)
 
 Bus.start(connection.create({children: {server}})).then(bus => {
-    const TestService = require('./TestService')
-    bus.registerObject('TestService', new TestService())
+    //const TestService = require('./TestService')
+    //bus.registerObject('TestService', new TestService())
 })
 
 

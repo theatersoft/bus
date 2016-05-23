@@ -12,7 +12,7 @@
 
 const
     EventEmitter = require('./EventEmitter'),
-    Manager = require('./Manager'),
+    manager = require('./Manager').manager,
     node = {
         //name,
         //server,
@@ -131,6 +131,9 @@ const
             return (...args) =>
                 request({path: '/', interface: iface, member: name, args})
         }
+    }),
+    initManager = bus => manager.init(bus, {
+        node, request, signal, // TODO
     })
 
 const Executor = (_r, _j) => ({
@@ -164,7 +167,7 @@ class Bus extends EventEmitter {
                         console.log(`bus name is ${data.hello}`)
                         node.name = data.hello
                         conn.name = `${node.name}0`
-                        node.manager = proxy('Manager')
+                        initManager()
                         startServer(context)
                         this.emit('connect')
                     }
@@ -175,8 +178,9 @@ class Bus extends EventEmitter {
             conn.id = 0
             node.connections[0] = conn
         } else {
+            node.root = true
             node.name = '/'
-            node.manager = new Manager(this)
+            initManager()
             startServer(context)
             setImmediate(() => this.emit('connect'))
         }
