@@ -58,8 +58,8 @@ class Bus extends EventEmitter {
         } else {
             node.root = true
             node.name = '/'
-            initManager()
-            startServer(context)
+            node.initManager()
+            node.startServer(context)
             setImmediate(() => this.emit('connect'))
         }
     }
@@ -76,7 +76,7 @@ class Bus extends EventEmitter {
     request (name, ...args) {
         console.log('request', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        return request({path, interface: iface, member, args})
+        return node.request({path, interface: iface, member, args})
             .catch(e => {
                 console.log(`request ${name} rejected ${e}`)
                 throw e
@@ -85,7 +85,7 @@ class Bus extends EventEmitter {
     signal (name, args) {
         //console.log('signal', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        return signal({name, path, interface: iface, member, args})
+        return node.signal({name, path, interface: iface, member, args})
     }
     registerListener (name, cb) {
         //const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
@@ -105,7 +105,7 @@ var Connection //setConnection
 module.exports = {
     set connection (value) {
         if (Connection) throw new Error('Cannot change Connection')
-        Connection = value
+        Connection = node.Connection = value
     },
     start (connection) {
         if (connection)

@@ -128,9 +128,14 @@ const
         node, request, signal, // TODO
     })
 
-module.exports = {
+var Connection
+
+    module.exports = {
     get bus () {return node.bus},
     set bus (b) {node.bus = b},
+
+    set Connection (c) {Connection = c},
+
     connections: node.connections,
 
     get name () {return node.name},
