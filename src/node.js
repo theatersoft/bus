@@ -118,12 +118,6 @@ const
     },
     close = () => {
     },
-    proxy = iface => Proxy.create({
-        get (target, name) {
-            return (...args) =>
-                request({path: '/', interface: iface, member: name, args})
-        }
-    }),
     initManager = bus => manager.init(bus, {
         node, request, signal, // TODO
     })
@@ -153,6 +147,5 @@ var Connection
     sigroute,
     signal,
     close,
-    proxy,
     initManager
 }

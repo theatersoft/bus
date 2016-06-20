@@ -7,7 +7,7 @@
 
  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <http://www.gnu.org/licenses/>
 
-*/
+ */
 'use strict'
 
 const
@@ -32,6 +32,7 @@ class Bus extends EventEmitter {
         }
         return busExecutor.promise
     }
+
     constructor (context) {
         super()
         if (!context) throw new Error('Invalid bus context')
@@ -63,16 +64,20 @@ class Bus extends EventEmitter {
             setImmediate(() => this.emit('connect'))
         }
     }
+
     get name () {
         return node.name
     }
+
     registerObject (name, obj, iface = (methods(obj))) {
         console.log(`registerObject ${name} at ${node.name} interface`, iface)
         node.objects[name] = {obj, iface}
     }
+
     unregisterObject () {
         //TODO
     }
+
     request (name, ...args) {
         console.log('request', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
@@ -82,19 +87,23 @@ class Bus extends EventEmitter {
                 throw e
             })
     }
+
     signal (name, args) {
         //console.log('signal', name, args)
         const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.signal({name, path, interface: iface, member, args})
     }
+
     registerListener (name, cb) {
         //const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         //TODO
         node.signals.on(name, cb)
     }
+
     unregisterListener () {
         //TODO
     }
+
     close () {
         node.close
     }
@@ -116,5 +125,12 @@ module.exports = {
         if (!node.bus) throw new Error('Bus not started')
         return node.bus
     },
-    proxy: node.proxy
+    proxy (iface) {
+        return new Proxy({}, {
+            get (_, name) {
+                return (...args) =>
+                    node.request({path: '/', interface: iface, member: name, args})
+            }
+        })
+    }
 }

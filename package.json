@@ -20,6 +20,7 @@
     "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link bus",
     "test-root": "node test/root.js",
     "test-child": "node test/child.js",
+    "test-ping-test": "node test/ping-test.js",
     "test-listen": "node test/listen.js",
     "test-listen-bus": "BUS=`cat .bus` node test/listen.js",
     "test-ping-service": "node test/ping-service.js",
