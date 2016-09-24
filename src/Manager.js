@@ -1,7 +1,4 @@
-'use strict'
-
-const
-    EventEmitter = require('./EventEmitter')
+import EventEmitter from './EventEmitter'
 
 let manager, bus, _i
 
@@ -57,4 +54,4 @@ class Manager {
 //    get emitter () {return this._emitter}
 //}
 
-module.exports = {manager: new Manager()}
+export default new Manager()

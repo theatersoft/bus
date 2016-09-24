@@ -1,7 +1,5 @@
-'use strict'
-const
-    EventEmitter = require('./EventEmitter'),
-    manager = require('./Manager').manager
+import EventEmitter from './EventEmitter'
+import manager from './Manager'
 
 const
     node = {
@@ -124,7 +122,7 @@ const
 
 var Connection
 
-    module.exports = {
+export default {
     get bus () {return node.bus},
     set bus (b) {node.bus = b},
 

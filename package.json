@@ -1,7 +1,8 @@
 {
   "name": "bus",
-  "main": "src/Bus.js",
-  "version": "0.1.0",
+  "main": "dist/node-bus.js",
+  "browser": "dist/browser-bus.js",
+  "version": "0.2.0",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
   "license": "AGPL-3.0",
@@ -11,10 +12,14 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "express": "^4.13.4",
-    "minimist": "^1.2.0"
+    "rollup": "^0.36.0",
+    "shelljs": "^0.7.4"
   },
   "scripts": {
-    "build": "cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js",
+    "build": "node build.js",
+    "build:browser": "node build.js browser",
+    "build:node": "node build.js node",
+    "build-client": "cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js",
     "test-client": "google-chrome-unstable http://localhost:5453/",
     "bus-send": "node bus-send.js",
     "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link bus",
@@ -28,10 +33,10 @@
     "test-signal": "node test/signal.js",
     "test-server": "node test/server.js",
     "debug-test-root": "node-debug --no-preload --nodejs test/root.js",
-    "debug-test-child": "node-debug --no-preload --nodejs test/child.js",
+    "debug-test-child": "node-debug --web-port=8081 test/child.js",
     "debug-test-ping-service": "node-debug --no-preload --nodejs test/ping-service.js",
     "debug-test-proxy": "node-debug --no-preload --nodejs test/proxy.js",
     "debug-test-signal": "node-debug --no-preload --nodejs test/signal.js",
-    "debug-test-server": "node-debug --no-preload --nodejs test/server.js"
+    "debug-test-server": "node-debug test/server.js"
   }
 }

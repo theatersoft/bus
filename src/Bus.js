@@ -8,11 +8,9 @@
  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <http://www.gnu.org/licenses/>
 
  */
-'use strict'
 
-const
-    EventEmitter = require('./EventEmitter'),
-    node = require('./node')
+import EventEmitter from './EventEmitter'
+import node from './node'
 
 const Executor = (_r, _j) => ({
     promise: new Promise((r, j) => {_r = r; _j = j}),
@@ -111,7 +109,7 @@ class Bus extends EventEmitter {
 
 var Connection //setConnection
 
-module.exports = {
+export default {
     set connection (value) {
         if (Connection) throw new Error('Cannot change Connection')
         Connection = node.Connection = value

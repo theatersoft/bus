@@ -1,8 +1,7 @@
 'use strict'
 
 const
-    Bus = require('bus'),
-    connection = require('bus/src/Connection'),
+    {Bus, Connection} = require('bus'),
     http = require('http'),
     {port} = require('url').parse(process.env.BUS || 'ws://localhost:5453'),
     express = require('express'),
@@ -14,7 +13,7 @@ app.use('/', express.static(`${__dirname}/pub`))
 const server = http.createServer(app).listen(port);
 console.log('Listening on port ' + port)
 
-Bus.start(connection.create({children: {server}})).then(bus => {
+Bus.start(Connection.create({children: {server}})).then(bus => {
     //const TestService = require('./TestService')
     //bus.registerObject('TestService', new TestService())
 })

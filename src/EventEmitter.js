@@ -1,5 +1,3 @@
-'use strict'
-
 class EventEmitter {
     constructor () {
         this.events = new Map()
@@ -42,4 +40,4 @@ class EventEmitter {
 
 EventEmitter.prototype.on = EventEmitter.prototype.addListener
 
-module.exports = EventEmitter
+export default EventEmitter

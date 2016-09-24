@@ -1,7 +1,4 @@
-'use strict'
-
-const
-    EventEmitter = require('./EventEmitter')
+import EventEmitter from './EventEmitter'
 
 class Connection extends EventEmitter {
     constructor (ws) {
@@ -27,7 +24,7 @@ class Connection extends EventEmitter {
 
 let context
 
-module.exports = {
+export default {
     createParentConnection (parent) {
         return new Connection(new WebSocket(parent.url))
     },

@@ -1,10 +1,6 @@
-'use strict'
-
-const
-    WebSocket = require('ws'),
-    WebSocketServer = require('ws').Server,
-    EventEmitter = require('./EventEmitter'),
-    url = process.env.BUS || 'ws://localhost:5453'
+import {WebSocket, Server as WebSocketServer} from 'ws'
+import EventEmitter from './EventEmitter'
+const url = process.env.BUS || 'ws://localhost:5453'
 
 class Connection extends EventEmitter {
     constructor (ws) {
@@ -43,7 +39,7 @@ class Server extends EventEmitter {
 
 let context
 
-module.exports = {
+export default {
     createParentConnection (parent) {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
         return new Connection(new WebSocket(parent.url))

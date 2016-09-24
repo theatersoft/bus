@@ -2,11 +2,9 @@
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
-const
-    Bus = require('bus'),
-    connection = require('bus/src/Connection')
+const {Bus, Connection} = require('bus')
 
-Bus.start(connection.create({parent: {url: 'ws://localhost:5453'}})).then(bus => {
+Bus.start(Connection.create({parent: {url: 'ws://localhost:5453'}})).then(bus => {
     bus.registerObject('Local', {
         ping: () => console.log('ping')
     }, ['ping'])
