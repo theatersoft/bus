@@ -1,7 +1,7 @@
 {
   "name": "bus",
-  "main": "dist/node-bus.js",
-  "browser": "dist/browser-bus.js",
+  "main": "dist/bus.js",
+  "browser": "dist/bus.browser.js",
   "version": "0.2.0",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
@@ -17,9 +17,6 @@
   },
   "scripts": {
     "build": "node build.js",
-    "build:browser": "node build.js browser",
-    "build:node": "node build.js node",
-    "build-client": "cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js",
     "test-client": "google-chrome-unstable http://localhost:5453/",
     "bus-send": "node bus-send.js",
     "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link bus",

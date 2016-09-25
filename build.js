@@ -24,12 +24,13 @@ const
 // https://github.com/rollup/rollup/wiki/JavaScript-API
 
 target.browser = function () {
+    console.log('target browser')
     rollup.rollup({
-            entry: 'src/browser-bundle.js'
+            entry: 'src/bundle.browser.js'
         })
         .then(bundle => {
             bundle.write({
-                dest: 'dist/browser-bus.js',
+                dest: 'dist/bus.browser.js',
                 format: 'umd',
                 exports: 'named',
                 moduleName: 'bus',
@@ -40,13 +41,14 @@ target.browser = function () {
 }
 
 target.node = function () {
+    console.log('target node')
     rollup.rollup({
-            entry: 'src/node-bundle.js',
+            entry: 'src/bundle.js',
             external: ['ws']
         })
         .then(bundle => {
             bundle.write({
-                dest: 'dist/node-bus.js',
+                dest: 'dist/bus.js',
                 format: 'cjs',
                 exports: 'named',
                 moduleName: 'bus',
@@ -56,7 +58,13 @@ target.node = function () {
         })
 }
 
+target.client = function () {
+    console.log('target client')
+    exec('cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js')
+}
+
 target.all = function () {
     target.browser()
     target.node()
+    target.client()
 }
