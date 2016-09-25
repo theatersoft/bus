@@ -1,0 +1,29 @@
+{
+  "name": "bus-test",
+  "version": "0.2.0",
+  "author": "Rob Huehn <rob@theatersoft.com>",
+  "private": true,
+  "license": "AGPL-3.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "client": "google-chrome-unstable http://localhost:5453/",
+    "root": "node root.js",
+    "child": "node child.js",
+    "ping-test": "node ping-test.js",
+    "listen": "node listen.js",
+    "listen-bus": "BUS=`cat ../bus` node listen.js",
+    "ping-service": "node ping-service.js",
+    "proxy": "node proxy.js",
+    "signal": "node signal.js",
+    "server": "node server.js",
+    "debug-root": "node-debug test/root.js",
+    "debug-child": "node-debug --web-port=8081 test/child.js",
+    "debug-ping-service": "node-debug ping-service.js",
+    "debug-proxy": "node-debug proxy.js",
+    "debug-signal": "node-debug signal.js",
+    "debug-server": "node-debug server.js"
+  }
+}
