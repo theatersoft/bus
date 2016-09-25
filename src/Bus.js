@@ -107,16 +107,16 @@ class Bus extends EventEmitter {
     }
 }
 
-var Connection //setConnection
+let Connection //setConnection
+
+export function setConnection (value) {
+    if (Connection) throw new Error('Cannot change Connection')
+    Connection = node.Connection = value
+}
 
 export default {
-    set connection (value) {
-        if (Connection) throw new Error('Cannot change Connection')
-        Connection = node.Connection = value
-    },
-    start (connection) {
-        if (connection)
-            this.connection = connection
+    start (context) {
+        Connection.create(context)
         return Bus.start()
     },
     get bus () {

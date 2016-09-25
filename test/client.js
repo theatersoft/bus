@@ -1,8 +1,6 @@
 'use strict'
 
-const {Bus, Connection} = require('bus')
-
-Bus.start(Connection).then(bus => {
+require('bus').Bus.start().then(bus => {
     console.log(`bus name is ${bus.name}`)
 
     bus.registerObject('Local', {
