@@ -1,4 +1,4 @@
-import {WebSocket, Server as WebSocketServer} from 'ws'
+import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
 const url = process.env.BUS || 'ws://localhost:5453'
 
