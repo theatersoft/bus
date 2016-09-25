@@ -2,8 +2,8 @@
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
-require('bus')
-    .start(require('bus/src/Connection').create())
+require('bus').Bus
+    .start()
     .then(bus => {
         bus.registerListener('/Hvac.data', data => {
             console.log('/Hvac.data', data)

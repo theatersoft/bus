@@ -3,12 +3,11 @@
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
 const
-    Bus = require('bus'),
-    Connection = require('bus/src/Connection'),
+    {Bus} = require('bus'),
     Ping = Bus.proxy('Ping')
 
 Bus
-    .start(Connection.create())
+    .start()
     .then(() => {
         Ping.ping()
             .then(res => {

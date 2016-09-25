@@ -1,7 +1,6 @@
 'use strict';
 const
-    Bus = require('bus'),
-    Connection = require('bus/src/Connection')
+    {Bus} = require('bus')
 
 class Ping {
     constructor () {
@@ -16,5 +15,5 @@ class Ping {
 }
 
 Bus
-    .start(Connection.create())
+    .start()
     .then(() => new Ping())
