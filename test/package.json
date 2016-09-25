@@ -9,6 +9,7 @@
   "devDependencies": {
   },
   "scripts": {
+    "build": "cd ..; time -p node build.js client",
     "client": "google-chrome-unstable http://localhost:5453/",
     "root": "node root.js",
     "child": "node child.js",

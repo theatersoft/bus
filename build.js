@@ -5,6 +5,8 @@ const
     path = require('path'),
     fs = require('fs'),
     rollup = require('rollup'),
+    babel = require('rollup-plugin-babel'),
+    //babili = require('babel-preset-babili'),
     copyright = `/*
  Copyright (C) 2016 Theatersoft
 
@@ -19,23 +21,53 @@ const
 
  You should have received a copy of the GNU Affero General Public License along
  with this program. If not, see <http://www.gnu.org/licenses/>
-  */`
+  */`,
+    execo = c => exec(c, {silent: true}).trim(),
+    liftUndefined = x => x === 'undefined' ? undefined : x,
+    getVar = n => liftUndefined(execo('npm config get bus:' + n)),
+    DIST = getVar('dist') === 'true',
+    plugins = DIST && [
+        babel({
+            babelrc: false,
+            //exclude: 'node_modules/**',
+            comments: false,
+            minified: true,
+            //presets: [babili],
+            plugins: [
+                require("babel-plugin-minify-constant-folding"),
+                require("babel-plugin-minify-dead-code-elimination"),
+                require("babel-plugin-minify-flip-comparisons"),
+                require("babel-plugin-minify-guarded-expressions"),
+                require("babel-plugin-minify-infinity"),
+                require("babel-plugin-minify-mangle-names"),
+                require("babel-plugin-minify-replace"),
+                //FAIL require("babel-plugin-minify-simplify"),
+                require("babel-plugin-minify-type-constructors"),
+                require("babel-plugin-transform-member-expression-literals"),
+                require("babel-plugin-transform-merge-sibling-variables"),
+                require("babel-plugin-transform-minify-booleans"),
+                require("babel-plugin-transform-property-literals"),
+                require("babel-plugin-transform-simplify-comparison-operators"),
+                require("babel-plugin-transform-undefined-to-void")
+            ]
+        })
+    ]
 
 // https://github.com/rollup/rollup/wiki/JavaScript-API
 
 target.browser = function () {
     console.log('target browser')
     rollup.rollup({
-            entry: 'src/bundle.browser.js'
+            entry: 'src/bundle.browser.js',
+            plugins
         })
         .then(bundle => {
             bundle.write({
                 dest: 'dist/bus.browser.js',
                 format: 'umd',
-                exports: 'named',
                 moduleName: 'bus',
                 banner: copyright,
-                sourceMap: 'inline'
+                sourceMap: DIST ? false : 'inline'
             })
         })
 }
@@ -44,16 +76,49 @@ target.node = function () {
     console.log('target node')
     rollup.rollup({
             entry: 'src/bundle.js',
-            external: ['ws']
+            external: ['ws'],
+            plugins
         })
         .then(bundle => {
             bundle.write({
                 dest: 'dist/bus.js',
                 format: 'cjs',
-                exports: 'named',
                 moduleName: 'bus',
                 banner: copyright,
-                sourceMap: 'inline',
+                sourceMap: DIST ? false : 'inline'
+            })
+        })
+}
+
+target['browser-es'] = function () {
+    console.log('target browser-es')
+    rollup.rollup({
+            entry: 'src/bundle.browser.js'
+        })
+        .then(bundle => {
+            bundle.write({
+                dest: 'dist/bus.browser.mjs',
+                format: 'es',
+                moduleName: 'bus',
+                banner: copyright,
+                sourceMap: DIST ? false : 'inline'
+            })
+        })
+}
+
+target['node-es'] = function () {
+    console.log('target node-es')
+    rollup.rollup({
+            entry: 'src/bundle.js',
+            external: ['ws']
+        })
+        .then(bundle => {
+            bundle.write({
+                dest: 'dist/bus.mjs',
+                format: 'es',
+                moduleName: 'bus',
+                banner: copyright,
+                sourceMap: DIST ? false : 'inline'
             })
         })
 }
@@ -65,6 +130,8 @@ target.client = function () {
 
 target.all = function () {
     target.browser()
+    //target['browser-es']()
     target.node()
-    target.client()
+    //target['node-es']()
+    //target.client()
 }
