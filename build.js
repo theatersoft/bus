@@ -123,9 +123,24 @@ target['node-es'] = function () {
         })
 }
 
+target.package = function () {
+    const p = Object.entries(require('./package.json')).reduce((o, [k, v]) => {
+        if (!['private', 'devDependencies', 'scripts'].includes(k)) o[k] = v
+        return o
+    }, {})
+    fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
+    exec('sed -i "s|dist/||g" dist/package.json ')
+    exec('cp LICENSE dist')
+}
+
 target.client = function () {
     console.log('target client')
     exec('cd test; ../node_modules/.bin/browserify client.js -d -v -o pub/test.js')
+}
+
+target.publish = function () {
+    console.log('target publish')
+    exec('npm publish dist')
 }
 
 target.all = function () {
@@ -134,4 +149,5 @@ target.all = function () {
     target.node()
     //target['node-es']()
     //target.client()
+    target.package()
 }

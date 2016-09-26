@@ -1,8 +1,7 @@
 {
-  "name": "bus",
-  "version": "0.2.0",
+  "name": "theatersoft-bus",
+  "version": "1.0.0",
   "main": "dist/bus.js",
-  "module": "dist/bus.mjs",
   "browser": "dist/bus.browser.js",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
@@ -19,7 +18,7 @@
     "shelljs": "^0.7.4"
   },
   "scripts": {
-    "build": "time -p node build.js && ls -l dist",
+    "build": "time -p node  --harmony_object_values_entries build.js && ls -l dist",
     "bus-send": "node bus-send.js",
     "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link bus",
     "set-dist-true": "npm config set bus:dist true",
