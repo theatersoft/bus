@@ -140,7 +140,7 @@ target.client = function () {
 
 target.publish = function () {
     console.log('target publish')
-    exec('npm publish dist')
+    exec('npm publish --access=public dist')
 }
 
 target.all = function () {
