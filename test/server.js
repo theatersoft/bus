@@ -1,7 +1,7 @@
 'use strict'
 
 const
-    {Bus} = require('bus'),
+    {Bus} = require('@theatersoft/bus'),
     http = require('http'),
     {port} = require('url').parse(process.env.BUS || 'ws://localhost:5453'),
     express = require('express'),

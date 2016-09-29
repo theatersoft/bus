@@ -1,7 +1,7 @@
 'use strict'
 
 const
-    {Bus} = require('bus'),
+    {Bus} = require('@theatersoft/bus'),
     testService = Bus.proxy('TestService')
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))

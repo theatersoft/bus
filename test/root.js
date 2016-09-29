@@ -3,7 +3,7 @@
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
 const
-    {Bus} = require('bus')
+    {Bus} = require('@theatersoft/bus')
 
 Bus.start({children: {host: '0.0.0.0', port:5453}}).then(bus => {
     console.log(`bus name is ${bus.name}`)

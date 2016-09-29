@@ -20,11 +20,11 @@
     "proxy": "node proxy.js",
     "signal": "node signal.js",
     "server": "node server.js",
-    "debug-root": "node-debug test/root.js",
-    "debug-child": "node-debug --web-port=8081 test/child.js",
-    "debug-ping-service": "node-debug ping-service.js",
-    "debug-proxy": "node-debug proxy.js",
-    "debug-signal": "node-debug signal.js",
-    "debug-server": "node-debug server.js"
+    "debug-root": "node --inspect test/root.js",
+    "debug-child": "node --inspect test/child.js",
+    "debug-ping-service": "node --inspect ping-service.js",
+    "debug-proxy": "node --inspect proxy.js",
+    "debug-signal": "node --inspect signal.js",
+    "debug-server": "node --inspect server.js"
   }
 }

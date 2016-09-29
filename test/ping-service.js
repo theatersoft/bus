@@ -1,6 +1,6 @@
 'use strict';
 const
-    {Bus} = require('bus')
+    {Bus} = require('@theatersoft/bus')
 
 class Ping {
     constructor () {

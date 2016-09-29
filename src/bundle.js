@@ -1,4 +1,3 @@
-import Bus from './Bus'
 import {setConnection} from './Bus'
 import Connection from './Connection'
 setConnection(Connection)

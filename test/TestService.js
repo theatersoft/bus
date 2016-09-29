@@ -1,5 +1,5 @@
 'use strict';
-const bus = require('bus').bus;
+const bus = require('@theatersoft/bus').bus;
 class TestService {
     constructor () {
         this._names = [];

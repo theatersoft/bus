@@ -2,7 +2,7 @@
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
-require('bus').Bus.start({parent: {url: 'ws://localhost:5453'}}).then(bus => {
+require('@theatersoft/bus').Bus.start().then(bus => {
     bus.registerObject('Local', {
         ping: () => console.log('ping')
     }, ['ping'])

@@ -21,7 +21,7 @@
   "scripts": {
     "build": "time -p node  --harmony_object_values_entries build.js && ls -l dist",
     "bus-send": "node bus-send.js",
-    "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link bus",
+    "link-test-bus": "npm link; mkdir -p test/node_modules; cd test/node_modules && npm link @theatersoft/bus",
     "set-dist-true": "npm config set bus:dist true",
     "set-dist-false": "npm config set bus:dist false",
     "show-config": "npm config ls|grep -s bus: || true "

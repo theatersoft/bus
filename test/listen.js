@@ -2,7 +2,7 @@
 
 process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
 
-require('bus').Bus
+require('@theatersoft/bus').Bus
     .start()
     .then(bus => {
         bus.registerListener('/Hvac.data', data => {
