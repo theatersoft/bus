@@ -123,7 +123,14 @@ target['node-es'] = function () {
         })
 }
 
+target.clean = function () {
+    console.log('target clean')
+    exec('mkdir -p dist; rm -f dist/*')
+}
+
 target.package = function () {
+    console.log('target package')
+    if (!DIST) return console.log('skipped')
     const p = Object.entries(require('./package.json')).reduce((o, [k, v]) => {
         if (!['private', 'devDependencies', 'scripts'].includes(k)) o[k] = v
         return o
@@ -144,6 +151,7 @@ target.publish = function () {
 }
 
 target.all = function () {
+    target.clean()
     target.browser()
     //target['browser-es']()
     target.node()
