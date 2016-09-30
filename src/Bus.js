@@ -38,10 +38,9 @@ class Bus extends EventEmitter {
                 })
                 .on('data', data => {
                     if (data.hello) {
-                        console.log(`bus name is ${data.hello}`)
-                        conn.name = `${node.name}0`
-                        node.init(data.hello)
-                        manager.init(this)
+                        this.name = data.hello
+                        conn.name = `${this.name}0`
+                        node.init(this)
                         node.startServer(context)
                         this.emit('connect')
                     }
@@ -52,15 +51,11 @@ class Bus extends EventEmitter {
             conn.id = 0
             node.connections[0] = conn
         } else {
-            node.init('/')
-            manager.init()
+            this.name = '/'
+            node.init(this)
             node.startServer(context)
             setImmediate(() => this.emit('connect'))
         }
-    }
-
-    get name () {
-        return node.name
     }
 
     registerObject (name, obj, iface = (methods(obj))) {

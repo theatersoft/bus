@@ -7,9 +7,6 @@ class Node {
     set Connection (c) {Connection = c}
 
     constructor () {
-        //bus,
-        //name,
-        //server,
         this.connections = [undefined]
         this.objects = {}
         this.reqid = 0
@@ -17,10 +14,12 @@ class Node {
         this.signals = new EventEmitter()
     }
 
-    init (name) {
-        console.log('node.init', name)
-        this.name = name
-        this.root = name === '/'
+    init (bus) {
+        console.log('node.init', bus.name)
+        this.bus = bus
+        this.name = bus.name
+        this.root = bus.name === '/'
+        manager.init(this)
     }
 
     addChild (child) {

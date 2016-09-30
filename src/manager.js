@@ -1,14 +1,17 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
+import Bus from './Bus'
 
 class Manager {
     constructor () {
-        this.names = new Map()
     }
 
-    init (bus) {
-        console.log('TODO Manager init')
-        this.bus = bus
+    init (node) {
+        console.log('manager.init')
+        if (node.root)
+            this.names = new Map()
+        else
+            this.proxy = Bus.proxy('/Bus.Manager')
     }
 
     // TODO needs request metadata: sender
