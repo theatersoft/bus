@@ -2,5 +2,6 @@
 /node_modules
 /test/node_modules
 /test/pub/test.js
-.idea
+/.idea
+/_*
 .bus

@@ -1,6 +1,13 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 
+let Connection
+
+export function setConnection (value) {
+    if (Connection) throw new Error('Cannot change Connection')
+    Connection = node.Connection = value
+}
+
 const Executor = (_r, _j) => ({
     promise: new Promise((r, j) => {_r = r; _j = j}),
     resolve: v => _r(v),
@@ -94,13 +101,6 @@ class Bus extends EventEmitter {
     close () {
         node.close
     }
-}
-
-let Connection //setConnection
-
-export function setConnection (value) {
-    if (Connection) throw new Error('Cannot change Connection')
-    Connection = node.Connection = value
 }
 
 export default {

@@ -1,82 +1,91 @@
 import EventEmitter from './EventEmitter'
-import manager from './Manager'
+import manager from './manager'
 
-const
-    node = {
+let Connection
+
+class Node {
+    set Connection (c) {Connection = c}
+
+    constructor () {
         //bus,
         //name,
         //server,
-        connections: [undefined],
-        objects: {},
-        reqid: 0,
-        requests: {},
-        signals: new EventEmitter()
-    },
-    addChild = child => {
-        child.id = node.connections.length
-        child.name = `${node.name}${child.id}`
-        console.log(`${node.name} adding child ${child.name}`)
-        node.connections.push(child)
+        this.connections = [undefined]
+        this.objects = {}
+        this.reqid = 0
+        this.requests = {}
+        this.signals = new EventEmitter()
+    }
+
+    addChild (child) {
+        child.id = this.connections.length
+        child.name = `${this.name}${child.id}`
+        console.log(`${this.name} adding child ${child.name}`)
+        this.connections.push(child)
         child.send({hello: `${child.name}/`})
-    },
-    startServer = context => {
+    }
+
+    startServer (context) {
         if (context.children) {
-            node.server = Connection.createServer(context.children)
+            this.server = Connection.createServer(context.children)
                 .on('connection', connection => {
-                    addChild(bind(connection))
+                    this.addChild(this.bind(connection))
                 })
                 .on('error', err => {
                     console.log('server error', err)
                 })
         }
-    },
-    route = n => {
+    }
+
+    route (n) {
         let i = n.lastIndexOf('/')
         if (i === -1) throw new Error('Invalid name')
         let
             path = n.slice(0, i + 1),
-            r = path === node.name ? null
-                : path.startsWith((node.name)) ? node.connections[parseInt(path.slice(node.name.length))]
-                : node.connections[0]
-        //console.log(`routing to ${path} from ${node.name} returns ${r && r.name}`)
+            r = path === this.name ? null
+                : path.startsWith((this.name)) ? this.connections[parseInt(path.slice(this.name.length))]
+                : this.connections[0]
+        //console.log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
         return r
-    },
-    bind = conn => {
+    }
+
+    bind (conn) {
         return conn
             .on('data', data => {
                 //console.log(`data from ${conn.name}`, data)
                 if (data.req) {
-                    request(data.req).then(
+                    this.request(data.req).then(
                         res =>
-                            reply({id: data.req.id, path: data.req.sender, args: res}),
+                            this.reply({id: data.req.id, path: data.req.sender, args: res}),
                         err =>
                             console.log(err))
                 } else if (data.res) {
-                    reply(data.res)
+                    this.reply(data.res)
                 } else if (data.sig) {
-                    signal(data.sig, conn.id)
+                    this.signal(data.sig, conn.id)
                 }
             })
             .on('close', () => {
                 console.log(`connection close ${conn.name}`)
-                node.connections[conn.id] = undefined
+                this.connections[conn.id] = undefined
             })
-    },
-    request = req => {
-        let conn = route(req.path)
+    }
+
+    request (req) {
+        let conn = this.route(req.path)
         if (conn) {
             if (req.sender)
                 conn.send({req})
             else {
-                req.sender = node.name
+                req.sender = this.name
                 return new Promise((r, j) => {
-                    req.id = node.reqid++
+                    req.id = this.reqid++
                     conn.send({req})
-                    node.requests[req.id] = {r, j, req}
+                    this.requests[req.id] = {r, j, req}
                 })
             }
         } else if (conn === null) {
-            let obj = node.objects[req.interface] && node.objects[req.interface].obj
+            let obj = this.objects[req.interface] && this.objects[req.interface].obj
             if (!obj) return Promise.reject(`Error interface ${req.interface} object not found`)
             let member = obj[req.member], args = req.args // workaround uglify parse error
             if (!member) return Promise.reject(`Error member ${req.member} not found`)
@@ -89,61 +98,42 @@ const
         }
         else if (conn === undefined)
             return Promise.reject('connection error') // TODO
-    },
-    reply = res => {
-        let conn = route(res.path)
+    }
+
+    reply (res) {
+        let conn = this.route(res.path)
         if (conn)
             conn.send({res})
         else {
-            let r = node.requests[res.id]
-            delete node.requests[res.id]
+            let r = this.requests[res.id]
+            delete this.requests[res.id]
             r.r(res.args)
         }
-    },
-    sigroute = (name, from) => {
-        let r = node.connections.filter(c => c && c.id !== from)
+    }
+
+    sigroute (name, from) {
+        let r = this.connections.filter(c => c && c.id !== from)
         //console.log(`sigrouting ${name} from ${from} returns ${r.map(c => c.id)}`)
         return r
-    },
-    signal = (sig, from) => {
-        node.signals.emit(sig.name, sig.args)
-        sigroute(sig.name, from).forEach(c => c && c.send({sig}))
-    },
-    methods = obj => {
+    }
+
+    signal (sig, from) {
+        this.signals.emit(sig.name, sig.args)
+        this.sigroute(sig.name, from).forEach(c => c && c.send({sig}))
+    }
+
+    methods (obj) {
         return Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
             .filter(p =>
             typeof obj[p] === 'function' && p !== 'constructor')
-    },
-    close = () => {
-    },
-    initManager = bus => manager.init(bus, {
-        node, request, signal, // TODO
-    })
+    }
 
-var Connection
+    close () {
+    }
 
-export default {
-    get bus () {return node.bus},
-    set bus (b) {node.bus = b},
-
-    set Connection (c) {Connection = c},
-
-    connections: node.connections,
-
-    get name () {return node.name},
-    set name (n) {node.name = n},
-
-    objects: node.objects,
-    signals: node.signals,
-
-    addChild,
-    startServer,
-    route,
-    bind,
-    request,
-    reply,
-    sigroute,
-    signal,
-    close,
-    initManager
+    initManager () {
+        manager.init()
+    }
 }
+
+export default new Node()

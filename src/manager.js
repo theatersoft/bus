@@ -1,4 +1,5 @@
 import EventEmitter from './EventEmitter'
+import node from './node'
 
 let manager, bus, _i
 
@@ -8,11 +9,8 @@ class Manager {
         console.log('Manager started')
     }
 
-    init (_bus, _impl) {
-        if (bus) throw 'reinited'
-        bus = _bus
-        _i = _impl
-        console.log('Manager init')
+    init () {
+        console.log('TODO Manager init')
     }
 
     // TODO needs request metadata: sender
