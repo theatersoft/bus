@@ -17,6 +17,12 @@ class Node {
         this.signals = new EventEmitter()
     }
 
+    init (name) {
+        console.log('node.init', name)
+        this.name = name
+        this.root = name === '/'
+    }
+
     addChild (child) {
         child.id = this.connections.length
         child.name = `${this.name}${child.id}`
@@ -129,10 +135,6 @@ class Node {
     }
 
     close () {
-    }
-
-    initManager () {
-        manager.init()
     }
 }
 

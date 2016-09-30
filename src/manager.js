@@ -1,16 +1,14 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 
-let manager, bus, _i
-
 class Manager {
     constructor () {
         this.names = new Map()
-        console.log('Manager started')
     }
 
-    init () {
+    init (bus) {
         console.log('TODO Manager init')
+        this.bus = bus
     }
 
     // TODO needs request metadata: sender
@@ -23,7 +21,7 @@ class Manager {
     }
 
     register (name, obj) {
-        if (_i.node.root) {
+        if (node.root) {
             console.log('Manager.register as root ')
             //bus.registerObject(name, obj)
             this.names.set(name, obj)

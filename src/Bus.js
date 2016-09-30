@@ -1,5 +1,6 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
+import manager from './manager'
 
 let Connection
 
@@ -38,9 +39,9 @@ class Bus extends EventEmitter {
                 .on('data', data => {
                     if (data.hello) {
                         console.log(`bus name is ${data.hello}`)
-                        node.name = data.hello
                         conn.name = `${node.name}0`
-                        node.initManager()
+                        node.init(data.hello)
+                        manager.init(this)
                         node.startServer(context)
                         this.emit('connect')
                     }
@@ -51,9 +52,8 @@ class Bus extends EventEmitter {
             conn.id = 0
             node.connections[0] = conn
         } else {
-            node.root = true
-            node.name = '/'
-            node.initManager()
+            node.init('/')
+            manager.init()
             node.startServer(context)
             setImmediate(() => this.emit('connect'))
         }
