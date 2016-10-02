@@ -63,17 +63,12 @@ class Node {
         return conn
             .on('data', data => {
                 //console.log(`data from ${conn.name}`, data)
-                if (data.req) {
-                    this.request(data.req).then(
-                        res =>
-                            this.reply({id: data.req.id, path: data.req.sender, args: res}),
-                        err =>
-                            console.log(err))
-                } else if (data.res) {
-                    this.reply(data.res)
-                } else if (data.sig) {
+                if (data.req)
+                    this._request(data.req)
+                else if (data.res)
+                    this.response(data.res)
+                else if (data.sig)
                     this.signal(data.sig, conn.id)
-                }
             })
             .on('close', () => {
                 console.log(`connection close ${conn.name}`)
@@ -82,54 +77,55 @@ class Node {
     }
 
     request (req) {
-        let conn = this.route(req.path)
-        if (conn) {
-            if (req.sender)
-                conn.send({req})
-            else {
-                req.sender = this.name
-                return new Promise((r, j) => {
-                    req.id = this.reqid++
-                    conn.send({req})
-                    this.requests[req.id] = {r, j, req}
-                })
-            }
-        } else if (conn === null) {
-            let obj = this.objects[req.interface] && this.objects[req.interface].obj
-            if (!obj) return Promise.reject(`Error interface ${req.interface} object not found`)
-            let member = obj[req.member]
-            if (!member) return Promise.reject(`Error member ${req.member} not found`)
-            try {
-                return Promise.resolve(obj[req.member](...req.args))
-            }
-            catch (e) {
-                return Promise.reject(`Exception calling interface ${req.interface} object member ${req.member} ${e}`)
-            }
-        }
-        else if (conn === undefined)
-            return Promise.reject('connection error') // TODO
+        return new Promise((r, j) => {
+            req.sender = this.name
+            req.id = this.reqid++
+            this.requests[req.id] = {r, j, req}
+            this._request(req)
+        })
     }
 
-    reply (res) {
-        let conn = this.route(res.path)
+    _request (req) {
+        const conn = this.route(req.path)
+        if (conn) {
+            conn.send({req})
+        } else if (conn === null) {
+            const
+                res = res =>
+                    this.response({id: req.id, path: req.sender, args: res}), // TODO args -> res
+                err = err =>
+                    this.response({id: req.id, path: req.sender, err}),
+                obj = this.objects[req.interface] && this.objects[req.interface].obj
+            if (!obj) err(`Error interface ${req.interface} object not found`)
+            let member = obj[req.member]
+            if (!member) err(`Error member ${req.member} not found`)
+            Promise.resolve()
+                .then(() => obj[req.member](...req.args))
+                .then(res, err)
+        }
+        else
+            throw('connection error') // TODO
+    }
+
+    response (res) {
+        const conn = this.route(res.path)
         if (conn)
             conn.send({res})
-        else {
+        else if (conn === null) {
             let r = this.requests[res.id]
             delete this.requests[res.id]
             r.r(res.args)
         }
-    }
-
-    sigroute (name, from) {
-        let r = this.connections.filter(c => c && c.id !== from)
-        //console.log(`sigrouting ${name} from ${from} returns ${r.map(c => c.id)}`)
-        return r
+        else
+            throw('connection error') // TODO
     }
 
     signal (sig, from) {
         this.signals.emit(sig.name, sig.args)
-        this.sigroute(sig.name, from).forEach(c => c && c.send({sig}))
+        this.connections.filter(c => c && c.id !== from).forEach(c => {
+            //console.log(`sigrouting ${name} from ${from} to ${c.id}`)
+            c && c.send({sig})
+        })
     }
 
     close () {

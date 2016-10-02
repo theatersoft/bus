@@ -22,8 +22,8 @@
     "server": "node server.js",
     "debug-root": "node --inspect test/root.js",
     "debug-child": "node --inspect test/child.js",
-    "debug-ping-service": "node --inspect ping-service.js",
-    "debug-ping-test": "node --inspect --debug-brk ping-test.js",
+    "debug-ping-service": "node --inspect=9230 ping-service.js",
+    "debug-ping-test": "node --inspect=9231 ping-test.js",
     "debug-proxy": "node --inspect proxy.js",
     "debug-signal": "node --inspect signal.js",
     "debug-server": "node --inspect server.js"
