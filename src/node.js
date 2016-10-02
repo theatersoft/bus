@@ -92,7 +92,7 @@ class Node {
         } else if (conn === null) {
             const
                 res = res =>
-                    this.response({id: req.id, path: req.sender, args: res}), // TODO args -> res
+                    this.response({id: req.id, path: req.sender, res}),
                 err = err =>
                     this.response({id: req.id, path: req.sender, err}),
                 obj = this.objects[req.interface] && this.objects[req.interface].obj
@@ -112,9 +112,10 @@ class Node {
         if (conn)
             conn.send({res})
         else if (conn === null) {
-            let r = this.requests[res.id]
+            let {r, j} = this.requests[res.id]
             delete this.requests[res.id]
-            r.r(res.args)
+            if (res.hasOwnProperty('err')) j(res.err)
+            else r(res.res)
         }
         else
             throw('connection error') // TODO

@@ -4,9 +4,6 @@ const
 
 class Ping {
     constructor (bus) {
-        setInterval(() => {
-        }, 2000)
-        bus.registerObject('Ping', this)
     }
 
     ping () {
@@ -14,4 +11,7 @@ class Ping {
     }
 }
 
-Bus.start().then(bus => new Ping(bus))
+Bus.start().then(bus =>
+    bus.registerObject('Ping', new Ping(bus))
+        .catch(e => console.log(e))
+)
