@@ -95,8 +95,8 @@ class Node {
                     this.response({id: req.id, path: req.sender, res}),
                 err = err =>
                     this.response({id: req.id, path: req.sender, err}),
-                obj = this.objects[req.interface] && this.objects[req.interface].obj
-            if (!obj) err(`Error interface ${req.interface} object not found`)
+                obj = this.objects[req.intf] && this.objects[req.intf].obj
+            if (!obj) err(`Error interface ${req.intf} object not found`)
             let member = obj[req.member]
             if (!member) err(`Error member ${req.member} not found`)
             Promise.resolve()
@@ -132,9 +132,9 @@ class Node {
     close () {
     }
 
-    registerObject (name, obj, iface = (methods(obj))) {
-        console.log(`registerObject ${name} at ${this.name} interface`, iface)
-        this.objects[name] = {obj, iface}
+    registerObject (name, obj, intf = (methods(obj))) {
+        console.log(`registerObject ${name} at ${this.name} interface`, intf)
+        this.objects[name] = {obj, intf}
     }
 }
 

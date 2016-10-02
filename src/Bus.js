@@ -58,10 +58,10 @@ class Bus extends EventEmitter {
         }
     }
 
-    registerObject (name, obj, iface) {
+    registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
             .then(() =>
-                node.registerObject(name, obj, iface)
+                node.registerObject(name, obj, intf)
             )
     }
 
@@ -71,8 +71,8 @@ class Bus extends EventEmitter {
 
     request (name, ...args) {
         console.log('request', name, args)
-        const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        return node.request({path, interface: iface, member, args})
+        const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
+        return node.request({path, intf, member, args})
             .catch(e => {
                 console.log(`request ${name} rejected ${e}`)
                 throw e
@@ -81,12 +81,12 @@ class Bus extends EventEmitter {
 
     signal (name, args) {
         //console.log('signal', name, args)
-        const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        return node.signal({name, path, interface: iface, member, args})
+        const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
+        return node.signal({name, path, intf, member, args})
     }
 
     registerListener (name, cb) {
-        //const [, path, iface, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
+        //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         //TODO
         node.signals.on(name, cb)
     }
@@ -110,16 +110,16 @@ export default {
         return node.bus
     },
     proxy (name) {
-        let [, path, iface] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
+        let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
         return new Proxy({}, {
             get (_, member) {
                 return (...args) =>
                     (path
                         ? Promise.resolve(path)
-                        : manager.resolveName(iface).then(p => {path = p; return p})
+                        : manager.resolveName(intf).then(p => {path = p; return p})
                     )
                         .then(() =>
-                            node.request({path, interface: iface, member, args: [...args, node.name]})
+                            node.request({path, intf, member, args: [...args, node.name]})
                         )
             }
         })
