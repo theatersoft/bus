@@ -3,6 +3,11 @@ import manager from './manager'
 
 let Connection
 
+const methods = obj =>
+    Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
+        .filter(p =>
+        typeof obj[p] === 'function' && p !== 'constructor')
+
 class Node {
     set Connection (c) {Connection = c}
 
@@ -92,10 +97,10 @@ class Node {
         } else if (conn === null) {
             let obj = this.objects[req.interface] && this.objects[req.interface].obj
             if (!obj) return Promise.reject(`Error interface ${req.interface} object not found`)
-            let member = obj[req.member], args = req.args // workaround uglify parse error
+            let member = obj[req.member]
             if (!member) return Promise.reject(`Error member ${req.member} not found`)
             try {
-                return Promise.resolve(obj[req.member](...args))
+                return Promise.resolve(obj[req.member](...req.args))
             }
             catch (e) {
                 return Promise.reject(`Exception calling interface ${req.interface} object member ${req.member} ${e}`)
@@ -127,13 +132,12 @@ class Node {
         this.sigroute(sig.name, from).forEach(c => c && c.send({sig}))
     }
 
-    methods (obj) {
-        return Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
-            .filter(p =>
-            typeof obj[p] === 'function' && p !== 'constructor')
+    close () {
     }
 
-    close () {
+    registerObject (name, obj, iface = (methods(obj))) {
+        console.log(`registerObject ${name} at ${this.name} interface`, iface)
+        this.objects[name] = {obj, iface}
     }
 }
 

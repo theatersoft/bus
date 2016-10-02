@@ -3,40 +3,56 @@ import node from './node'
 import Bus from './Bus'
 
 class Manager {
-    constructor () {
+    constructor (bus) {
+        // unused
     }
 
     init (node) {
         console.log('manager.init')
-        if (node.root)
-            this.names = new Map()
-        else
-            this.proxy = Bus.proxy('/Bus.Manager')
-    }
-
-    // TODO needs request metadata: sender
-    requestName (name, node) {
-        console.log('Manager.requestName')
-    }
-
-    releaseName (name, node) {
-        console.log('Manager.releaseName')
-    }
-
-    register (name, obj) {
+        this.node = node
         if (node.root) {
-            console.log('Manager.register as root ')
-            //bus.registerObject(name, obj)
-            this.names.set(name, obj)
-            return Promise.resolve(true) // TODO BusObject
-        } else {
-            console.log('Manager.register as child ')
-            return bus.request('/Bus.requestName', name, _i.node.name).then(r => {
-                console.log('Manager.registered ')
-                this.names.set(name, obj)
-                return true
-            })
-        }
+            this.names = new Map()
+            this.nodes = new Map()
+            node.registerObject('Bus', this)
+        } else
+            this.proxy = Bus.proxy('/Bus')
+    }
+
+    //addNode (name, _sender) {
+    //    if (this.proxy) return this.proxy.addNode(name)
+    //    if (this.nodes.has(name)) throw 'duplicate node name'
+    //    this.nodes.set(name, _sender)
+    //}
+    //
+    //removeNode (name, _sender) {
+    //    if (this.proxy) return this.proxy.removeNode(name)
+    //    if (!this.nodes.has(name)) throw 'missing node name'
+    //    this.nodes.delete(name, obj)
+    //    // remove node names
+    //}
+
+    addName (name, _sender) {
+        if (this.proxy) return this.proxy.addName(name)
+        console.log('manager.addName', name)
+        if (this.names.has(name)) throw 'duplicate name'
+        this.names.set(name, _sender)
+        console.log('names', this.names)
+    }
+
+    resolveName (name, _sender) {
+        if (this.proxy) return this.proxy.resolveName(name)
+        console.log('manager.resolveName', name, this.names)
+        if (!this.names.has(name)) throw 'missing name'
+        console.log(this.names.get(name))
+        return this.names.get(name)
+    }
+
+    removeName (name, _sender) {
+        if (this.proxy) return this.proxy.removeName(name)
+        console.log('manager.removeName', name)
+        if (!this.names.has(name)) throw 'missing name'
+        // check path?
+        this.names.delete(name)
     }
 }
 

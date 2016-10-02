@@ -3,10 +3,10 @@ const
     {Bus} = require('@theatersoft/bus')
 
 class Ping {
-    constructor () {
+    constructor (bus) {
         setInterval(() => {
         }, 2000)
-        Bus.bus.register('Ping', this)
+        bus.registerObject('Ping', this)
     }
 
     ping () {
@@ -14,6 +14,4 @@ class Ping {
     }
 }
 
-Bus
-    .start()
-    .then(() => new Ping())
+Bus.start().then(bus => new Ping(bus))

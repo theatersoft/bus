@@ -58,9 +58,11 @@ class Bus extends EventEmitter {
         }
     }
 
-    registerObject (name, obj, iface = (methods(obj))) {
-        console.log(`registerObject ${name} at ${node.name} interface`, iface)
-        node.objects[name] = {obj, iface}
+    registerObject (name, obj, iface) {
+        return manager.addName(name, this.name)
+            .then(() =>
+                node.registerObject(name, obj, iface)
+            )
     }
 
     unregisterObject () {
@@ -107,11 +109,18 @@ export default {
         if (!node.bus) throw new Error('Bus not started')
         return node.bus
     },
-    proxy (iface) {
+    proxy (name) {
+        let [, path, iface] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
         return new Proxy({}, {
-            get (_, name) {
+            get (_, member) {
                 return (...args) =>
-                    node.request({path: '/', interface: iface, member: name, args})
+                    (path
+                        ? Promise.resolve(path)
+                        : manager.resolveName(iface).then(p => {path = p; return p})
+                    )
+                        .then(() =>
+                            node.request({path, interface: iface, member, args: [...args, node.name]})
+                        )
             }
         })
     }
