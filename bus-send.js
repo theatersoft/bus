@@ -15,8 +15,6 @@ const
 
 //
 
-process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
-
 if (!argv.name) {
     console.log('Error: missing --name [/path]/[Interface.method]')
     process.exit()

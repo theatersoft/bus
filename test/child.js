@@ -1,7 +1,5 @@
 'use strict'
 
-process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
-
 require('@theatersoft/bus').Bus.start().then(bus => {
     bus.registerObject('Local', {
         ping: () => console.log('ping')

@@ -1,7 +1,5 @@
 'use strict'
 
-process.on('unhandledRejection', (reason, p) => console.log('unhandled rejection', reason, p))
-
 const
     {Bus} = require('@theatersoft/bus'),
     Ping = Bus.proxy('Ping')
