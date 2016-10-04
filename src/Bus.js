@@ -1,6 +1,8 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
+import executor from './executor'
+import proxy from './proxy'
 
 let Connection
 
@@ -9,16 +11,12 @@ export function setConnection (value) {
     Connection = node.Connection = value
 }
 
-const Executor = (_r, _j) => ({
-    promise: new Promise((r, j) => {_r = r; _j = j}),
-    resolve: v => _r(v),
-    reject: e => _j(e)
-})
-let busExecutor = Executor()
+let busExecutor = executor()
 
-class Bus extends EventEmitter {
-    static start () {
+export default class Bus extends EventEmitter {
+    static start (context) {
         if (Connection && !node.bus) {
+            Connection.create(context)
             let bus = new Bus(Connection.context)
                 .on('connect', () => {
                     node.bus = bus
@@ -26,6 +24,13 @@ class Bus extends EventEmitter {
                 })
         }
         return busExecutor.promise
+    }
+
+    static proxy (name) {return proxy(name)}
+
+    static get bus () {
+        if (!node.bus) throw new Error('Bus not started')
+        return node.bus
     }
 
     constructor (context) {
@@ -97,27 +102,5 @@ class Bus extends EventEmitter {
 
     close () {
         node.close
-    }
-}
-
-export default {
-    start (context) {
-        Connection.create(context)
-        return Bus.start()
-    },
-    get bus () {
-        if (!node.bus) throw new Error('Bus not started')
-        return node.bus
-    },
-    proxy (name) {
-        let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
-        return new Proxy({}, {
-            get (_, member) {
-                return (...args) =>
-                    (path ? Promise.resolve() : manager.resolveName(intf).then(p => {path = p}))
-                        .then(() =>
-                            node.request({path, intf, member, args: [...args, node.name]}))
-            }
-        })
     }
 }

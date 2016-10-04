@@ -7,7 +7,8 @@ class Ping {
     }
 
     ping () {
-        console.log('Ping.ping');
+        console.log('Ping.ping')
+        return 'ping'
     }
 }
 
