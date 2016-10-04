@@ -130,9 +130,9 @@ target.clean = function () {
 
 target.package = function () {
     console.log('target package')
-    if (!DIST) return console.log('skipped')
+    const filters = ['devDependencies', 'scripts'].concat(DIST ? ['private'] : [])
     const p = Object.entries(require('./package.json')).reduce((o, [k, v]) => {
-        if (!['private', 'devDependencies', 'scripts'].includes(k)) o[k] = v
+        if (!filters.includes(k)) o[k] = v
         return o
     }, {})
     fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
