@@ -6,26 +6,8 @@ const
     fs = require('fs'),
     rollup = require('rollup'),
     babel = require('rollup-plugin-babel'),
-    //babili = require('babel-preset-babili'),
-    copyright = `/*
- Copyright (C) 2016 Theatersoft
-
- This program is free software: you can redistribute it and/or modify it under
- the terms of the GNU Affero General Public License as published by the Free
- Software Foundation, version 3.
-
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- details.
-
- You should have received a copy of the GNU Affero General Public License along
- with this program. If not, see <http://www.gnu.org/licenses/>
-  */`,
-    execo = c => exec(c, {silent: true}).trim(),
-    liftUndefined = x => x === 'undefined' ? undefined : x,
-    getVar = n => liftUndefined(execo('npm config get bus:' + n)),
-    DIST = getVar('dist') === 'true',
+    copyright = `/*\n${fs.readFileSync('COPYRIGHT', 'utf8')}\n */`,
+    DIST = process.env.DIST === 'true',
     plugins = DIST && [
         babel({
             babelrc: false,
@@ -52,8 +34,6 @@ const
             ]
         })
     ]
-
-// https://github.com/rollup/rollup/wiki/JavaScript-API
 
 target.browser = function () {
     console.log('target browser')
@@ -157,6 +137,5 @@ target.all = function () {
     //target['browser-es']()
     target.node()
     //target['node-es']()
-    //target.client()
     target.package()
 }
