@@ -112,8 +112,9 @@ class Node {
         if (conn)
             conn.send({res})
         else if (conn === null) {
-            let {r, j} = this.requests[res.id]
+            let {r, j, req} = this.requests[res.id]
             delete this.requests[res.id]
+            console.log('response', req, res)
             if (res.hasOwnProperty('err')) j(res.err)
             else r(res.res)
         }

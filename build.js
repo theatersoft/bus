@@ -135,9 +135,10 @@ target.package = function () {
         if (!filters.includes(k)) o[k] = v
         return o
     }, {})
+    p.scripts = {start: 'node start.js'}
     fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
     exec('sed -i "s|dist/||g" dist/package.json ')
-    exec('cp LICENSE dist')
+    exec('cp LICENSE start.js dist')
 }
 
 target.client = function () {
