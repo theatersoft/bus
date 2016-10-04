@@ -2,7 +2,7 @@ import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
 import executor from './executor'
-import proxy from './proxy'
+import {proxy} from './proxy'
 
 let Connection
 

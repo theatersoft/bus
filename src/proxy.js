@@ -1,7 +1,7 @@
 import node from './node'
 import manager from './manager'
 
-export default function proxy (name) {
+export function proxy (name) {
     let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
     return new Proxy({}, {
         get (_, member) {
@@ -11,4 +11,10 @@ export default function proxy (name) {
                         node.request({path, intf, member, args: [...args, node.name]}))
         }
     })
+}
+
+export function methods (obj) {
+    return Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
+        .filter(p =>
+        typeof obj[p] === 'function' && p !== 'constructor')
 }

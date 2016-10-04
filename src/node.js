@@ -1,12 +1,8 @@
 import EventEmitter from './EventEmitter'
 import manager from './manager'
+import {methods} from './proxy'
 
 let Connection
-
-const methods = obj =>
-    Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
-        .filter(p =>
-        typeof obj[p] === 'function' && p !== 'constructor')
 
 class Node {
     set Connection (c) {Connection = c}
