@@ -114,7 +114,7 @@ export default {
         return new Proxy({}, {
             get (_, member) {
                 return (...args) =>
-                    path ? Promise.resolve() : manager.resolveName(intf).then(p => {path = p})
+                    (path ? Promise.resolve() : manager.resolveName(intf).then(p => {path = p}))
                         .then(() =>
                             node.request({path, intf, member, args: [...args, node.name]}))
             }
