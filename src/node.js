@@ -1,12 +1,9 @@
 import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
-
-let Connection
+import Connection from 'Connection'
 
 class Node {
-    set Connection (c) {Connection = c}
-
     constructor () {
         this.connections = [undefined]
         this.objects = {}

@@ -3,19 +3,13 @@ import node from './node'
 import manager from './manager'
 import executor from './executor'
 import {proxy} from './proxy'
-
-let Connection
-
-export function setConnection (value) {
-    if (Connection) throw new Error('Cannot change Connection')
-    Connection = node.Connection = value
-}
+import Connection from 'Connection'
 
 let busExecutor = executor()
 
 export default class Bus extends EventEmitter {
     static start (context) {
-        if (Connection && !node.bus) {
+        if (!node.bus) {
             Connection.create(context)
             let bus = new Bus(Connection.context)
                 .on('connect', () => {

@@ -5,11 +5,11 @@ const
     path = require('path'),
     fs = require('fs'),
     rollup = require('rollup'),
+    alias = require('rollup-plugin-alias'),
     babel = require('rollup-plugin-babel'),
     copyright = `/*\n${fs.readFileSync('COPYRIGHT', 'utf8')}\n */`,
     DIST = process.env.DIST === 'true',
-    plugins = DIST && [
-        babel({
+    babelPlugin = DIST && babel({
             babelrc: false,
             //exclude: 'node_modules/**',
             comments: false,
@@ -32,14 +32,20 @@ const
                 require("babel-plugin-transform-simplify-comparison-operators"),
                 require("babel-plugin-transform-undefined-to-void")
             ]
-        })
-    ]
+        }),
+    aliasPlugin = alias({})
 
 target.browser = function () {
     console.log('target browser')
     rollup.rollup({
             entry: 'src/bundle.browser.js',
-            plugins
+            plugins: [
+                babelPlugin,
+                alias({
+                    resolve: ['.js'],
+                    Connection: './BrowserConnection'
+                })
+            ]
         })
         .then(bundle => {
             bundle.write({
@@ -57,7 +63,13 @@ target.node = function () {
     rollup.rollup({
             entry: 'src/bundle.js',
             external: ['ws'],
-            plugins
+            plugins: [
+                babelPlugin,
+                alias({
+                    resolve: ['.js'],
+                    Connection: './Connection'
+                })
+            ]
         })
         .then(bundle => {
             bundle.write({
