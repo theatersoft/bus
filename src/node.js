@@ -86,6 +86,7 @@ class Node {
         if (conn) {
             conn.send({req})
         } else if (conn === null) {
+            console.log('request', req)
             const
                 res = res =>
                     this.response({id: req.id, path: req.sender, res}),
