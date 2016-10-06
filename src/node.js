@@ -1,3 +1,4 @@
+import bus from './Bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
@@ -5,34 +6,39 @@ import Connection from 'Connection'
 
 class Node {
     constructor () {
-        this.connections = [undefined]
+        this.conns = [undefined]
         this.objects = {}
         this.reqid = 0
         this.requests = {}
         this.signals = new EventEmitter()
     }
 
-    init (bus) {
+    init () {
         console.log('node.init', bus.name)
-        this.bus = bus
         this.name = bus.name
         this.root = bus.name === '/'
         manager.init(bus.name)
     }
 
-    addChild (child) {
-        child.id = this.connections.length
-        child.name = `${this.name}${child.id}`
-        console.log(`${this.name} adding child ${child.name}`)
-        this.connections.push(child)
-        child.send({hello: `${child.name}/`})
+    addChild (conn) {
+        conn.id = this.conns.length
+        conn.name = `${this.name}${conn.id}`
+        console.log(`${this.name} adding child ${conn.name}`)
+        conn.send({hello: `${conn.name}/`})
+        this.conns.push(conn)
+        conn.registered = true
     }
 
-    startServer (context) {
-        if (context.children) {
-            this.server = Connection.createServer(context.children)
-                .on('connection', connection => {
-                    this.addChild(this.bind(connection))
+    addParent (conn) {
+        conn.id = 0
+        this.conns[0] = conn
+    }
+
+    startServer () {
+        if (Connection.hasChildren) {
+            this.server = Connection.createServer()
+                .on('connection', conn => {
+                    this.addChild(this.bind(conn))
                 })
                 .on('error', err => {
                     console.log('server error', err)
@@ -46,8 +52,8 @@ class Node {
         let
             path = n.slice(0, i + 1),
             r = path === this.name ? null
-                : path.startsWith((this.name)) ? this.connections[parseInt(path.slice(this.name.length))]
-                : this.connections[0]
+                : path.startsWith((this.name)) ? this.conns[parseInt(path.slice(this.name.length))]
+                : this.conns[0]
         //console.log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
         return r
     }
@@ -65,10 +71,15 @@ class Node {
             })
             .on('close', () => {
                 console.log(`connection close ${conn.name}`)
-                this.connections[conn.id] = undefined
-                if (conn.id !== 0)
-                    Promise.resolve(manager.removeNode(`${conn.name}/`))
+                if (!conn.registered) {
+                    console.log('connection was not registered')
+                    return
+                }
+                this.conns[conn.id] = undefined
+                if (conn.id !== 0) {
+                    Promise.resolve().then(() => manager.removeNode(`${conn.name}/`))
                         .catch(e => console.log('manager.removeNode rejected', e))
+                }
             })
     }
 
@@ -122,7 +133,7 @@ class Node {
 
     signal (sig, from) {
         this.signals.emit(sig.name, sig.args)
-        this.connections.filter(c => c && c.id !== from).forEach(c => {
+        this.conns.filter(c => c && c.id !== from).forEach(c => {
             //console.log(`sigrouting ${name} from ${from} to ${c.id}`)
             c && c.send({sig})
         })

@@ -1,4 +1,5 @@
 import EventEmitter from './EventEmitter'
+const url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`
 
 class Connection extends EventEmitter {
     constructor (ws) {
@@ -25,21 +26,27 @@ class Connection extends EventEmitter {
 let context
 
 export default {
-    createParentConnection (parent) {
-        return new Connection(new WebSocket(parent.url))
-    },
-    createServer ({host, port, server}) {
-        throw ('not implemented')
-    },
-    create (context) {
-        this.context = context
-        return this
-    },
-    set context (value) {
-        if (context) throw new Error('Cannot change context')
+    create (value = {parent: {url}}) {
         context = value
     },
-    get context () {
-        return context || {parent: {url: `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`}}
+
+    get hasParent () {
+        if (!context) throw new Error('Invalid bus context')
+        return !!context.parent
+    },
+
+    get hasChildren () {
+        if (!context) throw new Error('Invalid bus context')
+        return !!context.children
+    },
+
+    createParentConnection () {
+        if (!context) throw new Error('Invalid bus context')
+        return new Connection(new WebSocket(context.parent.url))
+    },
+
+    createServer () {
+        if (!context) throw new Error('Invalid bus context')
+        throw ('not implemented')
     }
 }

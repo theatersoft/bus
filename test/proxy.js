@@ -1,10 +1,10 @@
 'use strict'
 
 const
-    {default: Bus, proxy} = require('@theatersoft/bus'),
+    {default: bus, proxy} = require('@theatersoft/bus'),
     testService = proxy('TestService')
 
-Bus.start({parent: {url: 'ws://localhost:5453'}}).then(bus => {
+bus.start({parent: {url: 'ws://localhost:5453'}}).then(() => {
     testService.addName(bus.name)
     testService.getNames()
         .then(res => {

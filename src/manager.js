@@ -3,10 +3,6 @@ import node from './node'
 import {proxy} from './proxy'
 
 class Manager {
-    constructor (bus) {
-        // unused
-    }
-
     init (path) {
         console.log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
         if (node.root) {

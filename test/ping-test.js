@@ -1,10 +1,10 @@
 'use strict'
 
 const
-    {default: Bus, proxy} = require('@theatersoft/bus'),
+    {default: bus, proxy} = require('@theatersoft/bus'),
     Ping = proxy('Ping')
 
-Bus.start()
+bus.start()
     .then(() => {
         Ping.ping()
             .then(res =>

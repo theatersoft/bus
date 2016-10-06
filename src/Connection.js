@@ -40,13 +40,29 @@ class Server extends EventEmitter {
 let context
 
 export default {
-    createParentConnection (parent) {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-        return new Connection(new WebSocket(parent.url))
+    create (value = {parent: {url}}) {
+        context = value
     },
 
-    createServer ({host, port, server}) {
-        let options
+    get hasParent () {
+        if (!context) throw new Error('Invalid bus context')
+        return !!context.parent
+    },
+
+    get hasChildren () {
+        if (!context) throw new Error('Invalid bus context')
+        return !!context.children
+    },
+
+    createParentConnection () {
+        if (!context) throw new Error('Invalid bus context')
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+        return new Connection(new WebSocket(context.parent.url))
+    },
+
+    createServer () {
+        if (!context) throw new Error('Invalid bus context')
+        let options, {host, port, server} = context.children
         if (server) {
             options = {server}
             console.log(`connecting ws server to http server`)
@@ -55,19 +71,5 @@ export default {
             console.log(`starting ws server on ${host}:${port}`)
         }
         return new Server(new WebSocketServer(options))
-    },
-
-    create (context = {parent: {url}}) {
-        this.context = context
-        return this
-    },
-
-    set context (value) {
-        if (context) throw new Error('Cannot change context')
-        context = value
-    },
-
-    get context () {
-        return context
     }
 }

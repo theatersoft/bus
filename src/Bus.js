@@ -1,58 +1,45 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
-import executor from './executor'
 import {proxy} from './proxy'
 import Connection from 'Connection'
 
-let busExecutor = executor()
+let started
 
-export default class Bus extends EventEmitter {
-    static start (context) {
-        if (!node.bus) {
-            Connection.create(context)
-            let bus = new Bus(Connection.context)
-                .on('connect', () => {
-                    node.bus = bus
-                    busExecutor.resolve(bus)
-                })
+class Bus extends EventEmitter {
+    start (context) {
+        if (!started) {
+            started = new Promise((resolve, reject) => {
+                Connection.create(context)
+                if (Connection.hasParent) {
+                    let conn = node.bind(Connection.createParentConnection()
+                        .on('open', () => {
+                            console.log('parent open')
+                        })
+                        .on('data', data => {
+                            if (data.hello) {
+                                this.name = data.hello
+                                conn.name = `${this.name}0`
+                                node.init(this)
+                                conn.registered = true
+                                node.startServer()
+                                resolve(this)
+                            }
+                        })
+                        .on('error', err => {
+                            console.log('parent error', err)
+                            reject(err)
+                        }))
+                    node.addParent(conn)
+                } else {
+                    this.name = '/'
+                    node.init(this)
+                    node.startServer(context)
+                    resolve(this)
+                }
+            })
         }
-        return busExecutor.promise
-    }
-
-    static get bus () {
-        if (!node.bus) throw new Error('Bus not started')
-        return node.bus
-    }
-
-    constructor (context) {
-        super()
-        if (!context) throw new Error('Invalid bus context')
-        if (context.parent) {
-            let conn = node.bind(Connection.createParentConnection(context.parent)
-                .on('open', () => {
-                    console.log('parent open')
-                })
-                .on('data', data => {
-                    if (data.hello) {
-                        this.name = data.hello
-                        conn.name = `${this.name}0`
-                        node.init(this)
-                        node.startServer(context)
-                        this.emit('connect')
-                    }
-                })
-                .on('error', err => {
-                    console.log('parent error', err)
-                }))
-            conn.id = 0
-            node.connections[0] = conn
-        } else {
-            this.name = '/'
-            node.init(this)
-            node.startServer(context)
-            setImmediate(() => this.emit('connect'))
-        }
+        return started
     }
 
     registerObject (name, obj, intf) {
@@ -96,3 +83,5 @@ export default class Bus extends EventEmitter {
         node.close
     }
 }
+
+export default new Bus()

@@ -1,6 +1,6 @@
 'use strict';
 const
-    Bus = require('@theatersoft/bus').default
+    bus = require('@theatersoft/bus').default
 
 class Ping {
     constructor (bus) {
@@ -12,7 +12,7 @@ class Ping {
     }
 }
 
-Bus.start().then(bus =>
+bus.start().then(() =>
     bus.registerObject('Ping', new Ping(bus))
         .catch(e => console.log(e))
 )
