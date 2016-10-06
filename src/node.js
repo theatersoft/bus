@@ -93,7 +93,7 @@ class Node {
                     if (!obj) throw `Error interface ${req.intf} object not found`
                     const member = obj[req.member]
                     if (!member) throw `Error member ${req.member} not found`
-                    obj[req.member](...req.args)
+                    return obj[req.member](...req.args)
                 })
                 .then(
                     res =>
