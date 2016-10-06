@@ -5,3 +5,4 @@
 /.idea
 /_*
 .bus
+npm-debug.log*

@@ -15,7 +15,7 @@
     "child": "node child.js",
     "ping-test": "node ping-test.js",
     "listen": "node listen.js",
-    "listen-bus": "BUS=`cat ../bus` node listen.js",
+    "listen-bus": "BUS=`cat ../.bus` node listen.js",
     "ping-service": "node ping-service.js",
     "proxy": "node proxy.js",
     "signal": "node signal.js",

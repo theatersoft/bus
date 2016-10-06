@@ -17,7 +17,7 @@ class Node {
         this.bus = bus
         this.name = bus.name
         this.root = bus.name === '/'
-        manager.init(this)
+        manager.init(bus.name)
     }
 
     addChild (child) {
@@ -66,6 +66,9 @@ class Node {
             .on('close', () => {
                 console.log(`connection close ${conn.name}`)
                 this.connections[conn.id] = undefined
+                if (conn.id !== 0)
+                    Promise.resolve(manager.removeNode(`${conn.name}/`))
+                        .catch(e => console.log('manager.removeNode rejected', e))
             })
     }
 

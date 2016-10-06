@@ -11,9 +11,6 @@ app.use('/', express.static(`${__dirname}/pub`))
 const server = http.createServer(app).listen(port);
 console.log('Listening on port ' + port)
 
-Bus.start({children: {server}}).then(bus => {
-    //const TestService = require('./TestService')
-    //bus.registerObject('TestService', new TestService())
-})
+Bus.start({children: {server}}).then(bus => {})
 
 
