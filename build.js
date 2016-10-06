@@ -38,7 +38,7 @@ const
 target.browser = function () {
     console.log('target browser')
     rollup.rollup({
-            entry: 'src/bundle.browser.js',
+            entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
                 alias({

@@ -1,7 +1,6 @@
 'use strict'
 
-require('@theatersoft/bus').Bus
-    .start()
+require('@theatersoft/bus').default.start()
     .then(bus => {
         bus.registerListener('/Hvac.data', data => {
             console.log('/Hvac.data', data)

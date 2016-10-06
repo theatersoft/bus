@@ -1,6 +1,6 @@
 'use strict'
 
-require('@theatersoft/bus').Bus.start().then(bus => {
+require('@theatersoft/bus').default.start().then(bus => {
     console.log(`bus name is ${bus.name}`)
 
     bus.registerObject('Local', {

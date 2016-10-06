@@ -20,8 +20,6 @@ export default class Bus extends EventEmitter {
         return busExecutor.promise
     }
 
-    static proxy (name) {return proxy(name)}
-
     static get bus () {
         if (!node.bus) throw new Error('Bus not started')
         return node.bus

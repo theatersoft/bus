@@ -1,6 +1,6 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
-import Bus from './Bus'
+import {proxy} from './proxy'
 
 class Manager {
     constructor (bus) {
@@ -14,7 +14,7 @@ class Manager {
             this.nodes /*: Map<BusPath, Array<BusName>>*/ = new Map()
             node.registerObject('Bus', this)
         } else
-            this.proxy = Bus.proxy('/Bus')
+            this.proxy = proxy('/Bus')
         //this.proxies /*: Map<BusName, BusPath>*/ = new Map()
         this.addNode(path)
     }

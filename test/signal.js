@@ -1,9 +1,7 @@
 'use strict'
 
-const
-    {Bus} = require('@theatersoft/bus')
-
-Bus.start({parent: {url: 'ws://localhost:5453'}}).then(bus => {
+require('@theatersoft/bus').default
+    .start({parent: {url: 'ws://localhost:5453'}}).then(bus => {
     bus.registerObject('Local', {
         ping: () => console.log('ping')
     }, ['ping'])
