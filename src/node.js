@@ -87,18 +87,19 @@ class Node {
             conn.send({req})
         } else if (conn === null) {
             console.log('request', req)
-            const
-                res = res =>
-                    this.response({id: req.id, path: req.sender, res}),
-                err = err =>
-                    this.response({id: req.id, path: req.sender, err}),
-                obj = this.objects[req.intf] && this.objects[req.intf].obj
-            if (!obj) err(`Error interface ${req.intf} object not found`)
-            let member = obj[req.member]
-            if (!member) err(`Error member ${req.member} not found`)
             Promise.resolve()
-                .then(() => obj[req.member](...req.args))
-                .then(res, err)
+                .then(() => {
+                    const obj = this.objects[req.intf] && this.objects[req.intf].obj
+                    if (!obj) throw `Error interface ${req.intf} object not found`
+                    const member = obj[req.member]
+                    if (!member) throw `Error member ${req.member} not found`
+                    obj[req.member](...req.args)
+                })
+                .then(
+                    res =>
+                        this.response({id: req.id, path: req.sender, res}),
+                    err =>
+                        this.response({id: req.id, path: req.sender, err}))
         }
         else
             throw('connection error') // TODO
