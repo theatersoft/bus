@@ -1,6 +1,6 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
   "author": "Rob Huehn <rob@theatersoft.com>",
