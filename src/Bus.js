@@ -3,6 +3,7 @@ import node from './node'
 import manager from './manager'
 import {proxy} from './proxy'
 import Connection from 'Connection'
+import log from 'log'
 
 let started
 
@@ -14,7 +15,7 @@ class Bus extends EventEmitter {
                 if (Connection.hasParent) {
                     let conn = node.bind(Connection.createParentConnection()
                         .on('open', () => {
-                            console.log('parent open')
+                            log.log('parent open')
                         })
                         .on('data', data => {
                             if (data.hello) {
@@ -27,7 +28,7 @@ class Bus extends EventEmitter {
                             }
                         })
                         .on('error', err => {
-                            console.log('parent error', err)
+                            log.error('parent error', err)
                             reject(err)
                         }))
                     node.addParent(conn)
@@ -54,17 +55,17 @@ class Bus extends EventEmitter {
     }
 
     request (name, ...args) {
-        console.log('request', name, args)
+        log.log('request', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.request({path, intf, member, args})
             .catch(e => {
-                console.log(`request ${name} rejected ${e}`)
+                log.error(`request ${name} rejected ${e}`)
                 throw e
             })
     }
 
     signal (name, args) {
-        //console.log('signal', name, args)
+        //log.log('signal', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.signal({name, path, intf, member, args})
     }

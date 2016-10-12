@@ -1,10 +1,11 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 import {proxy} from './proxy'
+import log from 'log'
 
 class Manager {
     init (path) {
-        console.log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
+        log.log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
         if (node.root) {
             this.names /*: Map<BusName, BusPath>*/ = new Map()
             this.nodes /*: Map<BusPath, Array<BusName>>*/ = new Map()
@@ -17,14 +18,14 @@ class Manager {
 
     addNode (path) {
         if (this.proxy) return this.proxy.addNode(path)
-        console.log('manager.addNode', path)
+        log.log('manager.addNode', path)
         if (this.nodes.has(path)) throw 'duplicate node'
         this.nodes.set(path, new Array())
     }
 
     removeNode (path) {
         if (this.proxy) return this.proxy.removeNode(path)
-        console.log('manager.removeNode', path)
+        log.log('manager.removeNode', path)
         if (!this.nodes.has(path)) throw 'missing node'
         for (let name of this.nodes.get(path))
             this.removeName(name) // TODO remove children
@@ -33,7 +34,7 @@ class Manager {
 
     addName (name, _sender) {
         if (this.proxy) return this.proxy.addName(name)
-        console.log('manager.addName', name)
+        log.log('manager.addName', name)
         if (this.names.has(name)) throw 'duplicate name'
         this.names.set(name, _sender)
         if (!this.nodes.has(_sender)) throw 'missing node'
@@ -43,13 +44,13 @@ class Manager {
     resolveName (name) {
         if (this.proxy) return this.proxy.resolveName(name)
         if (!this.names.has(name)) throw 'missing name'
-        console.log('manager.resolveName', name, this.names.get(name))
+        log.log('manager.resolveName', name, this.names.get(name))
         return this.names.get(name)
     }
 
     removeName (name) {
         if (this.proxy) return this.proxy.removeName(name)
-        console.log('manager.removeName', name)
+        log.log('manager.removeName', name)
         if (!this.names.has(name)) throw 'missing name'
         // check path?
         this.names.delete(name)

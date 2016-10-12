@@ -3,6 +3,7 @@ import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
 import Connection from 'Connection'
+import log from 'log'
 
 class Node {
     constructor () {
@@ -14,7 +15,7 @@ class Node {
     }
 
     init () {
-        console.log('node.init', bus.name)
+        log.log('node.init', bus.name)
         this.name = bus.name
         this.root = bus.name === '/'
         manager.init(bus.name)
@@ -23,7 +24,7 @@ class Node {
     addChild (conn) {
         conn.id = this.conns.length
         conn.name = `${this.name}${conn.id}`
-        console.log(`${this.name} adding child ${conn.name}`)
+        log.log(`${this.name} adding child ${conn.name}`)
         conn.send({hello: `${conn.name}/`})
         this.conns.push(conn)
         conn.registered = true
@@ -41,7 +42,7 @@ class Node {
                     this.addChild(this.bind(conn))
                 })
                 .on('error', err => {
-                    console.log('server error', err)
+                    log.log('server error', err)
                 })
         }
     }
@@ -54,14 +55,14 @@ class Node {
             r = path === this.name ? null
                 : path.startsWith((this.name)) ? this.conns[parseInt(path.slice(this.name.length))]
                 : this.conns[0]
-        //console.log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
+        //log.log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
         return r
     }
 
     bind (conn) {
         return conn
             .on('data', data => {
-                //console.log(`data from ${conn.name}`, data)
+                //log.log(`data from ${conn.name}`, data)
                 if (data.req)
                     this._request(data.req)
                 else if (data.res)
@@ -70,15 +71,15 @@ class Node {
                     this.signal(data.sig, conn.id)
             })
             .on('close', () => {
-                console.log(`connection close ${conn.name}`)
+                log.log(`connection close ${conn.name}`)
                 if (!conn.registered) {
-                    console.log('connection was not registered')
+                    log.log('connection was not registered')
                     return
                 }
                 this.conns[conn.id] = undefined
                 if (conn.id !== 0) {
                     Promise.resolve().then(() => manager.removeNode(`${conn.name}/`))
-                        .catch(e => console.log('manager.removeNode rejected', e))
+                        .catch(e => log.log('manager.removeNode rejected', e))
                 }
             })
     }
@@ -97,7 +98,7 @@ class Node {
         if (conn) {
             conn.send({req})
         } else if (conn === null) {
-            console.log('request', req)
+            log.log('request', req)
             Promise.resolve()
                 .then(() => {
                     const obj = this.objects[req.intf] && this.objects[req.intf].obj
@@ -123,7 +124,7 @@ class Node {
         else if (conn === null) {
             let {r, j, req} = this.requests[res.id]
             delete this.requests[res.id]
-            console.log('response', req, res)
+            log.log('response', req, res)
             if (res.hasOwnProperty('err')) j(res.err)
             else r(res.res)
         }
@@ -134,7 +135,7 @@ class Node {
     signal (sig, from) {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
-            //console.log(`sigrouting ${name} from ${from} to ${c.id}`)
+            //log.log(`sigrouting ${name} from ${from} to ${c.id}`)
             c && c.send({sig})
         })
     }
@@ -143,7 +144,7 @@ class Node {
     }
 
     registerObject (name, obj, intf = (methods(obj))) {
-        console.log(`registerObject ${name} at ${this.name} interface`, intf)
+        log.log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf}
     }
 }

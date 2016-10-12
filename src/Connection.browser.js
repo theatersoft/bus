@@ -1,4 +1,5 @@
 import EventEmitter from './EventEmitter'
+import log from 'log'
 const url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`
 
 class Connection extends EventEmitter {
@@ -11,14 +12,14 @@ class Connection extends EventEmitter {
         ws.onmessage = ev =>
             self.emit('data', JSON.parse(ev.data))
         ws.onclose = ev => {
-            console.log('connection close', this.name)
+            log.log('connection close', this.name)
             self.emit('close')
         }
         ws.onerror = ev =>
             self.emit('error', ev)
     }
     send (data) {
-        console.log(`connection ${this.name} send`, data)
+        log.log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
 }

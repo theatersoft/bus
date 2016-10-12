@@ -1,5 +1,6 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
+import log from 'log'
 const url = process.env.BUS || 'ws://localhost:5453'
 
 class Connection extends EventEmitter {
@@ -17,7 +18,7 @@ class Connection extends EventEmitter {
     }
 
     send (data) {
-        //console.log(`connection ${this.name} send`, data)
+        //log.log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
 }
@@ -27,7 +28,7 @@ class Server extends EventEmitter {
         super()
         wss
             .on('connection', ws => {
-                //console.log(`new connection to ${ws.upgradeReq.headers.host}`)
+                //log.log(`new connection to ${ws.upgradeReq.headers.host}`)
                 this.emit('connection', new Connection(ws))
             })
             .on('close', (code, msg) =>
@@ -65,10 +66,10 @@ export default {
         let options, {host, port, server} = context.children
         if (server) {
             options = {server}
-            console.log(`connecting ws server to http server`)
+            log.log(`connecting ws server to http server`)
         } else {
             options = {host, port}
-            console.log(`starting ws server on ${host}:${port}`)
+            log.log(`starting ws server on ${host}:${port}`)
         }
         return new Server(new WebSocketServer(options))
     }

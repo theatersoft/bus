@@ -33,7 +33,10 @@ const
                 require("babel-plugin-transform-undefined-to-void")
             ]
         }),
-    aliasPlugin = alias({})
+    aliases = {
+        resolve: ['.js'],
+        log: DIST ? './log.dist' : './log'
+    }
 
 target.browser = function () {
     console.log('target browser')
@@ -41,10 +44,7 @@ target.browser = function () {
             entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
-                alias({
-                    resolve: ['.js'],
-                    Connection: './BrowserConnection'
-                })
+                alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
             ]
         })
         .then(bundle => {
@@ -65,10 +65,7 @@ target.node = function () {
             external: ['ws'],
             plugins: [
                 babelPlugin,
-                alias({
-                    resolve: ['.js'],
-                    Connection: './Connection'
-                })
+                alias(Object.assign({}, aliases, {Connection: './Connection'}))
             ]
         })
         .then(bundle => {
