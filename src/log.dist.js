@@ -1,7 +1,6 @@
 export default {
     log () {},
-
-    error: console.error.bind(console),
-
-    debug () {}
+    info: console.info.bind(console),
+    warn: console.warn.bind(console),
+    error: console.error.bind(console)
 }
