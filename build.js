@@ -82,7 +82,11 @@ target.node = function () {
 target['browser-es'] = function () {
     console.log('target browser-es')
     rollup.rollup({
-            entry: 'src/bundle.browser.js'
+            entry: 'src/bundle.js',
+            plugins: [
+                babelPlugin,
+                alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
+            ]
         })
         .then(bundle => {
             bundle.write({
@@ -143,7 +147,7 @@ target.publish = function () {
 target.all = function () {
     target.clean()
     target.browser()
-    //target['browser-es']()
+    target['browser-es']()
     target.node()
     //target['node-es']()
     target.package()

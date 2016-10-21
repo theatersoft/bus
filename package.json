@@ -3,6 +3,7 @@
   "version": "1.3.3",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
+  "jsnext:main": "dist/bus.browser.mjs",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
   "license": "AGPL-3.0",
