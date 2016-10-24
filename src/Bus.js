@@ -21,8 +21,8 @@ class Bus extends EventEmitter {
                             if (data.hello) {
                                 this.name = data.hello
                                 conn.name = `${this.name}0`
-                                node.init(this)
                                 conn.registered = true
+                                node.init(conn)
                                 node.startServer()
                                 resolve(this)
                             }
@@ -31,10 +31,9 @@ class Bus extends EventEmitter {
                             log.error('parent error', err)
                             reject(err)
                         }))
-                    node.addParent(conn)
                 } else {
                     this.name = '/'
-                    node.init(this)
+                    node.init()
                     node.startServer(context)
                     resolve(this)
                 }

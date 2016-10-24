@@ -14,8 +14,12 @@ class Node {
         this.signals = new EventEmitter()
     }
 
-    init () {
+    init (parent) {
         log.log('node.init', bus.name)
+        if (parent) {
+            parent.id = 0
+            this.conns[0] = parent
+        }
         this.name = bus.name
         this.root = bus.name === '/'
         manager.init(bus.name)
@@ -28,11 +32,6 @@ class Node {
         conn.send({hello: `${conn.name}/`})
         this.conns.push(conn)
         conn.registered = true
-    }
-
-    addParent (conn) {
-        conn.id = 0
-        this.conns[0] = conn
     }
 
     startServer () {
