@@ -34,6 +34,10 @@ export default {
         context = value
     },
 
+    get context () {
+        return context
+    },
+
     get hasParent () {
         if (!context) throw new Error('Invalid bus context')
         return !!context.parent

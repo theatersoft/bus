@@ -33,7 +33,10 @@ class Server extends EventEmitter {
         wss
             .on('connection', ws => {
                 //log.log(`new connection to ${ws.upgradeReq.headers.host}`)
-                this.emit('connection', new ChildConnection(ws))
+                const child = new ChildConnection(ws)
+                    .on('connect', () => {
+                        this.emit('child', child)
+                    })
             })
             .on('close', (code, msg) =>
                 this.emit('close'))
@@ -47,6 +50,10 @@ let context
 export default {
     create (value = {parent: {url}}) {
         context = value
+    },
+
+    get context () {
+        return context
     },
 
     get hasParent () {

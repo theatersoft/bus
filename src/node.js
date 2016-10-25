@@ -31,7 +31,7 @@ class Node {
         conn.id = this.conns.length
         conn.name = `${this.name}${conn.id}`
         log.log(`${this.name} adding child ${conn.name}`)
-        conn.send({hello: `${conn.name}/`})
+        conn.hello()
         this.conns.push(conn)
         conn.registered = true
     }
@@ -39,7 +39,7 @@ class Node {
     startServer () {
         if (connection.hasChildren) {
             this.server = connection.createServer()
-                .on('connection', conn => {
+                .on('child', conn => {
                     this.addChild(this.bind(conn))
                 })
                 .on('error', err => {
