@@ -1,4 +1,4 @@
-import bus from './Bus'
+import bus from './bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'

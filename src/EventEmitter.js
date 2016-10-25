@@ -1,43 +1,29 @@
-class EventEmitter {
+export default class EventEmitter {
     constructor () {
-        this.events = new Map()
+        this.events /*: Map<Event, Array<Callback>>*/ = new Map()
     }
-    addListener (type, callback) {
+
+    // aka addListener
+    on (type, callback) {
         this.events.has(type) || this.events.set(type, [])
         this.events.get(type).push(callback)
         return this
     }
-    //removeListener (type, callback) {
-    //    let
-    //        events = this.events.get(type),
-    //        index
-    //
-    //    if (events && events.length) {
-    //        index = events.reduce((i, event, index) => {
-    //            return (typeof event === 'function' && event === callback)
-    //                ?  i = index
-    //                : i
-    //        }, -1)
-    //
-    //        if (index > -1) {
-    //            events.splice(index, 1)
-    //            this.events.set(type, events)
-    //            return true
-    //        }
-    //    }
-    //    return false
-    //}
+
+    // aka removeListener
+    off (type, callback) {
+        const callbacks = this.events.get(type)
+        if (callbacks && callbacks.length)
+            this.events.set(type, callbacks.filter(cb => cb !== callback))
+    }
+
     emit (type, ...args) {
-        let events = this.events.get(type)
-        if (events && events.length) {
-            events.forEach(event =>
-                event(...args))
+        const callbacks = this.events.get(type)
+        if (callbacks && callbacks.length) {
+            callbacks.forEach(cb =>
+                cb(...args))
             return true
         }
         return false
     }
 }
-
-EventEmitter.prototype.on = EventEmitter.prototype.addListener
-
-export default EventEmitter

@@ -1,23 +1,27 @@
 import log from 'log'
 
-const ConnectionStartup = ConnectionBase => {
+export function ParentConnectionStartup (ConnectionBase) {
     // fix TypeError in arrow function without braces returning a function
     // https://github.com/rollup/rollup/pull/1062
     return class extends ConnectionBase {
         constructor (...args) {
             super(...args)
-            this.on('data', ({hello}) => {
+            const onhello = ({hello}) => {
                 log.log('ConnectionStartup hello', hello)
                 if (hello) {
                     this.name = `${hello}0`
                     this.emit('connect', hello)
+                    this.off('data', onhello)
                 }
-            })
-        }
-
-        hello () {
+            }
+            this.on('data', onhello)
         }
     }
 }
 
-export default ConnectionStartup
+export function ChildConnectionStartup (ConnectionBase) {
+    return class extends ConnectionBase {
+        hello () {
+        }
+    }
+}

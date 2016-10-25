@@ -1,6 +1,6 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
-import ConnectionStartup from './ConnectionStartup'
+import {ChildConnectionStartup, ParentConnectionStartup} from './ConnectionStartup'
 import log from 'log'
 const url = process.env.BUS || 'ws://localhost:5453'
 
@@ -24,7 +24,8 @@ class NodeConnection extends EventEmitter {
     }
 }
 
-class Connection extends ConnectionStartup(NodeConnection) {}
+class ChildConnection extends ChildConnectionStartup(NodeConnection) {}
+class ParentConnection extends ParentConnectionStartup(NodeConnection) {}
 
 class Server extends EventEmitter {
     constructor (wss) {
@@ -32,7 +33,7 @@ class Server extends EventEmitter {
         wss
             .on('connection', ws => {
                 //log.log(`new connection to ${ws.upgradeReq.headers.host}`)
-                this.emit('connection', new Connection(ws))
+                this.emit('connection', new ChildConnection(ws))
             })
             .on('close', (code, msg) =>
                 this.emit('close'))
@@ -61,7 +62,7 @@ export default {
     createParentConnection () {
         if (!context) throw new Error('Invalid bus context')
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-        return new Connection(new WebSocket(context.parent.url))
+        return new ParentConnection(new WebSocket(context.parent.url))
     },
 
     createServer () {

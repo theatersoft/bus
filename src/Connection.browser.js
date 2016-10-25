@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter'
-import ConnectionStartup from './ConnectionStartup'
+import {ChildConnectionStartup} from './ConnectionStartup'
 import log from 'log'
 const url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`
 
@@ -25,7 +25,7 @@ class BrowserConnection extends EventEmitter {
     }
 }
 
-class Connection extends ConnectionStartup(BrowserConnection) {}
+class ChildConnection extends ChildConnectionStartup(BrowserConnection) {}
 
 let context
 
@@ -46,7 +46,7 @@ export default {
 
     createParentConnection () {
         if (!context) throw new Error('Invalid bus context')
-        return new Connection(new WebSocket(context.parent.url))
+        return new ChildConnection(new WebSocket(context.parent.url))
     },
 
     createServer () {
