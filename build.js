@@ -40,80 +40,60 @@ const
 
 target.browser = function () {
     console.log('target browser')
-    rollup.rollup({
+    return rollup.rollup({
             entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
                 alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
             ]
         })
-        .then(bundle => {
+        .then(bundle =>
             bundle.write({
                 dest: 'dist/bus.browser.js',
                 format: 'umd',
                 moduleName: 'bus',
                 banner: copyright,
                 sourceMap: DIST ? false : 'inline'
-            })
-        })
+            }))
 }
 
 target.node = function () {
     console.log('target node')
-    rollup.rollup({
+    return rollup.rollup({
             entry: 'src/bundle.js',
             external: ['ws'],
             plugins: [
                 babelPlugin,
-                alias(Object.assign({}, aliases, {Connection: './Connection'}))
+                alias(Object.assign({}, aliases, {Connection: './Connection.node'}))
             ]
         })
-        .then(bundle => {
+        .then(bundle =>
             bundle.write({
                 dest: 'dist/bus.js',
                 format: 'cjs',
                 moduleName: 'bus',
                 banner: copyright,
                 sourceMap: DIST ? false : 'inline'
-            })
-        })
+            }))
 }
 
 target['browser-es'] = function () {
     console.log('target browser-es')
-    rollup.rollup({
+    return rollup.rollup({
             entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
                 alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
             ]
         })
-        .then(bundle => {
+        .then(bundle =>
             bundle.write({
                 dest: 'dist/bus.browser.mjs',
                 format: 'es',
                 moduleName: 'bus',
                 banner: copyright,
                 sourceMap: DIST ? false : 'inline'
-            })
-        })
-}
-
-target['node-es'] = function () {
-    console.log('target node-es')
-    rollup.rollup({
-            entry: 'src/bundle.js',
-            external: ['ws']
-        })
-        .then(bundle => {
-            bundle.write({
-                dest: 'dist/bus.mjs',
-                format: 'es',
-                moduleName: 'bus',
-                banner: copyright,
-                sourceMap: DIST ? false : 'inline'
-            })
-        })
+            }))
 }
 
 target.clean = function () {
@@ -149,6 +129,5 @@ target.all = function () {
     target.browser()
     target['browser-es']()
     target.node()
-    //target['node-es']()
     target.package()
 }

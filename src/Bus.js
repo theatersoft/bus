@@ -9,37 +9,28 @@ let started
 
 class Bus extends EventEmitter {
     start (context) {
-        if (!started) {
-            started = new Promise((resolve, reject) => {
-                Connection.create(context)
+        return started || (started = new Promise((resolve, reject) => {
+            Connection.create(context)
                 if (Connection.hasParent) {
-                    let conn = node.bind(Connection.createParentConnection()
+                    const conn = Connection.createParentConnection()
                         .on('open', () => {
                             log.log('parent open')
                         })
-                        .on('data', data => {
-                            if (data.hello) {
-                                this.name = data.hello
-                                conn.name = `${this.name}0`
-                                conn.registered = true
-                                node.init(conn)
-                                node.startServer()
-                                resolve(this)
-                            }
+                        .on('connect', name => {
+                            this.name = name
+                            node.init(conn)
+                            resolve(this)
                         })
                         .on('error', err => {
                             log.error('parent error', err)
                             reject(err)
-                        }))
+                        })
                 } else {
                     this.name = '/'
                     node.init()
-                    node.startServer(context)
                     resolve(this)
                 }
-            })
-        }
-        return started
+            }))
     }
 
     registerObject (name, obj, intf) {

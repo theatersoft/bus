@@ -1,8 +1,9 @@
 import EventEmitter from './EventEmitter'
+import ConnectionStartup from './ConnectionStartup'
 import log from 'log'
 const url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`
 
-class Connection extends EventEmitter {
+class BrowserConnection extends EventEmitter {
     constructor (ws) {
         super()
         this.ws = ws
@@ -19,10 +20,12 @@ class Connection extends EventEmitter {
             self.emit('error', ev)
     }
     send (data) {
-        log.log(`connection ${this.name} send`, data)
+        //log.log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
 }
+
+class Connection extends ConnectionStartup(BrowserConnection) {}
 
 let context
 

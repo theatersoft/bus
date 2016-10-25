@@ -18,11 +18,13 @@ class Node {
         log.log('node.init', bus.name)
         if (parent) {
             parent.id = 0
-            this.conns[0] = parent
+            parent.registered = true
+            this.conns[0] = this.bind(parent)
         }
         this.name = bus.name
         this.root = bus.name === '/'
         manager.init(bus.name)
+        this.startServer()
     }
 
     addChild (conn) {

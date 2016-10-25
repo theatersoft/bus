@@ -1,9 +1,10 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
+import ConnectionStartup from './ConnectionStartup'
 import log from 'log'
 const url = process.env.BUS || 'ws://localhost:5453'
 
-class Connection extends EventEmitter {
+class NodeConnection extends EventEmitter {
     constructor (ws) {
         super()
         this.ws = ws
@@ -22,6 +23,8 @@ class Connection extends EventEmitter {
         this.ws.send(JSON.stringify(data))
     }
 }
+
+class Connection extends ConnectionStartup(NodeConnection) {}
 
 class Server extends EventEmitter {
     constructor (wss) {
