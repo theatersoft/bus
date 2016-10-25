@@ -1,6 +1,6 @@
 import log from 'log'
 
-export function ParentConnectionStartup (ConnectionBase) {
+export function parentStartup (ConnectionBase) {
     // fix TypeError in arrow function without braces returning a function
     // https://github.com/rollup/rollup/pull/1062
     return class extends ConnectionBase {
@@ -19,7 +19,7 @@ export function ParentConnectionStartup (ConnectionBase) {
     }
 }
 
-export function ChildConnectionStartup (ConnectionBase) {
+export function childStartup (ConnectionBase) {
     return class extends ConnectionBase {
         hello () {
         }

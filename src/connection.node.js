@@ -1,6 +1,6 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
-import {ChildConnectionStartup, ParentConnectionStartup} from './ConnectionStartup'
+import {childStartup, parentStartup} from './connectionStartup'
 import log from 'log'
 const url = process.env.BUS || 'ws://localhost:5453'
 
@@ -24,8 +24,8 @@ class NodeConnection extends EventEmitter {
     }
 }
 
-class ChildConnection extends ChildConnectionStartup(NodeConnection) {}
-class ParentConnection extends ParentConnectionStartup(NodeConnection) {}
+class ChildConnection extends childStartup(NodeConnection) {}
+class ParentConnection extends parentStartup(NodeConnection) {}
 
 class Server extends EventEmitter {
     constructor (wss) {

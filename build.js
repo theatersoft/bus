@@ -44,7 +44,7 @@ target.browser = function () {
             entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
-                alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
+                alias(Object.assign({}, aliases, {connection: './connection.browser'}))
             ]
         })
         .then(bundle =>
@@ -64,7 +64,7 @@ target.node = function () {
             external: ['ws'],
             plugins: [
                 babelPlugin,
-                alias(Object.assign({}, aliases, {Connection: './Connection.node'}))
+                alias(Object.assign({}, aliases, {connection: './connection.node'}))
             ]
         })
         .then(bundle =>
@@ -83,7 +83,7 @@ target['browser-es'] = function () {
             entry: 'src/bundle.js',
             plugins: [
                 babelPlugin,
-                alias(Object.assign({}, aliases, {Connection: './Connection.browser'}))
+                alias(Object.assign({}, aliases, {connection: './connection.browser'}))
             ]
         })
         .then(bundle =>

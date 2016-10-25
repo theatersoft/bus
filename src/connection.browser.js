@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter'
-import {ChildConnectionStartup} from './ConnectionStartup'
+import {childStartup} from './connectionStartup'
 import log from 'log'
 const url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`
 
@@ -25,7 +25,7 @@ class BrowserConnection extends EventEmitter {
     }
 }
 
-class ChildConnection extends ChildConnectionStartup(BrowserConnection) {}
+class ChildConnection extends childStartup(BrowserConnection) {}
 
 let context
 

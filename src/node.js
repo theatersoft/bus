@@ -2,7 +2,7 @@ import bus from './bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
-import Connection from 'Connection'
+import connection from 'connection'
 import log from 'log'
 
 class Node {
@@ -37,8 +37,8 @@ class Node {
     }
 
     startServer () {
-        if (Connection.hasChildren) {
-            this.server = Connection.createServer()
+        if (connection.hasChildren) {
+            this.server = connection.createServer()
                 .on('connection', conn => {
                     this.addChild(this.bind(conn))
                 })

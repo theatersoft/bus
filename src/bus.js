@@ -2,7 +2,7 @@ import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
 import {proxy} from './proxy'
-import Connection from 'Connection'
+import connection from 'connection'
 import log from 'log'
 
 let started
@@ -10,9 +10,9 @@ let started
 class Bus extends EventEmitter {
     start (context) {
         return started || (started = new Promise((resolve, reject) => {
-            Connection.create(context)
-                if (Connection.hasParent) {
-                    const conn = Connection.createParentConnection()
+            connection.create(context)
+                if (connection.hasParent) {
+                    const conn = connection.createParentConnection()
                         .on('open', () => {
                             log.log('parent open')
                         })
