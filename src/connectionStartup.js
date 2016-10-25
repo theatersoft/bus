@@ -10,46 +10,51 @@ export function parentStartup (ConnectionBase) {
             const
                 onhello = ({hello}) => {
                     if (hello) {
-                        log.log('parentStartup hello', hello)
+                        log.log('parentStartup onhello', hello)
                         this.name = `${hello}0`
                         this.emit('connect', hello)
                         this.off('data', onhello)
                     }
                 },
                 onauth = ({auth}) => {
-                    log.log('parentStartup auth', auth)
-                    this.send({auth: 'response'})
+                    log.log('parentStartup onauth', auth)
+                    this.send({auth: AUTH})
                     this.off('data', onauth)
-                }
-            this.on('data', onhello)
-            this.on('data', onauth)
+                    this.on('data', onhello)
+                },
+                {parent: {auth: AUTH}} = connection.context
+            AUTH ? this.on('data', onauth) : this.on('data', onhello)
+            log.log('parentStartup auth', AUTH)
         }
     }
 }
-
-const
-    authenticate =
-        // connection.context
-        true // TEST
 
 export function childStartup (ConnectionBase) {
     return class extends ConnectionBase {
         constructor (...args) {
             super(...args)
-            log.log('childStartup', authenticate)
+            const {children: {check} = {}} = connection.context
+            log.log('childStartup auth check', !!check)
             setImmediate(() => {
-                if (!authenticate)
+                if (!check)
                     this.emit('connect')
                 else {
                     const
                         onauth = ({auth}) => {
-                            log.log('childStartup auth', auth)
-                            // TODO check child auth
-                            this.off('data', onauth)
-                            this.emit('connect')
+                            log.log('childStartup onauth', auth)
+                            check(auth)
+                                .then(valid => {
+                                    if (valid) {
+                                        this.emit('connect')
+                                    }
+                                    else {
+                                        // close
+                                    }
+                                    this.off('data', onauth)
+                                })
                         }
                     this.on('data', onauth)
-                    this.send({auth: 'request'})
+                    this.send({auth: ''})
                 }
             })
         }
