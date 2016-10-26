@@ -50,10 +50,14 @@ const defaultUrl = process.env.BUS || 'ws://localhost:5453'
 export default {
     create (value = {}) {
         const
-            {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value,
-            parent = url ? {url, auth} : auth ? {url: defaultUrl, auth} : undefined,
-            children = server || host ? {server, host, port, check} : undefined
-        context = {parent, children}
+            {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value
+        return Promise.resolve(auth)
+            .then(auth => {
+                const
+                    parent = url ? {url, auth} : auth ? {url: defaultUrl, auth} : undefined,
+                    children = server || host ? {server, host, port, check} : undefined
+                context = {parent, children}
+            })
     },
 
     get context () {

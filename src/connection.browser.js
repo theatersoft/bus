@@ -30,10 +30,11 @@ let context
 
 export default {
     create (value) {
-        const
-            {parent: {url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value,
-            parent = {url, auth}
-        context = {parent}
+        const {parent: {url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value
+        return Promise.resolve(auth)
+            .then(auth => {
+                context = {parent: {url, auth}}
+            })
     },
 
     get context () {
