@@ -1,6 +1,6 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
   "jsnext:main": "dist/bus.browser.mjs",
@@ -24,6 +24,7 @@
     "build": "time -p node  --harmony_object_values_entries build.js && ls -l dist",
     "build:dist": "DIST=true npm run build",
     "link": "npm link; npm link @theatersoft/bus",
+    "publish": "node build.js publish",
     "start": "node dist/start.js",
     "debug": "node --inspect dist/start.js "
   }
