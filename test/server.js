@@ -11,6 +11,12 @@ app.use('/', express.static(`${__dirname}/pub`))
 const server = http.createServer(app).listen(port);
 console.log('Listening on port ' + port)
 
-bus.start({children: {server}})
-
-
+bus.start({
+    children: {
+        server,
+        check (auth) {
+            console.log('check', auth)
+            return Promise.resolve(true)
+        }
+    }
+})

@@ -8,6 +8,7 @@ export function parentStartup (ConnectionBase) {
         constructor (...args) {
             super(...args)
             const
+                {parent: {auth: AUTH}} = connection.context,
                 onhello = ({hello}) => {
                     if (hello) {
                         log.log('parentStartup onhello', hello)
@@ -21,9 +22,8 @@ export function parentStartup (ConnectionBase) {
                     this.send({auth: AUTH})
                     this.off('data', onauth)
                     this.on('data', onhello)
-                },
-                {parent: {auth: AUTH}} = connection.context
-            AUTH ? this.on('data', onauth) : this.on('data', onhello)
+                }
+            this.on('data', AUTH ? onauth : onhello)
             log.log('parentStartup auth', AUTH)
         }
     }
@@ -35,7 +35,7 @@ export function childStartup (ConnectionBase) {
             super(...args)
             const {children: {check} = {}} = connection.context
             log.log('childStartup auth check', !!check)
-            setImmediate(() => {
+            Promise.resolve().then(() => {
                 if (!check)
                     this.emit('connect')
                 else {
@@ -45,9 +45,11 @@ export function childStartup (ConnectionBase) {
                             check(auth)
                                 .then(valid => {
                                     if (valid) {
+                                        log.log('childStartup check passed', auth)
                                         this.emit('connect')
                                     }
                                     else {
+                                        log.error('childStartup check failed', auth)
                                         // close
                                     }
                                     this.off('data', onauth)

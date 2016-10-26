@@ -1,6 +1,9 @@
 'use strict';
-const
-    bus = require('@theatersoft/bus').default
+require('@theatersoft/bus').default.start({parent: {auth: 'TODO'}})
+    .then(bus =>
+        bus.registerObject('Ping', new Ping(bus)))
+    .catch(e =>
+        console.log(e))
 
 class Ping {
     constructor (bus) {
@@ -11,8 +14,3 @@ class Ping {
         return 'ping'
     }
 }
-
-bus.start().then(() =>
-    bus.registerObject('Ping', new Ping(bus))
-        .catch(e => console.log(e))
-)
