@@ -54,8 +54,8 @@ export default {
         return Promise.resolve(auth)
             .then(auth => {
                 const
-                    parent = url ? {url, auth} : auth ? {url: defaultUrl, auth} : undefined,
-                    children = server || host ? {server, host, port, check} : undefined
+                    children = server || host ? {server, host, port, check} : undefined,
+                    parent = url || auth || !children ? {url: url || defaultUrl, auth} : undefined
                 context = {parent, children}
             })
     },
