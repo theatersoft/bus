@@ -43,7 +43,7 @@ export default {
 
     get hasParent () {
         if (!context) throw new Error('Invalid bus context')
-        return !!context.parent
+        return context.parent && context.parent.url
     },
 
     get hasChildren () {
