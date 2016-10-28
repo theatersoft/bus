@@ -2,14 +2,15 @@ import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
 import {proxy} from './proxy'
+import executor from './executor'
 import connection from 'connection'
 import log from 'log'
 
-let started
+let start, started = executor()
 
 class Bus extends EventEmitter {
     start (context) {
-        return started || (started = new Promise((resolve, reject) => {
+        return start || (start = new Promise((resolve, reject) => {
                 connection.create(context)
                     .then(() => {
                         if (connection.hasParent) {
@@ -32,7 +33,12 @@ class Bus extends EventEmitter {
                             resolve(this)
                         }
                     })
-            }))
+            })
+                .then(bus => started.resolve(bus)))
+    }
+
+    started () {
+        return started.promise
     }
 
     registerObject (name, obj, intf) {
