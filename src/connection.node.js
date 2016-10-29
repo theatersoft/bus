@@ -46,6 +46,7 @@ class Server extends EventEmitter {
 
 let context
 const defaultUrl = process.env.BUS || 'ws://localhost:5453'
+const defaultAuth = process.env.AUTH
 
 export default {
     create (value = {}) {
@@ -55,7 +56,7 @@ export default {
             .then(auth => {
                 const
                     children = server || host ? {server, host, port, check} : undefined,
-                    parent = url || auth || !children ? {url: url || defaultUrl, auth} : undefined
+                    parent = url || auth || !children ? {url: url || defaultUrl, auth: auth || defaultAuth} : undefined
                 context = {parent, children}
             })
     },
