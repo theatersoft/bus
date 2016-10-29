@@ -6,40 +6,40 @@ import executor from './executor'
 import connection from 'connection'
 import log from 'log'
 
-let start, started = executor()
+let start = executor()
 
 class Bus extends EventEmitter {
     start (context) {
-        return start || (start = new Promise((resolve, reject) => {
-                connection.create(context)
-                    .then(() => {
-                        if (connection.hasParent) {
-                            const conn = connection.createParentConnection()
-                                .on('open', () => {
-                                    log.log('parent open')
-                                })
-                                .on('connect', name => {
-                                    this.name = name
-                                    node.init(conn)
-                                    resolve(this)
-                                    started.resolve(this)
-                                })
-                                .on('error', err => {
-                                    log.error('parent error', err)
-                                    reject(err)
-                                })
-                        } else {
-                            this.name = '/'
-                            node.init()
-                            resolve(this)
-                            started.resolve(this)
-                        }
-                    })
-            }))
+        if (!start.started) {
+            start.started = true
+            connection.create(context)
+                .then(() => {
+                    if (connection.hasParent) {
+                        const conn = connection.createParentConnection()
+                            .on('open', () => {
+                                log.log('parent open')
+                            })
+                            .on('connect', name => {
+                                this.name = name
+                                node.init(conn)
+                                start.resolve(this)
+                            })
+                            .on('error', err => {
+                                log.error('parent error', err)
+                                start.reject(err)
+                            })
+                    } else {
+                        this.name = '/'
+                        node.init()
+                        start.resolve(this)
+                    }
+                })
+        }
+        return start.promise
     }
 
     started () {
-        return started.promise
+        return start.promise
     }
 
     registerObject (name, obj, intf) {
