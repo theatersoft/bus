@@ -62,28 +62,25 @@ export default {
     },
 
     get context () {
+        if (!context) throw new Error('Invalid bus context')
         return context
     },
 
     get hasParent () {
-        if (!context) throw new Error('Invalid bus context')
-        return context.parent && context.parent.url
+        return this.context.parent && this.context.parent.url
     },
 
     get hasChildren () {
-        if (!context) throw new Error('Invalid bus context')
-        return !!context.children
+        return !!this.context.children
     },
 
     createParentConnection () {
-        if (!context) throw new Error('Invalid bus context')
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-        return new ParentConnection(new WebSocket(context.parent.url))
+        return new ParentConnection(new WebSocket(this.context.parent.url))
     },
 
     createServer () {
-        if (!context) throw new Error('Invalid bus context')
-        let options, {host, port, server} = context.children
+        let options, {host, port, server} = this.context.children
         if (server) {
             options = {server}
             log.log(`connecting ws server to http server`)
