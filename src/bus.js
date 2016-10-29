@@ -22,6 +22,7 @@ class Bus extends EventEmitter {
                                     this.name = name
                                     node.init(conn)
                                     resolve(this)
+                                    started.resolve(this)
                                 })
                                 .on('error', err => {
                                     log.error('parent error', err)
@@ -31,10 +32,10 @@ class Bus extends EventEmitter {
                             this.name = '/'
                             node.init()
                             resolve(this)
+                            started.resolve(this)
                         }
                     })
-            })
-                .then(bus => started.resolve(bus)))
+            }))
     }
 
     started () {

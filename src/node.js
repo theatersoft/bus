@@ -79,7 +79,8 @@ class Node {
                 }
                 this.conns[conn.id] = undefined
                 if (conn.id !== 0) {
-                    Promise.resolve().then(() => manager.removeNode(`${conn.name}/`))
+                    Promise.resolve()
+                        .then(() => manager.removeNode(`${conn.name}/`))
                         .catch(e => log.log('manager.removeNode rejected', e))
                 }
             })
