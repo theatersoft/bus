@@ -24,7 +24,19 @@ class Node {
         this.name = bus.name
         this.root = bus.name === '/'
         manager.init(bus.name)
-        this.startServer()
+
+        if (connection.hasChildren) {
+            connection.createServer()
+                .then(server => {
+                    this.server = server
+                        .on('child', conn => {
+                            this.addChild(this.bind(conn))
+                        })
+                        .on('error', err => {
+                            log.log('server error', err)
+                        })
+                })
+        }
     }
 
     addChild (conn) {
@@ -34,18 +46,6 @@ class Node {
         conn.hello()
         this.conns.push(conn)
         conn.registered = true
-    }
-
-    startServer () {
-        if (connection.hasChildren) {
-            this.server = connection.createServer()
-                .on('child', conn => {
-                    this.addChild(this.bind(conn))
-                })
-                .on('error', err => {
-                    log.log('server error', err)
-                })
-        }
     }
 
     route (n) {

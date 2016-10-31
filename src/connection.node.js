@@ -82,12 +82,17 @@ export default {
     createServer () {
         let options, {host, port, server} = this.context.children
         if (server) {
-            options = {server}
-            log.log(`connecting ws server to http server`)
+            options = Promise.resolve(server)
+                .then(server => {
+                    log.log(`connecting ws server to http server`)
+                    return {server}
+                })
         } else {
-            options = {host, port}
+            options = Promise.resolve({host, port})
             log.log(`starting ws server on ${host}:${port}`)
         }
-        return new Server(new WebSocketServer(options))
+        return options
+            .then(options =>
+                new Server(new WebSocketServer(options)))
     }
 }

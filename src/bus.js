@@ -19,6 +19,9 @@ class Bus extends EventEmitter {
                             .on('open', () => {
                                 log.log('parent open')
                             })
+                            .on('close', () => {
+                                log.log('parent close')
+                            })
                             .on('connect', name => {
                                 this.name = name
                                 node.init(conn)
