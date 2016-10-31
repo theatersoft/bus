@@ -45,6 +45,10 @@ class Bus extends EventEmitter {
         return start.promise
     }
 
+    get root () {
+        return node.root
+    }
+
     registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
             .then(() =>
