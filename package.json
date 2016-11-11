@@ -1,9 +1,9 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
-  "jsnext:main": "dist/bus.browser.mjs",
+  "jsnext:main": "dist/bus.browser.es.js",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
   "license": "AGPL-3.0",

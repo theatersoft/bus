@@ -88,11 +88,11 @@ target['browser-es'] = function () {
         })
         .then(bundle =>
             bundle.write({
-                dest: 'dist/bus.browser.mjs',
+                dest: 'dist/bus.browser.es.js',
                 format: 'es',
                 moduleName: 'bus',
                 banner: copyright,
-                sourceMap: DIST ? false : 'inline'
+                sourceMap: DIST ? false : true
             }))
 }
 
