@@ -92,7 +92,7 @@ target['browser-es'] = function () {
                 format: 'es',
                 moduleName: 'bus',
                 banner: copyright,
-                sourceMap: DIST ? false : 'inline'
+                sourceMap: !DIST // bus sourcemap must be file to passthrough rollup consumers
             }))
 }
 
