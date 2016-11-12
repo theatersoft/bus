@@ -1,6 +1,6 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
   "jsnext:main": "dist/bus.browser.es.js",

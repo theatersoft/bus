@@ -82,8 +82,9 @@ class Bus extends EventEmitter {
         node.signals.on(name, cb)
     }
 
-    unregisterListener () {
+    unregisterListener (name, cb) {
         //TODO
+        node.signals.off(name, cb)
     }
 
     close () {
