@@ -17,7 +17,7 @@ const
             //presets: [babili],
             plugins: [
                 require("babel-plugin-minify-constant-folding"),
-                require("babel-plugin-minify-dead-code-elimination"),
+                //FAIL require("babel-plugin-minify-dead-code-elimination"), // es build unusable
                 require("babel-plugin-minify-flip-comparisons"),
                 require("babel-plugin-minify-guarded-expressions"),
                 require("babel-plugin-minify-infinity"),
@@ -92,7 +92,7 @@ target['browser-es'] = function () {
                 format: 'es',
                 moduleName: 'bus',
                 banner: copyright,
-                sourceMap: DIST ? false : true
+                sourceMap: DIST ? false : 'inline'
             }))
 }
 
