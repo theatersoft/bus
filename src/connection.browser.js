@@ -29,7 +29,7 @@ class ParentConnection extends parentStartup(BrowserConnection) {}
 let context
 
 export default {
-    create (value) {
+    create (value = {}) {
         const {parent: {url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value
         return Promise.resolve(auth)
             .then(auth => {
