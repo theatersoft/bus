@@ -1,7 +1,7 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
 import {childStartup, parentStartup} from './connectionStartup'
-import log from 'log'
+import {log} from 'log'
 
 class NodeConnection extends EventEmitter {
     constructor (ws) {
@@ -84,12 +84,12 @@ export default {
         if (server) {
             options = Promise.resolve(server)
                 .then(server => {
-                    log.log(`connecting ws server to http server`)
+                    log(`connecting ws server to http server`)
                     return {server}
                 })
         } else {
             options = Promise.resolve({host, port})
-            log.log(`starting ws server on ${host}:${port}`)
+            log(`starting ws server on ${host}:${port}`)
         }
         return options
             .then(options =>

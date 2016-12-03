@@ -2,14 +2,12 @@
 require('shelljs/make')
 
 const
+    DIST = process.env.DIST === 'true',
     path = require('path'),
     fs = require('fs'),
-    rollup = require('rollup'),
-    alias = require('rollup-plugin-alias'),
-    babel = require('rollup-plugin-babel'),
     copyright = `/*\n${fs.readFileSync('COPYRIGHT', 'utf8')}\n */`,
-    DIST = process.env.DIST === 'true',
-    babelPlugin = DIST && babel({
+    rollup = require('rollup'),
+    babel = DIST && require('rollup-plugin-babel')({
             babelrc: false,
             //exclude: 'node_modules/**',
             comments: false,
@@ -33,18 +31,25 @@ const
                 require("babel-plugin-transform-undefined-to-void")
             ]
         }),
-    aliases = {
-        resolve: ['.js'],
-        log: DIST ? './log.dist' : './log'
-    }
+    alias = require('rollup-plugin-alias'),
+    aliases = ar => alias(ar.reduce((o, a) => {
+        o[a.match(/^\.\/([^\.]+)\./)[1]] = a
+        return o
+    }, {
+        resolve: ['.js']
+    })),
+    strip = DIST && require('rollup-plugin-strip')({
+            functions: ['log', 'debug']
+        })
 
-target.browser = function () {
+    target.browser = function () {
     console.log('target browser')
     return rollup.rollup({
             entry: 'src/bundle.js',
             plugins: [
-                babelPlugin,
-                alias(Object.assign({}, aliases, {connection: './connection.browser'}))
+                aliases(['./log.browser' , './connection.browser']),
+                babel,
+                strip
             ]
         })
         .then(bundle =>
@@ -63,8 +68,9 @@ target.node = function () {
             entry: 'src/bundle.js',
             external: ['ws'],
             plugins: [
-                babelPlugin,
-                alias(Object.assign({}, aliases, {connection: './connection.node'}))
+                aliases(['./log.node' , './connection.node']),
+                babel,
+                strip
             ]
         })
         .then(bundle =>
@@ -82,8 +88,9 @@ target['browser-es'] = function () {
     return rollup.rollup({
             entry: 'src/bundle.js',
             plugins: [
-                babelPlugin,
-                alias(Object.assign({}, aliases, {connection: './connection.browser'}))
+                aliases(['./log.browser' , './connection.browser']),
+                babel,
+                strip
             ]
         })
         .then(bundle =>

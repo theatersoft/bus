@@ -4,7 +4,7 @@ import manager from './manager'
 import {proxy} from './proxy'
 import executor from './executor'
 import connection from 'connection'
-import log from 'log'
+import {log, error} from 'log'
 
 let start = executor()
 
@@ -17,10 +17,10 @@ class Bus extends EventEmitter {
                     if (connection.hasParent) {
                         const conn = connection.createParentConnection()
                             .on('open', () => {
-                                log.log('parent open')
+                                log('parent open')
                             })
                             .on('close', () => {
-                                log.log('parent close')
+                                log('parent close')
                             })
                             .on('connect', name => {
                                 this.name = name
@@ -28,7 +28,7 @@ class Bus extends EventEmitter {
                                 start.resolve(this)
                             })
                             .on('error', err => {
-                                log.error('parent error', err)
+                                error('parent error', err)
                                 start.reject(err)
                             })
                     } else {
@@ -61,17 +61,17 @@ class Bus extends EventEmitter {
     }
 
     request (name, ...args) {
-        log.log('request', name, args)
+        log('request', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.request({path, intf, member, args})
             .catch(e => {
-                log.error(`request ${name} rejected ${e}`)
+                error(`request ${name} rejected ${e}`)
                 throw e
             })
     }
 
     signal (name, args) {
-        //log.log('signal', name, args)
+        //log('signal', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.signal({name, path, intf, member, args})
     }

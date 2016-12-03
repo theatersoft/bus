@@ -1,6 +1,6 @@
 import EventEmitter from './EventEmitter'
 import {parentStartup} from './connectionStartup'
-import log from 'log'
+import {log} from 'log'
 
 class BrowserConnection extends EventEmitter {
     constructor (ws) {
@@ -12,7 +12,7 @@ class BrowserConnection extends EventEmitter {
         ws.onmessage = ev =>
             self.emit('data', JSON.parse(ev.data))
         ws.onclose = ev => {
-            log.log('connection close', this.name)
+            log('connection close', this.name)
             self.emit('close')
         }
         ws.onerror = ev =>

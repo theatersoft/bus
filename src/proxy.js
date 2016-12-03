@@ -1,5 +1,6 @@
 import node from './node'
 import manager from './manager'
+import {log, error} from 'log'
 
 export function proxy (name) {
     let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
@@ -10,7 +11,7 @@ export function proxy (name) {
                     .then(() =>
                         node.request({path, intf, member, args: [...args, node.name]}))
                     .catch(e => {
-                        console.log('Proxy request', {path, intf, member, args}, 'rejected', e)
+                        error('Proxy request', {path, intf, member, args}, 'rejected', e)
                         throw e
                     })
         }

@@ -1,11 +1,11 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 import {proxy} from './proxy'
-import log from 'log'
+import {log} from 'log'
 
 class Manager {
     init (path) {
-        log.log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
+        log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
         if (node.root) {
             this.names /*: Map<BusName, BusPath>*/ = new Map()
             this.nodes /*: Map<BusPath, Array<BusName>>*/ = new Map()
@@ -18,7 +18,7 @@ class Manager {
 
     addNode (path) {
         if (this.proxy) return this.proxy.addNode(path)
-        log.log('manager.addNode', path)
+        log('manager.addNode', path)
         if (this.nodes.has(path)) return Promise.reject('duplicate node')
         this.nodes.set(path, new Array())
         return Promise.resolve()
@@ -26,7 +26,7 @@ class Manager {
 
     removeNode (path) {
         if (this.proxy) return this.proxy.removeNode(path)
-        log.log('manager.removeNode', path)
+        log('manager.removeNode', path)
         if (!this.nodes.has(path)) return Promise.reject('missing node')
         for (let name of this.nodes.get(path))
             this.removeName(name) // TODO remove children
@@ -36,7 +36,7 @@ class Manager {
 
     addName (name, _sender) {
         if (this.proxy) return this.proxy.addName(name)
-        log.log('manager.addName', name)
+        log('manager.addName', name)
         if (this.names.has(name)) return Promise.reject('duplicate name')
         this.names.set(name, _sender)
         if (!this.nodes.has(_sender)) return Promise.reject('missing node')
@@ -47,13 +47,13 @@ class Manager {
     resolveName (name) {
         if (this.proxy) return this.proxy.resolveName(name)
         if (!this.names.has(name)) return Promise.reject('missing name')
-        log.log('manager.resolveName', name, this.names.get(name))
+        log('manager.resolveName', name, this.names.get(name))
         return this.names.get(name)
     }
 
     removeName (name) {
         if (this.proxy) return this.proxy.removeName(name)
-        log.log('manager.removeName', name)
+        log('manager.removeName', name)
         if (!this.names.has(name)) return Promise.reject('missing name')
         // check path?
         this.names.delete(name)
