@@ -3,7 +3,7 @@ import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
-import {log} from 'log'
+import {log, error} from 'log'
 
 class Node {
     constructor () {
@@ -114,9 +114,9 @@ class Node {
                         this.response({id: req.id, path: req.sender, res}),
                     err =>
                         this.response({id: req.id, path: req.sender, err}))
+        } else {
+            error('connection error', req)
         }
-        else
-            throw('connection error') // TODO
     }
 
     response (res) {
@@ -130,8 +130,9 @@ class Node {
             if (res.hasOwnProperty('err')) j(res.err)
             else r(res.res)
         }
-        else
-            throw('connection error') // TODO
+        else {
+            error('connection error', res)
+        }
     }
 
     signal (sig, from) {

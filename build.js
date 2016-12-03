@@ -66,7 +66,7 @@ target.node = function () {
     console.log('target node')
     return rollup.rollup({
             entry: 'src/bundle.js',
-            external: ['ws'],
+            external: ['ws', 'util'],
             plugins: [
                 aliases(['./log.node' , './connection.node']),
                 babel,
