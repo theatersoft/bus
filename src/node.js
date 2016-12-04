@@ -99,6 +99,8 @@ class Node {
                 .on('connect', name => {
                     this.name = name
                     this.init(conn)
+                    Object.keys(this.objects).forEach(name =>
+                        manager.addName(name, this.name))
                 })
                 .on('error', err => {
                     error('reconnect parent error', err.message)
