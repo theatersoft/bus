@@ -25,7 +25,7 @@ class Node {
         this.root = bus.name === '/'
         manager.init(bus.name)
 
-        if (connection.hasChildren) {
+        if (!this.server && connection.hasChildren) {
             connection.createServer()
                 .then(server => {
                     this.server = server
@@ -33,7 +33,7 @@ class Node {
                             this.addChild(this.bind(conn))
                         })
                         .on('error', err => {
-                            log('server error', err)
+                            error('server error', err.message)
                         })
                 })
         }
@@ -78,12 +78,33 @@ class Node {
                     return
                 }
                 this.conns[conn.id] = undefined
-                if (conn.id !== 0) {
+                if (conn.id === 0)
+                    this.reconnect(1000)
+                else
                     Promise.resolve()
                         .then(() => manager.removeNode(`${conn.name}/`))
                         .catch(e => log('manager.removeNode rejected', e))
-                }
             })
+    }
+
+    reconnect (ms) {
+        setTimeout(() => {
+            const conn = connection.createParentConnection()
+                .on('open', () => {
+                    log('reconnect parent open')
+                })
+                .on('close', () => {
+                    log('reconnect parent close')
+                })
+                .on('connect', name => {
+                    this.name = name
+                    this.init(conn)
+                })
+                .on('error', err => {
+                    error('reconnect parent error', err.message)
+                    this.reconnect(Math.min(ms * 2, 32000))
+                })
+        }, ms)
     }
 
     request (req) {
@@ -115,7 +136,7 @@ class Node {
                     err =>
                         this.response({id: req.id, path: req.sender, err}))
         } else {
-            error('connection error', req)
+            log('_request connection error', req)
         }
     }
 

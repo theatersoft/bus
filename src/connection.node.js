@@ -9,8 +9,10 @@ class NodeConnection extends EventEmitter {
         this.ws = ws
             .on('open', () =>
                 this.emit('open'))
-            .on('message', (data, flags) =>
-                this.emit('data', JSON.parse(data)))
+            .on('message', (data, flags) => {
+                //log(`connection ${this.name} message`, data)
+                this.emit('data', JSON.parse(data))
+            })
             .on('close', () =>
                 this.emit('close'))
             .on('error', err =>
@@ -18,7 +20,7 @@ class NodeConnection extends EventEmitter {
     }
 
     send (data) {
-        //log.log(`connection ${this.name} send`, data)
+        //log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
 }
