@@ -4,11 +4,7 @@ const
     {default: bus, proxy} = require('@theatersoft/bus'),
     Ping = proxy('Ping')
 
-bus.start({
-        parent: {
-            auth: 'TODO'
-        }
-    })
+bus.start()
     .then(() => {
         Ping.ping()
             .then(res =>
