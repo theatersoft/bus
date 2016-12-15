@@ -12,7 +12,7 @@
     "BUS": "BUS=`[ -f .bus ] && cat .bus` AUTH=`[ -f .auth ] && cat .auth`",
     "RUN": "npm run BUS -- node",
     "build": "cd ..; time -p node build.js client",
-    "client": "google-chrome-unstable http://localhost:5453/",
+    "client": "google-chrome http://localhost:5453/",
     "root": "node root.js",
     "child": "node child.js",
     "ping-test": "node ping-test.js",

@@ -14,16 +14,16 @@ class Node {
         this.signals = new EventEmitter()
     }
 
-    init (parent) {
-        log('node.init', bus.name)
+    init (name, parent) {
+        log('node.init', name)
         if (parent) {
             parent.id = 0
             parent.registered = true
             this.conns[0] = this.bind(parent)
         }
-        this.name = bus.name
-        this.root = bus.name === '/'
-        manager.init(bus.name)
+        this.name = name
+        this.root = name === '/'
+        manager.init(name)
 
         if (!this.server && connection.hasChildren) {
             connection.createServer()
@@ -97,8 +97,7 @@ class Node {
                     log('reconnect parent close')
                 })
                 .on('connect', name => {
-                    this.name = name
-                    this.init(conn)
+                    this.init(name, conn)
                     Object.keys(this.objects).forEach(name =>
                         manager.addName(name, this.name))
                 })

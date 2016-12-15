@@ -23,8 +23,7 @@ class Bus extends EventEmitter {
                                 log('parent close')
                             })
                             .on('connect', name => {
-                                this.name = name
-                                node.init(conn)
+                                node.init(name, conn)
                                 start.resolve(this)
                             })
                             .on('error', err => {
@@ -32,8 +31,7 @@ class Bus extends EventEmitter {
                                 start.reject(err)
                             })
                     } else {
-                        this.name = '/'
-                        node.init()
+                        node.init('/')
                         start.resolve(this)
                     }
                 })
@@ -41,13 +39,11 @@ class Bus extends EventEmitter {
         return start.promise
     }
 
-    started () {
-        return start.promise
-    }
+    started () {return start.promise}
 
-    get root () {
-        return node.root
-    }
+    get root () {return node.root}
+
+    get name () {return node.name}
 
     registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
@@ -87,9 +83,7 @@ class Bus extends EventEmitter {
         node.signals.off(name, cb)
     }
 
-    close () {
-        node.close
-    }
+    close () {node.close()}
 }
 
 export default new Bus()
