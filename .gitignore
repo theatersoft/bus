@@ -2,8 +2,6 @@
 /node_modules
 /test/node_modules
 /test/pub/test.js
-/.idea
 /_*
-.bus
-.auth
+.*
 npm-debug.log*
