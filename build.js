@@ -45,7 +45,7 @@ const
     target.browser = function () {
     console.log('target browser')
     return rollup.rollup({
-            entry: 'src/bundle.js',
+            entry: 'src/index.js',
             plugins: [
                 aliases(['./log.browser' , './connection.browser']),
                 babel,
@@ -65,7 +65,7 @@ const
 target.node = function () {
     console.log('target node')
     return rollup.rollup({
-            entry: 'src/bundle.js',
+            entry: 'src/index.js',
             external: ['ws', 'util'],
             plugins: [
                 aliases(['./log.node' , './connection.node']),
@@ -86,7 +86,7 @@ target.node = function () {
 target['browser-es'] = function () {
     console.log('target browser-es')
     return rollup.rollup({
-            entry: 'src/bundle.js',
+            entry: 'src/index.js',
             plugins: [
                 aliases(['./log.browser' , './connection.browser']),
                 babel,
