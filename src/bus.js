@@ -1,4 +1,3 @@
-import EventEmitter from './EventEmitter'
 import node from './node'
 import manager from './manager'
 import {proxy} from './proxy'
@@ -8,7 +7,7 @@ import {log, error} from 'log'
 
 let start = executor()
 
-class Bus extends EventEmitter {
+class Bus {
     start (context) {
         if (!start.started) {
             start.started = true
