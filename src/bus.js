@@ -52,7 +52,10 @@ class Bus {
     }
 
     unregisterObject () {
-        //TODO
+        return manager.removeName(name, this.name)
+            .then(() =>
+                node.unregisterObject(name)
+            )
     }
 
     request (name, ...args) {

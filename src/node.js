@@ -172,6 +172,11 @@ class Node {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf}
     }
+
+    unregisterObject (name) {
+        log(`unRegisterObject ${name} at ${this.name}`)
+        delete this.objects[name]
+    }
 }
 
 export default new Node()
