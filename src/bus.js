@@ -51,7 +51,7 @@ class Bus {
             )
     }
 
-    unregisterObject () {
+    unregisterObject (name) {
         return manager.removeName(name, this.name)
             .then(() =>
                 node.unregisterObject(name)
