@@ -51,12 +51,17 @@ class Manager {
         return this.names.get(name)
     }
 
-    removeName (name) {
+    removeName (name, _sender) {
         if (this.proxy) return this.proxy.removeName(name)
         log('manager.removeName', name)
         if (!this.names.has(name)) return Promise.reject('missing name')
-        // check path?
+        const path = this.names.get(name)
         this.names.delete(name)
+        // TODO check path===_sender
+        if (!this.nodes.has(path)) return Promise.reject('missing node')
+        const names = this.nodes.get(path), i = names.indexOf(name)
+        if (i === -1) return Promise.reject('missing name')
+        names.splice(i, 1)
         return Promise.resolve()
     }
 }
