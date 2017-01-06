@@ -44,6 +44,8 @@ class Bus {
 
     get name () {return node.name}
 
+    get proxy () {return proxy}
+
     registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
             .then(() =>

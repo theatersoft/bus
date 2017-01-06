@@ -1,11 +1,10 @@
 'use strict'
 
+const logSignal = (bus, name) => bus.registerListener(name, data => console.log(name, data))
+
 require('@theatersoft/bus').default.start()
-    .then(bus => {
-        bus.registerListener('/Hvac.data', data => {
-            console.log('/Hvac.data', data)
-        })
-        bus.registerListener('/x10.rx', data => {
-            console.log('/x10.rx', data)
-        })
-    })
+    .then(bus => [
+        '/Hvac.data',
+        '/x10.rx',
+        '/ZWave.state'
+    ].forEach(name => logSignal(bus, name)))
