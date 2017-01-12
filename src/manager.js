@@ -48,7 +48,7 @@ class Manager {
         if (this.proxy) return this.proxy.resolveName(name)
         if (!this.names.has(name)) return Promise.reject('missing name')
         log('manager.resolveName', name, this.names.get(name))
-        return this.names.get(name)
+        return Promise.resolve(this.names.get(name))
     }
 
     removeName (name, _sender) {
