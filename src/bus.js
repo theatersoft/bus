@@ -49,8 +49,11 @@ class Bus {
     registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
             .then(() =>
-                node.registerObject(name, obj, intf)
-            )
+                node.registerObject(name, obj, intf))
+            .then(() => ({
+                signal: (member, args) =>
+                    node.signal({name: `${name}.${member}`, args})
+            }))
     }
 
     unregisterObject (name) {
@@ -71,9 +74,10 @@ class Bus {
     }
 
     signal (name, args) {
+        throw 'deprecated'
         //log('signal', name, args)
-        const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        return node.signal({name, path, intf, member, args})
+        //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
+        //return node.signal({name, path, intf, member, args})
     }
 
     registerListener (name, cb) {

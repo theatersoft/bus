@@ -4,7 +4,7 @@ const logSignal = (bus, name) => bus.registerListener(name, data => console.log(
 
 require('@theatersoft/bus').default.start()
     .then(bus => [
-        '/Hvac.data',
-        '/x10.rx',
-        '/ZWave.state'
+        'Hvac.data',
+        'x10.rx',
+        'ZWave.state'
     ].forEach(name => logSignal(bus, name)))
