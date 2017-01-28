@@ -28,10 +28,14 @@ class Manager {
         if (this.proxy) return this.proxy.removeNode(path)
         log('manager.removeNode', path)
         if (!this.nodes.has(path)) return Promise.reject('missing node')
-        for (let name of this.nodes.get(path))
-            this.removeName(name) // TODO remove children
-        this.nodes.delete(path)
-        return Promise.resolve()
+        return Promise.all(
+            this.nodes.get(path)
+                .slice()
+                .map(name =>
+                    this.removeName(name)) // TODO remove children
+            )
+            .then(() =>
+                this.nodes.delete(path))
     }
 
     addName (name, _sender) {
