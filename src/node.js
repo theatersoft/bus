@@ -12,6 +12,7 @@ class Node {
         this.reqid = 0
         this.requests = {}
         this.signals = new EventEmitter()
+        this.status = new EventEmitter()
     }
 
     init (name, parent) {
@@ -79,15 +80,17 @@ class Node {
                 }
                 this.conns[conn.id] = undefined
                 if (conn.id === 0)
-                    this.reconnect(1000)
+                    this.reconnect()
                 else
                     Promise.resolve()
                         .then(() => manager.removeNode(`${conn.name}/`))
+                        .then(() => log(`connection removed ${conn.name}`))
                         .catch(e => log('manager.removeNode rejected', e))
             })
     }
 
-    reconnect (ms) {
+    reconnect (ms = 1000) {
+        this.status.emit('disconnect')
         setTimeout(() => {
             const conn = connection.createParentConnection()
                 .on('open', () => {
@@ -100,6 +103,7 @@ class Node {
                     this.init(name, conn)
                     Object.keys(this.objects).forEach(name =>
                         manager.addName(name, this.name))
+                    this.status.emit('reconnect')
                 })
                 .on('error', err => {
                     error('reconnect parent error', err.message)

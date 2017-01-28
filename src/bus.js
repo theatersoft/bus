@@ -87,6 +87,15 @@ class Bus {
         node.signals.off(name, cb)
     }
 
+    on (type, cb) {
+        node.status.on(type, cb)
+        return this
+    }
+
+    off (type, cb) {
+        node.status.off(type, cb)
+    }
+
     close () {node.close()}
 }
 
