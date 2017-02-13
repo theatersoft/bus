@@ -1,7 +1,7 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
 import {proxy} from './proxy'
-import {log} from 'log'
+import {log} from './log'
 
 class Manager {
     init (path) {

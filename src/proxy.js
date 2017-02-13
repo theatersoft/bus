@@ -1,6 +1,6 @@
 import node from './node'
 import manager from './manager'
-import {log, error} from 'log'
+import {log, error} from './log'
 
 export function proxy (name) {
     let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]

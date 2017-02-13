@@ -3,7 +3,7 @@ import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
-import {log, error} from 'log'
+import {log, error} from './log'
 
 class Node {
     constructor () {

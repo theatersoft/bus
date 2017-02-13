@@ -1,7 +1,7 @@
 import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
 import {childStartup, parentStartup} from './connectionStartup'
-import {log} from 'log'
+import {log} from './log'
 
 class NodeConnection extends EventEmitter {
     constructor (ws) {

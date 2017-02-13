@@ -3,7 +3,7 @@ import manager from './manager'
 import {proxy} from './proxy'
 import executor from './executor'
 import connection from 'connection'
-import {log, error} from 'log'
+import {log, error} from './log'
 
 let start = executor()
 

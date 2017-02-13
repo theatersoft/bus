@@ -1,6 +1,6 @@
 import EventEmitter from './EventEmitter'
 import {parentStartup} from './connectionStartup'
-import {log} from 'log'
+import {log} from './log'
 
 class BrowserConnection extends EventEmitter {
     constructor (ws) {

@@ -1,5 +1,5 @@
 import connection from 'connection'
-import {log, error} from 'log'
+import {log, error} from './log'
 
 export function parentStartup (ConnectionBase) {
     // fix TypeError in arrow function without braces returning a function
