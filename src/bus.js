@@ -16,7 +16,7 @@ class Bus {
                     if (connection.hasParent) {
                         const conn = connection.createParentConnection()
                             .on('open', () => {
-                                log('parent open')
+                                //log('parent open')
                             })
                             .on('close', () => {
                                 log('parent close')

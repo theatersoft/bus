@@ -5,7 +5,7 @@ import {log} from './log'
 
 class Manager {
     init (path) {
-        log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
+        //log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
         if (node.root) {
             this.names /*: Map<BusName, BusPath>*/ = new Map()
             this.nodes /*: Map<BusPath, Array<BusName>>*/ = new Map()

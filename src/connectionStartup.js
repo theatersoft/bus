@@ -11,20 +11,20 @@ export function parentStartup (ConnectionBase) {
                 {parent: {auth: AUTH}} = connection.context,
                 onhello = ({hello}) => {
                     if (hello) {
-                        log('parentStartup onhello', hello)
+                        //log('parentStartup onhello', hello)
                         this.name = `${hello}0`
                         this.emit('connect', hello)
                         this.off('data', onhello)
                     }
                 },
                 onauth = ({auth}) => {
-                    log('parentStartup onauth', auth)
+                    //log('parentStartup onauth', auth)
                     this.send({auth: AUTH})
                     this.off('data', onauth)
                     this.on('data', onhello)
                 }
             this.on('data', AUTH ? onauth : onhello)
-            log('parentStartup auth', AUTH)
+            //log('parentStartup auth', AUTH)
         }
     }
 }
@@ -34,18 +34,18 @@ export function childStartup (ConnectionBase) {
         constructor (...args) {
             super(...args)
             const {children: {check} = {}} = connection.context
-            log('childStartup auth check', !!check)
+            //log('childStartup auth check', !!check)
             Promise.resolve().then(() => {
                 if (!check)
                     this.emit('connect')
                 else {
                     const
                         onauth = ({auth}) => {
-                            log('childStartup onauth', auth)
+                            //log('childStartup onauth', auth)
                             check(auth)
                                 .then(valid => {
                                     if (valid) {
-                                        log('childStartup check passed', auth)
+                                        //log('childStartup check passed', auth)
                                         this.emit('connect')
                                     }
                                     else {

@@ -7,7 +7,7 @@ import {log, error} from './log'
 
 const
     logRequest = req => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req, res) => log(`<-${req.id}  `, res.hasOwnProperty('err') ? res.err : res.res, `${res.hasOwnProperty('err') ? 'FAILED' : 'returned'}`)
+    logResponse = (req, res) => log(`<-${req.id}  `, res.hasOwnProperty('err') ? res.err : res.res, `${res.hasOwnProperty('err') ? 'FAILED' : ''}`)
 
 class Node {
     constructor () {
