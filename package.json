@@ -1,6 +1,6 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.12.2",
+  "version": "1.12.3",
   "description": "Bus messaging connects network of browser clients and system services",
   "repository": "theatersoft/bus",
   "main": "dist/bus.js",
