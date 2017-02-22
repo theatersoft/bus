@@ -5,6 +5,10 @@ import {methods} from './proxy'
 import connection from 'connection'
 import {log, error} from './log'
 
+const
+    logRequest = req => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
+    logResponse = (req, res) => log(`<-${req.id}  `, res.hasOwnProperty('err') ? res.err : res.res, `${res.hasOwnProperty('err') ? 'FAILED' : 'returned'}`)
+
 class Node {
     constructor () {
         this.conns = [undefined]
@@ -123,10 +127,10 @@ class Node {
 
     _request (req) {
         const conn = this.route(req.path)
+        logRequest(req)
         if (conn) {
             conn.send({req})
         } else if (conn === null) {
-            log('request', req)
             Promise.resolve()
                 .then(() => {
                     const obj = this.objects[req.intf] && this.objects[req.intf].obj
@@ -152,7 +156,7 @@ class Node {
         else if (conn === null) {
             let {r, j, req} = this.requests[res.id]
             delete this.requests[res.id]
-            log('response', req, res)
+            logResponse(req, res)
             if (res.hasOwnProperty('err')) j(res.err)
             else r(res.res)
         }
