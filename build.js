@@ -118,7 +118,7 @@ target.package = function () {
     p.scripts = {start: 'node start.js'}
     fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
     exec('sed -i "s|dist/||g" dist/package.json ')
-    exec('cp LICENSE start.js dist')
+    exec('cp LICENSE README.md start.js dist')
 }
 
 target.client = function () {
