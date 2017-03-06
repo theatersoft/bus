@@ -7,13 +7,14 @@ const
     fs = require('fs'),
     copyright = `/*\n${fs.readFileSync('COPYRIGHT', 'utf8')}\n */`,
     rollup = require('rollup'),
-    babel = DIST && require('rollup-plugin-babel')({
+    babel = require('rollup-plugin-babel')({
             babelrc: false,
-            //exclude: 'node_modules/**',
-            comments: false,
-            minified: true,
+            comments: !DIST,
+            minified: DIST,
             //presets: [babili],
             plugins: [
+                [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}]
+            ].concat(DIST ? [
                 require("babel-plugin-minify-constant-folding"),
                 //FAIL require("babel-plugin-minify-dead-code-elimination"), // es build unusable
                 require("babel-plugin-minify-flip-comparisons"),
@@ -29,7 +30,7 @@ const
                 require("babel-plugin-transform-property-literals"),
                 require("babel-plugin-transform-simplify-comparison-operators"),
                 require("babel-plugin-transform-undefined-to-void")
-            ]
+            ] : [])
         }),
     alias = require('rollup-plugin-alias'),
     aliases = ar => alias(ar.reduce((o, a) => {
