@@ -6,7 +6,9 @@
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
   "jsnext:main": "dist/bus.browser.es.js",
-  "engines" : { "node" : ">=7.6.0" },
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
   "license": "AGPL-3.0",
@@ -14,6 +16,7 @@
     "ws": "^1.1.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-preset-babili": "0.0.3",
     "browserify": "^13.0.0",

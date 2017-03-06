@@ -13,6 +13,7 @@ const
             minified: DIST,
             //presets: [babili],
             plugins: [
+                require("babel-plugin-transform-decorators-legacy").default,
                 [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}]
             ].concat(DIST ? [
                 require("babel-plugin-minify-constant-folding"),
