@@ -1,19 +1,14 @@
 {
-  "name": "bus-test",
+  "name": "test",
   "version": "0.2.0",
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
   "license": "AGPL-3.0",
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
   "scripts": {
     "BUS": "BUS=`[ -f .bus ] && cat .bus` AUTH=`[ -f .auth ] && cat .auth`",
     "RUN": "npm run BUS -- node",
     "build": "cd ..; time -p node build.js client",
     "client": "google-chrome http://localhost:5453/",
-    "root": "node root.js",
     "child": "node child.js",
     "ping-test": "node ping-test.js",
     "listen": "node listen.js",
@@ -22,12 +17,10 @@
     "proxy": "node proxy.js",
     "signal": "node signal.js",
     "server": "node server.js",
-    "debug-root": "node --inspect test/root.js",
     "debug-child": "node --inspect test/child.js",
     "debug-listen-bus": "npm run BUS -- node --inspect=9232 listen.js",
     "debug-ping-service": "node --inspect-brk=9230 ping-service.js",
     "debug-ping-test": "node --inspect=9231 ping-test.js",
-    "debug-proxy": "node --inspect proxy.js",
     "debug-signal": "node --inspect signal.js",
     "debug-server": "node --inspect server.js"
   }
