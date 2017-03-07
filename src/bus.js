@@ -1,6 +1,6 @@
 import node from './node'
 import manager from './manager'
-import {proxy} from './proxy'
+import {proxy, methods} from './proxy'
 import executor from './executor'
 import connection from 'connection'
 import {log, error} from './log'
@@ -46,7 +46,7 @@ class Bus {
 
     get proxy () {return proxy}
 
-    registerObject (name, obj, intf) {
+    registerObject (name, obj, intf = methods(obj)) {
         return manager.addName(name, this.name)
             .then(() =>
                 node.registerObject(name, obj, intf))

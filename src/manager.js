@@ -1,6 +1,6 @@
 import EventEmitter from './EventEmitter'
 import node from './node'
-import {proxy} from './proxy'
+import {proxy, methods} from './proxy'
 import {log} from './log'
 
 class Manager {
@@ -9,7 +9,7 @@ class Manager {
         if (node.root) {
             this.names /*: Map<BusName, BusPath>*/ = new Map()
             this.nodes /*: Map<BusPath, Array<BusName>>*/ = new Map()
-            node.registerObject('Bus', this)
+            node.registerObject('Bus', this, methods(this), {sender: true})
         } else
             this.proxy = proxy('/Bus')
         //this.proxies /*: Map<BusName, BusPath>*/ = new Map()

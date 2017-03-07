@@ -20,7 +20,7 @@
     "debug-child": "node --inspect test/child.js",
     "debug-listen-bus": "npm run BUS -- node --inspect=9232 listen.js",
     "debug-ping-service": "node --inspect-brk=9230 ping-service.js",
-    "debug-ping-test": "node --inspect=9231 ping-test.js",
+    "debug-ping-test": "node --inspect-brk=9231 ping-test.js",
     "debug-signal": "node --inspect signal.js",
     "debug-server": "node --inspect server.js"
   }

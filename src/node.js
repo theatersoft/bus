@@ -126,18 +126,22 @@ class Node {
     }
 
     _request (req) {
-        const conn = this.route(req.path)
         logRequest(req)
+        const conn = this.route(req.path)
         if (conn) {
             conn.send({req})
         } else if (conn === null) {
             Promise.resolve()
                 .then(() => {
-                    const obj = this.objects[req.intf] && this.objects[req.intf].obj
-                    if (!obj) throw `Error interface ${req.intf} object not found`
-                    const member = obj[req.member]
-                    if (!member) throw `Error member ${req.member} not found`
-                    return obj[req.member](...req.args)
+                    const
+                        {intf, member, sender} = req,
+                        info = this.objects[intf]
+                    if (!info) throw `Error interface ${intf} object not found`
+                    const {obj, meta = {}} = info
+                    if (!obj[member]) throw `Error member ${member} not found`
+                    let {args} = req
+                    if (meta.sender) args = args.concat(sender)
+                    return obj[member](...args)
                 })
                 .then(
                     res =>
@@ -176,9 +180,9 @@ class Node {
     close () {
     }
 
-    registerObject (name, obj, intf = (methods(obj))) {
+    registerObject (name, obj, intf, meta) {
         log(`registerObject ${name} at ${this.name} interface`, intf)
-        this.objects[name] = {obj, intf}
+        this.objects[name] = {obj, intf, meta}
     }
 
     unregisterObject (name) {
