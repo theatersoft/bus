@@ -10,7 +10,7 @@ npm install
 npm run build
 npm run link
 ```
-### 1. Start bus server
+### 1. Start bus server in terminal 1
 The next command starts the root bus node which listens for new connections:
 ```
 npm run start
@@ -23,7 +23,7 @@ BUS registerObject Bus at / interface [ 'init', 'addNode', 'removeNode', 'addNam
 BUS manager.addNode /
 BUS starting ws server on 0.0.0.0:5453
 ```
-### 2. Start ping service
+### 2. Start ping service in terminal 2
 **In a new terminal** start the test ping service:
 ```
 cd bus/test; npm run ping-service
@@ -46,7 +46,7 @@ BUS manager.addNode /1/
 BUS   1-> /Bus.addName( Ping ) from /1/
 BUS manager.addName Ping
 ```
-### 3. Start ping test
+### 3. Start ping test in terminal 3
 **In a new terminal** start the ping test:
 ```
 cd bus/test; npm run ping-test
@@ -67,14 +67,14 @@ BUS <-3   fail FAILED
 BUS Proxy request { path: '/1/', intf: 'Ping', member: 'fail', args: [] } rejected fail
 rejected fail
 ```
-This ping test called methods (which returned 'ping' and threw 'fail' respectively) to the Ping service running in terminal 2:
+This ping test called methods (which returned 'ping' and threw 'fail' respectively) in the Ping service running in terminal 2:
 ```
 BUS   2-> /1/Ping.ping( ) from /2/
 Ping.ping
 BUS   3-> /1/Ping.fail( ) from /2/
 Ping.fail
 ```
-You'll also see the bus requests logged in the root node in terminal 1:
+You'll also see the bus requests logged in terminal 1 as they are routed through the root node:
 ```
 BUS / adding child /2
 BUS   0-> /Bus.addNode( /2/ ) from /2/
