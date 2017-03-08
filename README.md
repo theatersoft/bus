@@ -1,8 +1,38 @@
 # bus
 This message bus is the foundation of the Theatersoft platform. Within the platform it manages communication between host Node.js servers and client web browsers, creating a complex distributed application using modern Javascript. The initial Theatersoft application is a home monitoring, control, automation, and surveillance system, however the message bus is designed to be general purpose. For example, other possible uses include: real time chat apps between multiple browsers; connecting web apps to native host server APIs; and embedded browser based applications for automotive, consumer, and industrial markets.
 
-## Simple Ping Service Tutorial
-First, clone the repo and build the development module:
+## Quick Sample: Ping Service
+This is a simple three step example using one line JavaScript that can be copied into the Node.js REPL.
+
+To begin, create a new workspace with the bus package:
+```
+mkdir ping; cd ping; npm init --yes
+npm install @theatersoft/bus --save
+```
+### 1. Create a root node
+Now start `node` and run this:
+```
+require('@theatersoft/bus').bus.start({children: {host: '0.0.0.0', port: 5453}})
+```
+This creates a root bus node that listens for child websocket connections on the specified host and port.
+### 2. Register a bus service on a second node
+Now open a new terminal in the same directory, start another `node`, and run this:
+```
+require('@theatersoft/bus').bus.start().then(bus => bus.registerObject('Ping', {ping: () => 'ping'}))
+```
+This connects to the parent node (`start()` with no args defaults the parent url to `ws://localhost:5453`) and registers an object with a the `Ping` method.
+### 3. Call the service method from a third node
+Now open a new terminal in the same directory, start another `node`, and run this:
+```
+require('@theatersoft/bus').bus.start().then(async bus => console.log(await bus.proxy('Ping').ping()))
+```
+
+`ping`!
+
+## Running the Ping Service in a development build
+Let's revisit that example and see how it works internally by looking at the log output when running the development bus build. The code examples are already included in the git repo in a more verbose form.
+
+First, clone the repo and build the development package:
 ```
 git clone git@github.com:theatersoft/bus.git
 cd bus
@@ -11,7 +41,7 @@ npm run build
 npm run link
 ```
 ### 1. Start bus server in terminal 1
-The next command starts the root bus node which listens for new connections:
+Start a root bus node to listen for new connections:
 ```
 npm run start
 
