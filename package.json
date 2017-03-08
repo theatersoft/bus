@@ -1,7 +1,8 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.12.7",
+  "version": "1.12.9",
   "description": "Bus messaging connects distributed clients and services",
+  "keywords": ["bus", "message", "messaging", "distributed", "rpc", "pub", "sub", "event", "websocket"],
   "repository": "theatersoft/bus",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
