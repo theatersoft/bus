@@ -34,12 +34,10 @@ const
         ] : [])
     }),
     alias = require('rollup-plugin-alias'),
-    aliases = ar => alias(ar.reduce((o, a) => {
-        o[a.match(/^\.\/([^\.]+)\./)[1]] = a
-        return o
-    }, {
-        resolve: ['.js']
-    })),
+    aliases = ar => alias(ar.reduce(
+        (o, a) => (o[a.match(/^\.\/([^\.]+)\./)[1]] = a, o),
+        {resolve: ['.js']}
+    )),
     strip = DIST && require('rollup-plugin-strip')({
             functions: ['log', 'debug']
         })
