@@ -3,5 +3,5 @@
 /test/node_modules
 /test/pub/test.js
 /_*
-.*
+/.idea
 npm-debug.log*
