@@ -2,7 +2,17 @@
   "name": "@theatersoft/bus",
   "version": "1.12.9",
   "description": "Bus messaging connects distributed clients and services",
-  "keywords": ["bus", "message", "messaging", "distributed", "rpc", "pub", "sub", "event", "websocket"],
+  "keywords": [
+    "bus",
+    "message",
+    "messaging",
+    "distributed",
+    "rpc",
+    "pub",
+    "sub",
+    "event",
+    "websocket"
+  ],
   "repository": "theatersoft/bus",
   "main": "dist/bus.js",
   "browser": "dist/bus.browser.js",
@@ -27,6 +37,9 @@
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-strip": "^1.1.1",
     "shelljs": "^0.7.4"
+  },
+  "distScripts": {
+    "start": "node start.js"
   },
   "scripts": {
     "build": "time -p node build.js && ls -l dist",

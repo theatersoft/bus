@@ -2,6 +2,7 @@
 require('shelljs/make')
 
 const
+    pkg = require('./package.json'),
     DIST = process.env.DIST === 'true',
     path = require('path'),
     fs = require('fs'),
@@ -111,12 +112,12 @@ const targets = {
 
     package () {
         console.log('target package')
-        const filters = ['devDependencies', 'scripts'].concat(DIST ? ['private'] : [])
-        const p = Object.entries(require('./package.json')).reduce((o, [k, v]) => {
-            if (!filters.includes(k)) o[k] = v
-            return o
-        }, {})
-        p.scripts = {start: 'node start.js'}
+        const p = Object.assign({}, pkg, {
+            private: !DIST,
+            devDependencies: undefined,
+            distScripts: undefined,
+            scripts: pkg.distScripts
+        })
         fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
         exec('sed -i "s|dist/||g" dist/package.json ')
         exec('cp LICENSE README.md start.js dist')
