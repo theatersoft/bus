@@ -105,22 +105,19 @@ const targets = {
                 }))
     },
 
-    clean () {
-        console.log('target clean')
-        exec('mkdir -p dist; rm -f dist/*')
-    },
-
     package () {
         console.log('target package')
         const p = Object.assign({}, pkg, {
             private: !DIST,
+            dependencies: pkg.distDependencies,
+            distDependencies: undefined,
             devDependencies: undefined,
-            distScripts: undefined,
-            scripts: pkg.distScripts
+            scripts: pkg.distScripts,
+            distScripts: undefined
         })
         fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
-        exec('sed -i "s|dist/||g" dist/package.json ')
         exec('cp LICENSE README.md start.js dist')
+        exec('cp dist.npmignore dist/.npmignore')
     },
 
     client () {
@@ -134,7 +131,6 @@ const targets = {
     },
 
     async all () {
-        target.clean()
         await target.browser()
         await target['browser-es']()
         await target.node()
