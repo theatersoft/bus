@@ -5,7 +5,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "scripts": {
-    "BUS": "BUS=`[ -f .bus ] && cat .bus` AUTH=`[ -f .auth ] && cat .auth`",
+    "BUS": "env $(cat ~/.config/theatersoft/.bus | xargs)",
     "RUN": "npm run BUS -- node",
     "build": "cd ..; time -p node build.js client",
     "client": "google-chrome http://localhost:5453/",
