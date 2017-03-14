@@ -116,8 +116,7 @@ const targets = {
             distScripts: undefined
         })
         fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
-        exec('cp LICENSE README.md start.js dist')
-        exec('cp dist.npmignore dist/.npmignore')
+        exec('cp LICENSE COPYRIGHT README.md start.js .npmignore dist')
     },
 
     client () {
