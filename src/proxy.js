@@ -10,10 +10,6 @@ export function proxy (name) {
                 (path ? Promise.resolve() : manager.resolveName(intf).then(p => {path = p}))
                     .then(() =>
                         node.request({path, intf, member, args}))
-                    .catch(e => {
-                        error('Proxy request', {path, intf, member, args}, 'rejected', e)
-                        throw e
-                    })
         }
     })
 }
