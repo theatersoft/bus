@@ -2,6 +2,7 @@ import EventEmitter from './EventEmitter'
 import node from './node'
 import {proxy, methods} from './proxy'
 import {log} from './log'
+import connection from 'connection'
 
 class Manager {
     init (path) {
@@ -67,6 +68,11 @@ class Manager {
         if (i === -1) return Promise.reject('missing name')
         names.splice(i, 1)
         return Promise.resolve()
+    }
+
+    check (auth) {
+        const {children: {check} = {}} = connection.context
+        return check(auth)
     }
 }
 
