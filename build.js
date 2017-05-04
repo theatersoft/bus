@@ -130,10 +130,15 @@ const targets = {
     },
 
     async all () {
-        await target.browser()
-        await target['browser-es']()
-        await target.node()
-        target.package()
+        try {
+            await target.browser()
+            await target['browser-es']()
+            await target.node()
+            target.package()
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 }
 
