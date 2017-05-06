@@ -1,4 +1,4 @@
-export const mixinEventEmitter = base => class extends base {
+export const mixinEventEmitter = Base => class extends Base {
     constructor (...args) {
         super(...args)
         this.events /*: Map<Event, Array<Callback>>*/ = new Map()
@@ -29,6 +29,4 @@ export const mixinEventEmitter = base => class extends base {
     }
 }
 
-class Base {}
-
-export default class EventEmitter extends mixinEventEmitter(Base) {}
+export default class EventEmitter extends mixinEventEmitter(class {}) {}
