@@ -6,6 +6,7 @@ const
     DIST = process.env.DIST === 'true',
     path = require('path'),
     fs = require('fs'),
+    writeJson = (file, json) => fs.writeFileSync(file, JSON.stringify(json, null, '  '), 'utf-8'),
     copyright = `/*\n${fs.readFileSync('COPYRIGHT', 'utf8')}\n */`,
     rollup = require('rollup'),
     babel = require('rollup-plugin-babel')({
@@ -107,15 +108,7 @@ const targets = {
 
     package () {
         console.log('target package')
-        const p = Object.assign({}, pkg, {
-            private: !DIST,
-            dependencies: pkg.distDependencies,
-            distDependencies: undefined,
-            devDependencies: undefined,
-            scripts: pkg.distScripts,
-            distScripts: undefined
-        })
-        fs.writeFileSync('dist/package.json', JSON.stringify(p, null, '  '), 'utf-8')
+        writeJson('dist/package.json', Object.assign({}, pkg, {private: !DIST, dist: undefined}, pkg.dist))
         exec('cp LICENSE README.md start.js .npmignore dist')
     },
 
