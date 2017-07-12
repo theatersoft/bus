@@ -1,6 +1,6 @@
 {
   "name": "@theatersoft/bus",
-  "version": "1.13.0",
+  "version": "1.13.2",
   "description": "Bus messaging connects distributed clients and services",
   "keywords": [
     "bus",
