@@ -1,3 +1,9 @@
+<p align="center">
+<a href="https://www.theatersoft.com">
+<img alt="Theatersoft" title="Theatersoft" src="https://www.theatersoft.com/images/theatersoft-logo-text.svg" width="640">
+</a>
+</p>
+
 # bus
 This message bus is the foundation of the Theatersoft platform. It enables communication between host Node.js servers and client web browsers to create a distributed application using modern Javascript.
 
