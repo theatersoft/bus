@@ -14,9 +14,9 @@ console.log('Listening on port ' + port)
 bus.start({
     children: {
         server,
-        check (auth) {
-            console.log('check', auth)
-            return Promise.resolve(true)
-        }
+        //check (auth) {
+        //    console.log('check', auth)
+        //    return Promise.resolve(true)
+        //}
     }
 })

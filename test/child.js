@@ -1,4 +1,5 @@
 'use strict'
+process.on('unhandledRejection', e => console.log(e))
 
 require('@theatersoft/bus').default.start().then(bus => {
     bus.registerObject('Local', {
@@ -13,5 +14,3 @@ require('@theatersoft/bus').default.start().then(bus => {
         console.log('getNames returned', res)
     })
 })
-
-

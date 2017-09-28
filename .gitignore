@@ -2,6 +2,8 @@
 /node_modules
 /test/node_modules
 /test/pub/test.js
+/test/.esm-cache
 /_*
 /.idea
 npm-debug.log*
+package-lock.json

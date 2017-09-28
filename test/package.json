@@ -5,6 +5,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "scripts": {
+    "postinstall": "npm link @theatersoft/bus",
     "BUS": "env $(cat ~/.config/theatersoft/.bus | xargs)",
     "RUN": "npm run BUS -- node",
     "build": "cd ..; time -p node build.js client",
@@ -17,11 +18,19 @@
     "proxy": "node proxy.js",
     "signal": "node signal.js",
     "server": "node server.js",
-    "debug-child": "node --inspect test/child.js",
-    "debug-listen-bus": "npm run BUS -- node --inspect=9232 listen.js",
+    "debug-child": "node --inspect-brk=9233 child.js",
+    "debug-child-mjs": "node --experimental-modules --inspect-brk=9233 child.mjs",
+    "debug-std-esm-child-mjs": "node -r @std/esm --inspect-brk=9233 std-esm-child.mjs",
+    "debug-listen-bus": "npm run BUS -- node --inspect-brk=9232 listen.js",
     "debug-ping-service": "node --inspect-brk=9230 ping-service.js",
     "debug-ping-test": "node --inspect-brk=9231 ping-test.js",
     "debug-signal": "node --inspect signal.js",
     "debug-server": "node --inspect server.js"
+  },
+  "dependencies": {
+    "@std/esm": "^0.11.0"
+  },
+  "@std/esm": {
+    "cjs": true
   }
 }
