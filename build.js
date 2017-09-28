@@ -1,5 +1,6 @@
 'use strict'
 require('shelljs/make')
+process.on('unhandledRejection', e => console.log(e))
 
 const
     pkg = require('./package.json'),
