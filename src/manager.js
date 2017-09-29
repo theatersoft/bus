@@ -76,17 +76,4 @@ class Manager {
     }
 }
 
-//class BusEmitter {
-//
-//}
-//
-//class BusObject {
-//    constructor (bus) {
-//        this.bus = bus
-//        this._emitter = new BusEmitter()
-//    }
-//
-//    get emitter () {return this._emitter}
-//}
-
 export default new Manager()
