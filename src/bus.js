@@ -46,14 +46,18 @@ class Bus {
 
     get proxy () {return proxy}
 
-    registerObject (name, obj, intf = methods(obj)) {
+    registerNodeObject (name, obj, intf = methods(obj)) {
+        node.registerObject(name, obj, intf)
+        return {
+            signal: (member, args) =>
+                node.signal({name: `${name}.${member}`, args})
+        }
+    }
+
+    registerObject (name, obj, intf) {
         return manager.addName(name, this.name)
             .then(() =>
-                node.registerObject(name, obj, intf))
-            .then(() => ({
-                signal: (member, args) =>
-                    node.signal({name: `${name}.${member}`, args})
-            }))
+                this.registerNodeObject(name, obj, intf))
     }
 
     unregisterObject (name) {

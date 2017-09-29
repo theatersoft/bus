@@ -14,6 +14,7 @@
     "ping-test": "npm run RUN -- ping-test.js",
     "listen": "node listen.js",
     "listen-bus": "npm run RUN -- listen.js",
+    "objects": "node objects.js",
     "ping-service": "npm run RUN -- ping-service.js",
     "proxy": "node proxy.js",
     "signal": "node signal.js",
