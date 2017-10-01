@@ -82,7 +82,7 @@ class Node {
                     return
                 }
                 this.conns[conn.id] = undefined
-                if (conn.id === 0)
+                if (conn.id === 0 && !this.closing)
                     this.reconnect()
                 else
                     Promise.resolve()
@@ -177,6 +177,8 @@ class Node {
     }
 
     close () {
+        this.closing = true
+        this.conns.forEach(conn => conn.close())
     }
 
     registerObject (name, obj, intf, meta) {

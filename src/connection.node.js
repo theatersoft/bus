@@ -23,6 +23,10 @@ class NodeConnection extends EventEmitter {
         //log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
     }
+
+    close () {
+        this.ws.close()
+    }
 }
 
 class ChildConnection extends childStartup(NodeConnection) {}
