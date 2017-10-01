@@ -23,6 +23,7 @@
     "debug-child-mjs": "node --experimental-modules --inspect-brk=9233 child.mjs",
     "debug-std-esm-child-mjs": "node -r @std/esm --inspect-brk=9233 std-esm-child.mjs",
     "debug-listen-bus": "npm run BUS -- node --inspect-brk=9232 listen.js",
+    "debug-objects": "node --inspect-brk=9234 objects.js",
     "debug-ping-service": "node --inspect-brk=9230 ping-service.js",
     "debug-ping-test": "node --inspect-brk=9231 ping-test.js",
     "debug-signal": "node --inspect signal.js",
