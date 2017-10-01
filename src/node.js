@@ -82,8 +82,8 @@ class Node {
                     return
                 }
                 this.conns[conn.id] = undefined
-                if (conn.id === 0 && !this.closing)
-                    this.reconnect()
+                if (conn.id === 0)
+                    !this.closing && this.reconnect()
                 else
                     Promise.resolve()
                         .then(() => manager.removeNode(`${conn.name}/`))
