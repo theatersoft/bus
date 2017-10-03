@@ -14,7 +14,7 @@ const
         babelrc: false,
         comments: !DIST,
         minified: DIST,
-        //presets: [babili],
+        presets: ['flow'],
         plugins: [
             //require("babel-plugin-transform-decorators-legacy").default,
             [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}]
