@@ -14,7 +14,6 @@ const
     dupName = Promise.reject('duplicate name'),
     missingName = Promise.reject('missing name')
 
-
 class Manager {
     names:Map<Name, Path>
     nodes:Map<Path, Array<Name>>

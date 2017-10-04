@@ -1,4 +1,4 @@
-//TODO @flow
+//@flow
 import bus from './bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'
@@ -7,14 +7,14 @@ import connection from 'connection'
 import {log, error} from './log'
 import type {Connection} from 'connection'
 
-const
-    logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req:Req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
-
 type Request = {path:string, intf:string, member:string, args:Array<any>}
 type Req = {path:string, intf:string, member:string, args:Array<any>, id:number, sender:string}
 type Response = any
-type Signal = any
+type Signal = {name:string, args:Array<any>}
+
+const
+    logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
+    logResponse = (req:Req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
 class Node {
     name:string
@@ -81,9 +81,9 @@ class Node {
                 if (data.req)
                     this._request(data.req)
                 else if (data.res)
-                    this.response(data.res)
+                    this._response(data.res)
                 else if (data.sig)
-                    this.signal(data.sig, conn.id)
+                    this._signal(data.sig, conn.id)
             })
             .on('close', () => {
                 log(`connection close ${conn.name}`)
@@ -125,14 +125,6 @@ class Node {
         }, ms)
     }
 
-    request (request:Request): Promise<mixed> {
-        return new Promise((r, j) => {
-            const req = {...request, sender: this.name, id: this.reqid++}
-            this.requests[req.id] = {r, j, req}
-            this._request(req)
-        })
-    }
-
     _request (req:Req) {
         logRequest(req)
         const conn = this.route(req.path)
@@ -153,15 +145,15 @@ class Node {
                 })
                 .then(
                     res =>
-                        this.response({id: req.id, path: req.sender, res}),
+                        this._response({id: req.id, path: req.sender, res}),
                     err =>
-                        this.response({id: req.id, path: req.sender, err}))
+                        this._response({id: req.id, path: req.sender, err}))
         } else {
             log('_request connection error', req)
         }
     }
 
-    response (res:Response) {
+    _response (res:Response) {
         const conn = this.route(res.path)
         if (conn)
             conn.send({res})
@@ -177,11 +169,19 @@ class Node {
         }
     }
 
-    signal (sig:Signal, from:?string) {
+    _signal (sig:Signal, from:?string) {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
             //log(`sigrouting ${name} from ${from} to ${c.id}`)
             c && c.send({sig})
+        })
+    }
+
+    request (request:Request): Promise<mixed> {
+        return new Promise((r, j) => {
+            const req = {...request, sender: this.name, id: this.reqid++}
+            this.requests[req.id] = {r, j, req}
+            this._request(req)
         })
     }
 

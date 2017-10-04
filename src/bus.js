@@ -68,7 +68,7 @@ class Bus {
         node.registerObject(name, obj, intf)
         return {
             signal: (member:string, args:Array<any>) =>
-                node.signal({name: `${name}.${member}`, args})
+                node._signal({name: `${name}.${member}`, args})
         }
     }
 
@@ -93,13 +93,6 @@ class Bus {
                 error(`request ${name} rejected ${e}`)
                 throw e
             })
-    }
-
-    signal (name:string, args:Array<any>) {
-        throw 'deprecated'
-        //log('signal', name, args)
-        //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        //return node.signal({name, path, intf, member, args})
     }
 
     registerListener (name:string, cb:Listener) {
