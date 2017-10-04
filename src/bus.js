@@ -1,16 +1,34 @@
+//@flow
 import node from './node'
 import manager from './manager'
 import {proxy, methods} from './proxy'
 import executor from './executor'
 import connection from 'connection'
 import {log, error} from './log'
+import type {Listener} from './EventEmitter'
+import type {Executor} from './executor'
 
-let start = executor()
+let
+    start:Executor<Bus> = executor(),
+    _started:boolean
+
+type
+    Context = {
+    parent: {
+        url: string
+    },
+    children: {
+        server: any,
+        host: string,
+        port: number,
+        check: (string) => boolean
+    }
+}
 
 class Bus {
-    start (context) {
-        if (!start.started) {
-            start.started = true
+    start (context:Context) {
+        if (!_started) {
+            _started = true
             connection.create(context)
                 .then(() => {
                     if (connection.hasParent) {
@@ -40,34 +58,34 @@ class Bus {
 
     started () {return start.promise}
 
-    get root () {return node.root}
+    get root ():boolean {return node.root}
 
-    get name () {return node.name}
+    get name ():string {return node.name}
 
-    get proxy () {return proxy}
+    get proxy ():any {return proxy}
 
-    registerNodeObject (name, obj, intf = methods(obj)) {
+    registerNodeObject (name:string, obj:any, intf:Array<string> = methods(obj)) {
         node.registerObject(name, obj, intf)
         return {
-            signal: (member, args) =>
+            signal: (member:string, args:Array<any>) =>
                 node.signal({name: `${name}.${member}`, args})
         }
     }
 
-    registerObject (name, obj, intf) {
+    registerObject (name:string, obj:any, intf:Array<string>) {
         return manager.addName(name, this.name)
             .then(() =>
                 this.registerNodeObject(name, obj, intf))
     }
 
-    unregisterObject (name) {
+    unregisterObject (name:string) {
         return manager.removeName(name, this.name)
             .then(() =>
                 node.unregisterObject(name)
             )
     }
 
-    request (name, ...args) {
+    request (name:string, ...args:Array<any>) {
         log('request', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.request({path, intf, member, args})
@@ -77,30 +95,30 @@ class Bus {
             })
     }
 
-    signal (name, args) {
+    signal (name:string, args:Array<any>) {
         throw 'deprecated'
         //log('signal', name, args)
         //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         //return node.signal({name, path, intf, member, args})
     }
 
-    registerListener (name, cb) {
+    registerListener (name:string, cb:Listener) {
         //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         //TODO
         node.signals.on(name, cb)
     }
 
-    unregisterListener (name, cb) {
+    unregisterListener (name:string, cb:Listener) {
         //TODO
         node.signals.off(name, cb)
     }
 
-    on (type, cb) {
+    on (type:string, cb:Listener) {
         node.status.on(type, cb)
         return this
     }
 
-    off (type, cb) {
+    off (type:string, cb:Listener) {
         node.status.off(type, cb)
     }
 
