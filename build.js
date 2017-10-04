@@ -17,7 +17,8 @@ const
         presets: ['flow'],
         plugins: [
             //require("babel-plugin-transform-decorators-legacy").default,
-            [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}]
+            [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}],
+            require("babel-plugin-transform-class-properties")
         ].concat(DIST ? [
             require("babel-plugin-minify-constant-folding"),
             //FAIL require("babel-plugin-minify-dead-code-elimination"), // es build unusable
