@@ -12,5 +12,6 @@ const format = (...args) => ([
 export const setTag = val => {tag = val}
 export const setTime = val => {time = val}
 
+export const debug = (...args) => console.log(...format(...args))
 export const log = (...args) => console.log(...format(...args))
 export const error = (...args) => console.error(...format(...args))

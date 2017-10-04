@@ -5,6 +5,7 @@ process.on('unhandledRejection', e => console.log(e))
 const
     pkg = require('./package.json'),
     DIST = process.env.DIST === 'true',
+    DEBUG = process.env.DEBUG === 'true',
     path = require('path'),
     fs = require('fs'),
     writeJson = (file, json) => fs.writeFileSync(file, JSON.stringify(json, null, '  '), 'utf-8'),
@@ -42,8 +43,8 @@ const
         (o, a) => (o[a.match(/^\.\/([^\.]+)\./)[1]] = a, o),
         {resolve: ['.js']}
     )),
-    strip = DIST && require('rollup-plugin-strip')({
-            functions: ['log']
+    strip = !DEBUG && require('rollup-plugin-strip')({
+            functions: DIST ? ['log', 'debug'] : ['debug']
         })
 
 const targets = {

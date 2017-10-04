@@ -4,7 +4,7 @@ import manager from './manager'
 import {proxy, methods} from './proxy'
 import executor from './executor'
 import connection from 'connection'
-import {log, error} from './log'
+import {debug, log, error} from './log'
 import type {Listener} from './EventEmitter'
 import type {Executor} from './executor'
 

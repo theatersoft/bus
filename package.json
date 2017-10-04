@@ -53,6 +53,7 @@
   },
   "scripts": {
     "build": "node build.js && ls -l dist",
+    "build:debug": "DEBUG=true npm run build",
     "build:dist": "DIST=true npm run build",
     "publish": "node build.js publish",
     "debug": "node --inspect-brk dist/start.js ",
