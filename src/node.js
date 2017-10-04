@@ -8,10 +8,11 @@ import {log, error} from './log'
 import type {Connection} from 'connection'
 
 const
-    logRequest = req => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
+    logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
+    logResponse = (req:Req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
-type Request = any
+type Request = {path:string, intf:string, member:string, args:Array<any>}
+type Req = {path:string, intf:string, member:string, args:Array<any>, id:number, sender:string}
 type Response = any
 type Signal = any
 
@@ -124,16 +125,15 @@ class Node {
         }, ms)
     }
 
-    request (req:Request): Promise<any> {
+    request (request:Request): Promise<any> {
         return new Promise((r, j) => {
-            req.sender = this.name
-            req.id = this.reqid++
+            const req = {...request, sender: this.name, id: this.reqid++}
             this.requests[req.id] = {r, j, req}
             this._request(req)
         })
     }
 
-    _request (req:Request) {
+    _request (req:Req) {
         logRequest(req)
         const conn = this.route(req.path)
         if (conn) {
