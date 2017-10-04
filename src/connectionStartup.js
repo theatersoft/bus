@@ -1,8 +1,10 @@
+//@flow
 import connection from 'connection'
 import {debug, log, error} from './log'
+import type {Connection} from 'connection'
 
-export const parentStartup = ConnectionBase => class extends ConnectionBase {
-    constructor (...args) {
+export const parentStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
+    constructor (...args:Array<any>) {
         super(...args)
         const
             {parent: {auth}} = connection.context,
@@ -25,8 +27,8 @@ export const parentStartup = ConnectionBase => class extends ConnectionBase {
     }
 }
 
-export const childStartup = ConnectionBase => class extends ConnectionBase {
-    constructor (...args) {
+export const childStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
+    constructor (...args:Array<any>) {
         super(...args)
         const {children: {check} = {}} = connection.context
         debug('childStartup auth check', !!check)
