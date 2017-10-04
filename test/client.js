@@ -1,7 +1,5 @@
 'use strict'
-require('@theatersoft/bus').default.start({
-    parent: {auth: 'TODO'}
-})
+require('@theatersoft/bus').bus.start()
     .then(bus =>
         bus.registerObject('Ping', {
             ping () {
