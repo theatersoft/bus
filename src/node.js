@@ -125,7 +125,7 @@ class Node {
         }, ms)
     }
 
-    request (request:Request): Promise<any> {
+    request (request:Request): Promise<mixed> {
         return new Promise((r, j) => {
             const req = {...request, sender: this.name, id: this.reqid++}
             this.requests[req.id] = {r, j, req}
