@@ -1,20 +1,24 @@
+//@flow
 import node from './node'
 import manager from './manager'
 import {log, error} from './log'
 
-export function proxy (name) {
-    let [, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
+export function proxy (name:string) {
+    let [__, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
     return new Proxy({}, {
         get (_, member) {
             return (...args) =>
                 (path ? Promise.resolve() : manager.resolveName(intf).then(p => {path = p}))
                     .then(() =>
-                        node.request({path, intf, member, args}))
+                        path
+                            ? node.request({path, intf, member, args})
+                            : error('Proxy interface not resolved')
+                    )
         }
     })
 }
 
-export function methods (obj) {
+export function methods (obj:any) {
     return Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
         .filter(p =>
         typeof obj[p] === 'function' && p !== 'constructor')
