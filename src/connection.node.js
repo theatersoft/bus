@@ -3,6 +3,8 @@ import EventEmitter from './EventEmitter'
 import {childStartup, parentStartup} from './connectionStartup'
 import {log} from './log'
 
+export type Connection = any
+
 class NodeConnection extends EventEmitter {
     constructor (ws) {
         super()

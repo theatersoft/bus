@@ -1,24 +1,33 @@
+//TODO @flow
 import bus from './bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {log, error} from './log'
+import type {Connection} from 'connection'
 
 const
     logRequest = req => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req, res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `,  res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
-class Node {
-    constructor () {
-        this.conns = [undefined]
-        this.objects = {}
-        this.reqid = 0
-        this.requests = {}
-        this.signals = new EventEmitter()
-        this.status = new EventEmitter()
-    }
+    logResponse = (req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
-    init (name, parent) {
+type Request = any
+type Response = any
+type Signal = any
+
+class Node {
+    name:string
+    root:boolean
+    closing:boolean
+    server:any
+    conns:Array<Connection> = [undefined]
+    objects = {}
+    reqid = 0
+    requests = {}
+    signals = new EventEmitter()
+    status = new EventEmitter()
+
+    init (name:string, parent:any) {
         log('node.init', name)
         if (parent) {
             parent.id = 0
@@ -43,7 +52,7 @@ class Node {
         }
     }
 
-    addChild (conn) {
+    addChild (conn:Connection) {
         conn.id = this.conns.length
         conn.name = `${this.name}${conn.id}`
         log(`${this.name} adding child ${conn.name}`)
@@ -52,19 +61,19 @@ class Node {
         conn.registered = true
     }
 
-    route (n) {
-        let i = n.lastIndexOf('/')
+    route (path:string) {
+        let i = path.lastIndexOf('/')
         if (i === -1) throw new Error('Invalid name')
         let
-            path = n.slice(0, i + 1),
-            r = path === this.name ? null
-                : path.startsWith((this.name)) ? this.conns[parseInt(path.slice(this.name.length))]
+            p = path.slice(0, i + 1),
+            r = p === this.name ? null
+                : p.startsWith((this.name)) ? this.conns[parseInt(p.slice(this.name.length))]
                 : this.conns[0]
         //log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
         return r
     }
 
-    bind (conn) {
+    bind (conn:Connection) {
         return conn
             .on('data', data => {
                 //log(`data from ${conn.name}`, data)
@@ -92,7 +101,7 @@ class Node {
             })
     }
 
-    reconnect (ms = 1000) {
+    reconnect (ms:number = 1000) {
         this.status.emit('disconnect')
         setTimeout(() => {
             const conn = connection.createParentConnection()
@@ -115,7 +124,7 @@ class Node {
         }, ms)
     }
 
-    request (req) {
+    request (req:Request): Promise<any> {
         return new Promise((r, j) => {
             req.sender = this.name
             req.id = this.reqid++
@@ -124,7 +133,7 @@ class Node {
         })
     }
 
-    _request (req) {
+    _request (req:Request) {
         logRequest(req)
         const conn = this.route(req.path)
         if (conn) {
@@ -152,7 +161,7 @@ class Node {
         }
     }
 
-    response (res) {
+    response (res:Response) {
         const conn = this.route(res.path)
         if (conn)
             conn.send({res})
@@ -168,7 +177,7 @@ class Node {
         }
     }
 
-    signal (sig, from) {
+    signal (sig:Signal, from:?string) {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
             //log(`sigrouting ${name} from ${from} to ${c.id}`)
@@ -181,12 +190,12 @@ class Node {
         this.conns.forEach(conn => conn.close())
     }
 
-    registerObject (name, obj, intf, meta) {
+    registerObject (name:string, obj:any, intf:Array<string>, meta:any) {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf, meta}
     }
 
-    unregisterObject (name) {
+    unregisterObject (name:string) {
         log(`unRegisterObject ${name} at ${this.name}`)
         delete this.objects[name]
     }
