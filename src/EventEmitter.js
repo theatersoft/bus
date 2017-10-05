@@ -1,10 +1,10 @@
 //@flow
-export type Listener = (...args:Array<any>) => void
+export type Listener = (...args:mixed[]) => void
 
 export const mixinEventEmitter = (Base:any) => class Mixin extends Base {
-    events:Map<string, Array<Listener>>
+    events:Map<string, Listener[]>
 
-    constructor (...args:Array<any>) {
+    constructor (...args:mixed[]) {
         super(...args)
         this.events = new Map()
     }
@@ -25,7 +25,7 @@ export const mixinEventEmitter = (Base:any) => class Mixin extends Base {
         return this
     }
 
-    emit (type:string, ...args:Array<any>):boolean {
+    emit (type:string, ...args:mixed[]):boolean {
         const callbacks = this.events.get(type)
         if (callbacks && callbacks.length) {
             callbacks.forEach(cb =>

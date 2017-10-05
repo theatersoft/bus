@@ -16,7 +16,7 @@ const
 
 class Manager {
     names:Map<Name, Path>
-    nodes:Map<Path, Array<Name>>
+    nodes:Map<Path, Name[]>
     proxy:any
 
     init (path:Path) {

@@ -4,7 +4,7 @@ import {debug, log, error} from './log'
 import type {Connection} from 'connection'
 
 export const parentStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
-    constructor (...args:Array<any>) {
+    constructor (...args:mixed[]) {
         super(...args)
         const
             {parent: {auth}} = connection.context,
@@ -28,7 +28,7 @@ export const parentStartup = (ConnectionBase:Connection) => class extends Connec
 }
 
 export const childStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
-    constructor (...args:Array<any>) {
+    constructor (...args:mixed[]) {
         super(...args)
         const {children: {check} = {}} = connection.context
         debug('childStartup auth check', !!check)

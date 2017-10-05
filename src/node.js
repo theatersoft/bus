@@ -7,10 +7,10 @@ import connection from 'connection'
 import {log, error} from './log'
 import type {Connection} from 'connection'
 
-type Request = {path:string, intf:string, member:string, args:Array<any>}
-type Req = {path:string, intf:string, member:string, args:Array<any>, id:number, sender:string}
-type Response = any
-type Signal = {name:string, args:Array<any>}
+type Request = {path:string, intf:string, member:string, args:mixed[]}
+type Req = {path:string, intf:string, member:string, args:mixed[], id:number, sender:string}
+type Res = {id:number, path:string, res?: mixed, err?: mixed}
+type Sig = {name:string, args:mixed[]}
 
 const
     logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
@@ -21,7 +21,7 @@ class Node {
     root:boolean
     closing:boolean
     server:any
-    conns:Array<Connection> = [undefined]
+    conns:Connection[] = [undefined]
     objects = {}
     reqid = 0
     requests = {}
@@ -153,7 +153,7 @@ class Node {
         }
     }
 
-    _response (res:Response) {
+    _response (res:Res) {
         const conn = this.route(res.path)
         if (conn)
             conn.send({res})
@@ -169,7 +169,7 @@ class Node {
         }
     }
 
-    _signal (sig:Signal, from:?string) {
+    _signal (sig:Sig, from:?string) {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
             //log(`sigrouting ${name} from ${from} to ${c.id}`)
@@ -190,7 +190,7 @@ class Node {
         this.conns.forEach(conn => conn.close())
     }
 
-    registerObject (name:string, obj:any, intf:Array<string>, meta:any) {
+    registerObject (name:string, obj:any, intf:string[], meta:any) {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf, meta}
     }

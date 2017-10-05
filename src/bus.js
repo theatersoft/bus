@@ -64,15 +64,15 @@ class Bus {
 
     get proxy ():any {return proxy}
 
-    registerNodeObject (name:string, obj:any, intf:Array<string> = methods(obj)) {
+    registerNodeObject (name:string, obj:any, intf:string[] = methods(obj)) {
         node.registerObject(name, obj, intf)
         return {
-            signal: (member:string, args:Array<any>) =>
+            signal: (member:string, args:mixed[]) =>
                 node._signal({name: `${name}.${member}`, args})
         }
     }
 
-    registerObject (name:string, obj:any, intf:Array<string>) {
+    registerObject (name:string, obj:any, intf:string[]) {
         return manager.addName(name, this.name)
             .then(() =>
                 this.registerNodeObject(name, obj, intf))
@@ -85,7 +85,7 @@ class Bus {
             )
     }
 
-    request (name:string, ...args:Array<any>) {
+    request (name:string, ...args:mixed[]) {
         log('request', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.request({path, intf, member, args})
