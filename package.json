@@ -57,6 +57,7 @@
     "build:dist": "DIST=true npm run build",
     "publish": "node build.js publish",
     "debug": "node --inspect-brk dist/start.js ",
-    "flow": "flow"
+    "flow:server": "flow server",
+    "flow:status": "flow status"
   }
 }

@@ -4,7 +4,7 @@ import EventEmitter from './EventEmitter'
 import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
-import {log, error} from './log'
+import {debug, log, error} from './log'
 import type {Connection} from 'connection'
 
 type Request = {path:string, intf:string, member:string, args:mixed[]}
@@ -77,13 +77,10 @@ class Node {
     bind (conn:Connection) {
         return conn
             .on('data', data => {
-                //log(`data from ${conn.name}`, data)
-                if (data.req)
-                    this._request(data.req)
-                else if (data.res)
-                    this._response(data.res)
-                else if (data.sig)
-                    this._signal(data.sig, conn.id)
+                //debug(`data from ${conn.name}`, data)
+                data.req ? this._request(data.req)
+                    : data.res ? this._response(data.res)
+                    : data.sig && this._signal(data.sig, conn.id)
             })
             .on('close', () => {
                 log(`connection close ${conn.name}`)
@@ -177,7 +174,7 @@ class Node {
         })
     }
 
-    request (request:Request): Promise<mixed> {
+    request (request:Request):Promise<mixed> {
         return new Promise((r, j) => {
             const req = {...request, sender: this.name, id: this.reqid++}
             this.requests[req.id] = {r, j, req}
