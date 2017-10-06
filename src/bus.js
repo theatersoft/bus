@@ -7,6 +7,7 @@ import connection from 'connection'
 import {debug, log, error} from './log'
 import type {Listener} from './EventEmitter'
 import type {Executor} from './executor'
+import type {Connection} from 'connection'
 
 let
     start:Executor<Bus> = executor(),
@@ -32,7 +33,7 @@ class Bus {
             connection.create(context)
                 .then(() => {
                     if (connection.hasParent) {
-                        const conn = connection.createParentConnection()
+                        const conn:Connection = connection.createParentConnection()
                             .on('open', () => {
                                 //log('parent open')
                             })

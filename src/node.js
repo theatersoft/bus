@@ -5,30 +5,41 @@ import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Connection} from 'connection'
+//import type {Connection} from 'connection'
 
+type Listener = (...args:any[]) => void
+interface Connection {
+    id:number;
+    name:string;
+    send(data:any):void;
+    close():void;
+    registered:boolean;
+    hello():void;
+    on(type:string, callback:Listener):Connection;
+}
 type Request = {path:string, intf:string, member:string, args:mixed[]}
 type Req = {path:string, intf:string, member:string, args:mixed[], id:number, sender:string}
 type Res = {id:number, path:string, res?: mixed, err?: mixed}
 type Sig = {name:string, args:mixed[]}
+type Data = {|req:Req|}|{|res:Res|}|{|sig:Sig|}
 
 const
     logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req:Req, res:any) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
+    logResponse = (req:Req, res:Res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
 class Node {
     name:string
     root:boolean
     closing:boolean
     server:any
-    conns:Connection[] = [undefined]
+    conns:Array<?Connection> = [undefined]
     objects = {}
     reqid = 0
     requests = {}
     signals = new EventEmitter()
     status = new EventEmitter()
 
-    init (name:string, parent:any) {
+    init (name:string, parent?:Connection):void {
         log('node.init', name)
         if (parent) {
             parent.id = 0
@@ -43,7 +54,7 @@ class Node {
             connection.createServer()
                 .then(server => {
                     this.server = server
-                        .on('child', conn => {
+                        .on('child', (conn:Connection) => {
                             this.addChild(this.bind(conn))
                         })
                         .on('error', err => {
@@ -53,7 +64,7 @@ class Node {
         }
     }
 
-    addChild (conn:Connection) {
+    addChild (conn:Connection):void {
         conn.id = this.conns.length
         conn.name = `${this.name}${conn.id}`
         log(`${this.name} adding child ${conn.name}`)
@@ -62,7 +73,7 @@ class Node {
         conn.registered = true
     }
 
-    route (path:string) {
+    route (path:string):?Connection {
         let i = path.lastIndexOf('/')
         if (i === -1) throw new Error('Invalid name')
         let
@@ -74,9 +85,9 @@ class Node {
         return r
     }
 
-    bind (conn:Connection) {
+    bind (conn:Connection):Connection {
         return conn
-            .on('data', data => {
+            .on('data', (data:Data) => {
                 //debug(`data from ${conn.name}`, data)
                 data.req ? this._request(data.req)
                     : data.res ? this._response(data.res)
@@ -99,7 +110,7 @@ class Node {
             })
     }
 
-    reconnect (ms:number = 1000) {
+    reconnect (ms:number = 1000):void {
         this.status.emit('disconnect')
         setTimeout(() => {
             const conn = connection.createParentConnection()
@@ -122,7 +133,7 @@ class Node {
         }, ms)
     }
 
-    _request (req:Req) {
+    _request (req:Req):void {
         logRequest(req)
         const conn = this.route(req.path)
         if (conn) {
@@ -150,7 +161,7 @@ class Node {
         }
     }
 
-    _response (res:Res) {
+    _response (res:Res):void {
         const conn = this.route(res.path)
         if (conn)
             conn.send({res})
@@ -166,7 +177,7 @@ class Node {
         }
     }
 
-    _signal (sig:Sig, from:?string) {
+    _signal (sig:Sig, from:?number):void {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
             //log(`sigrouting ${name} from ${from} to ${c.id}`)
@@ -182,17 +193,17 @@ class Node {
         })
     }
 
-    close () {
+    close ():void {
         this.closing = true
-        this.conns.forEach(conn => conn.close())
+        this.conns.forEach(conn => conn && conn.close())
     }
 
-    registerObject (name:string, obj:any, intf:string[], meta:any) {
+    registerObject (name:string, obj:any, intf:string[], meta:any):void {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf, meta}
     }
 
-    unregisterObject (name:string) {
+    unregisterObject (name:string):void {
         log(`unRegisterObject ${name} at ${this.name}`)
         delete this.objects[name]
     }

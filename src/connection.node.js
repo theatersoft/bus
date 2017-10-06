@@ -74,15 +74,15 @@ export default {
         return context
     },
 
-    get hasParent () {
+    get hasParent ():boolean {
         return this.context.parent && this.context.parent.url
     },
 
-    get hasChildren () {
+    get hasChildren ():boolean {
         return !!this.context.children
     },
 
-    createParentConnection () {
+    createParentConnection (): Connection {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
         return new ParentConnection(new WebSocket(this.context.parent.url))
     },
