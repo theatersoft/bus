@@ -15,10 +15,10 @@ const
         babelrc: false,
         comments: !DIST,
         minified: DIST,
-        presets: ['flow'],
         plugins: [
             //require("babel-plugin-transform-decorators-legacy").default,
             [require("babel-plugin-transform-object-rest-spread"), {useBuiltIns: true}],
+            require("babel-plugin-transform-flow-comments"),
             require("babel-plugin-transform-class-properties")
         ].concat(DIST ? [
             require("babel-plugin-minify-constant-folding"),
