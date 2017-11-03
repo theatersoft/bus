@@ -5,8 +5,7 @@ import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
-
-import type {Request, Req, Res, Sig, Data, Connection} from './types'
+import type {Request, Req, Res, Sig, Data, Connection} from './node.type'
 
 const
     logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
