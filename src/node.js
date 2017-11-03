@@ -5,23 +5,8 @@ import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
-//import type {Connection} from 'connection'
 
-type Listener = (...args:any[]) => void
-interface Connection {
-    id:number;
-    name:string;
-    send(data:any):void;
-    close():void;
-    registered:boolean;
-    hello():void;
-    on(type:string, callback:Listener):Connection;
-}
-type Request = {path:string, intf:string, member:string, args:mixed[]}
-type Req = {path:string, intf:string, member:string, args:mixed[], id:number, sender:string}
-type Res = {id:number, path:string, res?: mixed, err?: mixed}
-type Sig = {name:string, args:mixed[]}
-type Data = {|req:Req|}|{|res:Res|}|{|sig:Sig|}
+import type {Request, Req, Res, Sig, Data, Connection} from './types'
 
 const
     logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
