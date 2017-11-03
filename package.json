@@ -58,6 +58,7 @@
     "publish": "node build.js publish",
     "debug": "node --inspect-brk dist/start.js ",
     "flow:server": "flow server",
-    "flow:status": "flow status"
+    "flow:status": "flow status",
+    "flow:stop": "flow stop"
   }
 }
