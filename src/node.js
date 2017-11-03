@@ -25,7 +25,8 @@ export class Node {
     status = new EventEmitter()
 
     init (name:string, parent?:Connection):void {
-        log('node.init', name)
+        debug('node.init', name)
+        this.objects['*'] = {obj: this}
         if (parent) {
             parent.id = 0
             parent.registered = true
