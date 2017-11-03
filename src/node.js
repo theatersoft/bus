@@ -6,12 +6,13 @@ import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
 import type {Request, Req, Res, Sig, Data, Connection} from './node.type'
+import {nodeIntrospect} from './node.introspect'
 
 const
     logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
     logResponse = (req:Req, res:Res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
-class Node {
+export class Node {
     name:string
     root:boolean
     closing:boolean
@@ -193,4 +194,4 @@ class Node {
     }
 }
 
-export default new Node()
+export default new class extends nodeIntrospect(Node) {} ()
