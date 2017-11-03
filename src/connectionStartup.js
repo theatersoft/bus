@@ -6,6 +6,7 @@ import type {Connection} from 'connection'
 export const parentStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
     constructor (...args:mixed[]) {
         super(...args)
+        debug('parentStartup context', connection.context.parent)
         const
             {parent: {auth}} = connection.context,
             onhello = ({hello}) => {
@@ -31,7 +32,7 @@ export const childStartup = (ConnectionBase:Connection) => class extends Connect
     constructor (...args:mixed[]) {
         super(...args)
         const {children: {check} = {}} = connection.context
-        debug('childStartup auth check', !!check)
+        debug('childStartup context', connection.context.children)
         Promise.resolve().then(() => {
             if (!check)
                 this.emit('connect')

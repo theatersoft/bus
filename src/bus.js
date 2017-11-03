@@ -35,10 +35,10 @@ class Bus {
                     if (connection.hasParent) {
                         const conn:Connection = connection.createParentConnection()
                             .on('open', () => {
-                                //log('parent open')
+                                debug('parent open')
                             })
                             .on('close', () => {
-                                log('parent close')
+                                debug('parent close')
                             })
                             .on('connect', name => {
                                 node.init(name, conn)
@@ -117,6 +117,10 @@ class Bus {
     }
 
     close () {node.close()}
+
+    introspectNode (path:string) {
+        return node.introspect(path)
+    }
 }
 
 export default new Bus()
