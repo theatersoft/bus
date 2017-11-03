@@ -12,14 +12,14 @@ This is a simple three step example using one line JavaScript that can be copied
 
 Begin by installing the bus package in a new project:
 ```
-mkdir ping; cd ping; npm init --yes
+mkdir ping && cd ping && npm init --yes
 npm install @theatersoft/bus --save
 ```
 
 ### 1. Create a root node
 Start `node` and run:
 ```
-require('@theatersoft/bus').bus.start({children: {host: '0.0.0.0', port: 5453}})
+require('@theatersoft/bus').bus.start({children: {host: 'localhost', port: 5453}})
 ```
 This creates a root bus node that listens for child connections on the specified host and port.
 
