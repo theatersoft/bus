@@ -125,12 +125,24 @@ const targets = {
         exec('npm publish --access=public dist')
     },
 
+    async watch () {
+        await targets.all()
+        require('chokidar').watch([
+                'src'
+            ])
+            .on('change', path => {
+                console.log(new Date().toLocaleTimeString(), path)
+                targets.all()
+            })
+            .on('error', e => console.log(e))
+    },
+
     async all () {
         try {
-            await target.browser()
-            await target['browser-es']()
-            await target.node()
-            target.package()
+            await targets.browser()
+            await targets['browser-es']()
+            await targets.node()
+            targets.package()
         }
         catch (e) {
             console.log(e)
