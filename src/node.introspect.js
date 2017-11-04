@@ -8,7 +8,7 @@ export const nodeIntrospect = (Base:Node) => class extends Base {
             name: this.name,
             children: this.conns
                 .filter((c, i) => i && c && c.name)
-                .map(({name}) => name),
+                .map(({name}) => `${name}/`),
             objects: Object.keys(this.objects)
         }
     }
