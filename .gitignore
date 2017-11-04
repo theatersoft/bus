@@ -3,6 +3,7 @@
 /test/node_modules
 /test/pub/test.js
 /test/.esm-cache
+/test/.bus
 /_*
 /.idea
 npm-debug.log*
