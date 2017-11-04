@@ -108,8 +108,9 @@ export class Node {
                 })
                 .on('connect', name => {
                     this.init(name, conn)
-                    Object.keys(this.objects).forEach(name =>
-                        manager.addName(name, this.name))
+                    Object.keys(this.objects)
+                        .filter(name => /^[A-Z]/.test(name))
+                        .forEach(name => manager.addName(name, this.name))
                     this.status.emit('reconnect')
                 })
                 .on('error', err => {
@@ -195,4 +196,4 @@ export class Node {
     }
 }
 
-export default new class extends nodeIntrospect(Node) {} ()
+export default new class extends nodeIntrospect(Node) {}()

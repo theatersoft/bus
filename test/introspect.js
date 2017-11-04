@@ -9,4 +9,3 @@ bus.start()
     .then(async bus => {
         log(await bus.introspectNode('/'))
     })
-
