@@ -24,7 +24,7 @@
     "server": "node server.js",
     "debug-child": "node --inspect-brk=9233 child.js",
     "debug-child-mjs": "node --experimental-modules --inspect-brk=9233 child.mjs",
-    "debug-introspect": "npm run RUN -- --inspect=9233 introspect.js",
+    "debug-introspect": "npm run RUN -- --inspect-brk=9233 introspect.js",
     "debug-std-esm-child-mjs": "node -r @std/esm --inspect-brk=9233 std-esm-child.mjs",
     "debug-listen-bus": "npm run BUS -- node --inspect=9232 listen.js",
     "debug-objects": "node --inspect-brk=9234 objects.js",
