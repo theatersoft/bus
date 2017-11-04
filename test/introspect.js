@@ -8,8 +8,13 @@ setTime(true)
 
 const tree = async p => {
     const node = await bus.introspectNode(p)
-    node.children = await Promise.all(node.children.map(tree))
+    node.children = await Promise.all(
+        node.children.map(name =>
+            tree(name)
+                .catch(error => ({name, error}))
+        )
+    )
     return node
 }
 
-run(() => tree('/'))
+run(async () => log(JSON.stringify(await tree('/'), null, 4)))
