@@ -104,3 +104,5 @@ export default {
                 new Server(new WebSocketServer(options)))
     }
 }
+
+export const type = 'node'

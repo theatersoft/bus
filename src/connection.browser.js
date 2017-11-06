@@ -18,6 +18,7 @@ class BrowserConnection extends EventEmitter {
         ws.onerror = ev =>
             self.emit('error', ev)
     }
+
     send (data) {
         //log.log(`connection ${this.name} send`, data)
         this.ws.send(JSON.stringify(data))
@@ -30,7 +31,7 @@ let context
 
 export default {
     create (value = {}) {
-        const {parent: {url = `${location.protocol ==='https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value
+        const {parent: {url = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value
         return Promise.resolve(auth)
             .then(auth => {
                 context = {parent: {url, auth}}
@@ -58,3 +59,5 @@ export default {
         throw ('not implemented')
     }
 }
+
+export const type = 'browser'
