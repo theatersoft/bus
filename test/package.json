@@ -6,7 +6,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "postinstall": "npm link @theatersoft/bus",
-    "BUS:opt": "ln -sf /opt/theatersoft/.config/theatersoft/.bus",
+    "BUS:opt": "cp -f /opt/theatersoft/.config/theatersoft/.bus .",
     "BUS:test": "rm -f .bus; echo 'BUS=ws://localhost:5453' > .bus",
     "BUS": "env $(cat .bus | xargs)",
     "RUN": "npm run BUS -- node",
