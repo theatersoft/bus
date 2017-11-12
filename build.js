@@ -137,6 +137,19 @@ const targets = {
             .on('error', e => console.log(e))
     },
 
+    flow () {
+        require('chokidar').watch([
+                'src'
+            ])
+            .on('change', path => {
+                console.log('\n\n----',  new Date().toLocaleTimeString(), '----\n')
+                try {
+                    exec('flow status')
+                } catch (e) {}
+            })
+            .on('error', e => console.log(e))
+    },
+
     async all () {
         try {
             await targets.browser()
