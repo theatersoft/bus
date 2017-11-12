@@ -121,6 +121,10 @@ class Bus {
     introspectNode (path:string) {
         return node.introspect(path)
     }
+
+    resolveName (name:string) {
+        return manager.resolveName(name)
+    }
 }
 
 export default new Bus()
