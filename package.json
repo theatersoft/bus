@@ -63,5 +63,8 @@
     "flow:status": "flow status",
     "flow:status:watch": "node build.js flow",
     "flow:stop": "flow stop"
+  },
+  "dependencies": {
+    "flow-typed": "^2.2.3"
   }
 }

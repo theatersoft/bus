@@ -1,6 +1,7 @@
 import EventEmitter from './EventEmitter'
 import {parentStartup} from './connectionStartup'
 import {log} from './log'
+import type {Context} from './types'
 
 class BrowserConnection extends EventEmitter {
     constructor (ws) {
@@ -30,7 +31,7 @@ class ParentConnection extends parentStartup(BrowserConnection) {}
 let context
 
 export default {
-    create (value = {}) {
+    create (value: Context = {}) {
         const {parent: {url = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`, auth} = {}} = value
         return Promise.resolve(auth)
             .then(auth => {

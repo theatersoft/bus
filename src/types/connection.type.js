@@ -1,12 +1,11 @@
-//@flow
-
 export type Connection = any
 
 export type Context = {
-    parent: {
-        url: string
+    parent?: {
+        url: string,
+        auth?: string
     },
-    children: {
+    children?: {
         server: any,
         host: string,
         port: number,

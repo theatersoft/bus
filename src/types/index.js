@@ -1,7 +1,5 @@
-//@flow
-
 export * from './connection.type'
-export * from './node'
+export * from './node.type'
 
 export type Executor<T> ={
     promise: Promise<T>,

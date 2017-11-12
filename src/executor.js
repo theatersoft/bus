@@ -1,4 +1,3 @@
-//@flow
 import type {Executor} from './types'
 
 export default function executor (_r:any, _j:any):Executor<*> {

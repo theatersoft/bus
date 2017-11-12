@@ -2,6 +2,7 @@ import {default as WebSocket, Server as WebSocketServer} from 'ws'
 import EventEmitter from './EventEmitter'
 import {childStartup, parentStartup} from './connectionStartup'
 import {log} from './log'
+import type {Context} from './types'
 
 class NodeConnection extends EventEmitter {
     constructor (ws) {
@@ -55,7 +56,7 @@ const defaultUrl = process.env.BUS || 'ws://localhost:5453'
 const defaultAuth = process.env.AUTH
 
 export default {
-    create (value = {}) {
+    create (value: Context = {}) {
         const
             {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value
         return Promise.resolve(auth)

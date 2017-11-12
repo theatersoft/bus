@@ -138,14 +138,13 @@ const targets = {
     },
 
     flow () {
+        try {exec('flow status')} catch (e) {}
         require('chokidar').watch([
                 'src'
             ])
             .on('change', path => {
                 console.log('\n\n----',  new Date().toLocaleTimeString(), '----\n')
-                try {
-                    exec('flow status')
-                } catch (e) {}
+                try {exec('flow status')} catch (e) {}
             })
             .on('error', e => console.log(e))
     },

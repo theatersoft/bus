@@ -1,4 +1,3 @@
-//@flow
 import bus from './bus'
 import EventEmitter from './EventEmitter'
 import manager from './manager'

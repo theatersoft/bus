@@ -1,4 +1,3 @@
-//@flow
 import connection from 'connection'
 import {debug, log, error} from './log'
 import type {Connection} from 'connection'

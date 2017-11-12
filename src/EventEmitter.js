@@ -1,4 +1,3 @@
-//@flow
 import type {Listener} from './types'
 
 export const mixinEventEmitter = (Base:any) => class Mixin extends Base {

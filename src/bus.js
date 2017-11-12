@@ -1,4 +1,3 @@
-//@flow
 import node from './node'
 import manager from './manager'
 import {proxy, methods} from './proxy'

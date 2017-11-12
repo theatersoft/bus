@@ -1,5 +1,7 @@
 [ignore]
-<PROJECT_ROOT>/dist
+.*.json
+.*/\(node_modules\|test\|dist\)/.*
+<PROJECT_ROOT>/\(start\|build\).js
 
 [include]
 
@@ -8,6 +10,6 @@
 [lints]
 
 [options]
+all=true
 unsafe.enable_getters_and_setters=true
-
 module.name_mapper='^connection' -> '<PROJECT_ROOT>/src/connection.node'

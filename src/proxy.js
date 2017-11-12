@@ -1,4 +1,3 @@
-//@flow
 import node from './node'
 import manager from './manager'
 import {log, error} from './log'

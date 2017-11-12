@@ -1,4 +1,3 @@
-//@flow
 import EventEmitter from './EventEmitter'
 import node from './node'
 import {proxy, methods} from './proxy'

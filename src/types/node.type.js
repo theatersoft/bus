@@ -1,5 +1,3 @@
-//@flow
-
 export type Listener = (...args:any[]) => void
 
 export
