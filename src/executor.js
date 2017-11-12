@@ -1,9 +1,5 @@
 //@flow
-export type Executor<T> ={
-    promise: Promise<T>,
-    resolve: (v:T) => void,
-    reject: (e:any) => void
-}
+import type {Executor} from './types'
 
 export default function executor (_r:any, _j:any):Executor<*> {
     return {

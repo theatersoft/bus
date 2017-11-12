@@ -1,5 +1,5 @@
 //@flow
-export type Listener = (...args:mixed[]) => void
+import type {Listener} from './types'
 
 export const mixinEventEmitter = (Base:any) => class Mixin extends Base {
     events:Map<string, Listener[]>

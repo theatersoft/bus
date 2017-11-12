@@ -5,26 +5,11 @@ import {proxy, methods} from './proxy'
 import executor from './executor'
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Listener} from './EventEmitter'
-import type {Executor} from './executor'
-import type {Connection} from 'connection'
+import type {Context, Listener, Executor, Connection} from './types'
 
 let
     start:Executor<Bus> = executor(),
     _started:boolean
-
-type
-    Context = {
-    parent: {
-        url: string
-    },
-    children: {
-        server: any,
-        host: string,
-        port: number,
-        check: (string) => boolean
-    }
-}
 
 class Bus {
     start (context:Context) {
@@ -97,13 +82,10 @@ class Bus {
     }
 
     registerListener (name:string, cb:Listener) {
-        //const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
-        //TODO
         node.signals.on(name, cb)
     }
 
     unregisterListener (name:string, cb:Listener) {
-        //TODO
         node.signals.off(name, cb)
     }
 

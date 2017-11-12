@@ -5,7 +5,7 @@ import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Request, Req, Res, Sig, Data, Connection} from './node.type'
+import type {Request, Req, Res, Sig, Data, Connection} from './types'
 import {nodeIntrospect} from './node.introspect'
 
 const
@@ -86,9 +86,10 @@ export class Node {
                     return
                 }
                 this.conns[conn.id] = undefined
-                if (conn.id === 0)
+                if (conn.id === 0) {
+                    debug('disconnected')
                     !this.closing && this.reconnect()
-                else
+                } else
                     Promise.resolve()
                         .then(() => manager.removeNode(`${conn.name}/`))
                         .then(() => log(`connection removed ${conn.name}`))
@@ -112,6 +113,7 @@ export class Node {
                         .filter(name => /^[A-Z]/.test(name))
                         .forEach(name => manager.addName(name, this.name))
                     this.status.emit('reconnect')
+                    debug('reconnected')
                 })
                 .on('error', err => {
                     error('reconnect parent error', err.message)
