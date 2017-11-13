@@ -143,7 +143,7 @@ const targets = {
                 'src'
             ])
             .on('change', path => {
-                console.log('\n\n----',  new Date().toLocaleTimeString(), '----\n')
+                console.log('\n\n\n\n\n\n----',  new Date().toLocaleTimeString(), '----\n')
                 try {exec('flow status')} catch (e) {}
             })
             .on('error', e => console.log(e))

@@ -2,7 +2,7 @@ import {Node} from './node'
 import {proxy, methods} from './proxy'
 import {type} from 'connection'
 
-export const nodeIntrospect = (Base:Node) => class extends Base {
+export const nodeIntrospect = (Base: Node) => class extends Base {
     introspect (path:string) {
         if (path !== this.name) return this.request({path, intf: '*', member: 'introspect', args: [path]})
         return {
