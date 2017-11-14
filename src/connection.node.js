@@ -56,7 +56,7 @@ const defaultUrl: string = process.env.BUS || 'ws://localhost:5453'
 const defaultAuth = (process.env.AUTH: any)
 
 export default {
-    create (value: Context = {}) {
+    create (value: Context = {}): Promise<void> {
         const
             {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value
         return (Promise.resolve(auth): Promise<any>)
@@ -86,7 +86,7 @@ export default {
         return new ParentConnection(new WebSocket(this.context.parent.url))
     },
 
-    createServer () {
+    createServer (): Promise<Server> {
         let options, {host, port, server} = this.context.children
         if (server) {
             options = Promise.resolve(server)

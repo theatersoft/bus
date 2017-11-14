@@ -23,7 +23,7 @@ export class Node {
     signals = new EventEmitter()
     status = new EventEmitter()
 
-    init (name:string, parent?:Connection):void {
+    init (name: string, parent?: Connection): void {
         debug('node.init', name)
         this.objects['*'] = {obj: this}
         if (parent) {
@@ -42,7 +42,7 @@ export class Node {
                         .on('child', (conn:Connection) => {
                             this.addChild(this.bind(conn))
                         })
-                        .on('error', err => {
+                        .on('error', (err: any) => {
                             error('server error', err.message)
                         })
                 })
@@ -58,7 +58,7 @@ export class Node {
         conn.registered = true
     }
 
-    route (path:string):?Connection {
+    route (path: string): ?Connection {
         let i = path.lastIndexOf('/')
         if (i === -1) throw new Error('Invalid name')
         let
