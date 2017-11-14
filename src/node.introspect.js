@@ -1,6 +1,7 @@
 import {Node} from './node'
 import {proxy, methods} from './proxy'
 import {type} from 'connection'
+import type {ObjectEntry} from './types'
 
 export const nodeIntrospect = (Base: Node) => class extends Base {
     introspect (path:string) {
@@ -12,7 +13,7 @@ export const nodeIntrospect = (Base: Node) => class extends Base {
                 .filter((c, i) => i && c && c.name)
                 .map(({name}) => `${name}/`),
             objects: Object.entries(this.objects)
-                .filter(([k, v]) => k !== '*')
+                .filter(([k, v]: [string, ObjectEntry]) => k !== '*')
                 .reduce((o, [k, {intf, meta}]) => (o[k] = {intf, meta}, o), {})
         }
     }

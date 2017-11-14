@@ -4,12 +4,12 @@ import manager from './manager'
 import {methods} from './proxy'
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Request, Req, Res, Sig, Data, Connection} from './types'
+import type {Request, Req, Res, Sig, Data, Connection, ObjectEntry} from './types'
 import {nodeIntrospect} from './node.introspect'
 
 const
-    logRequest = (req:Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req:Req, res:Res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
+    logRequest = (req: Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
+    logResponse = (req: Req, res:Res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
 
 export class Node {
     name:string
@@ -17,7 +17,7 @@ export class Node {
     closing:boolean
     server:any
     conns:Array<?Connection> = [undefined]
-    objects = {}
+    objects: {[name: string]: ObjectEntry} = {}
     reqid = 0
     requests = {}
     signals = new EventEmitter()
@@ -49,7 +49,7 @@ export class Node {
         }
     }
 
-    addChild (conn:Connection):void {
+    addChild (conn: Connection): void {
         conn.id = this.conns.length
         conn.name = `${this.name}${conn.id}`
         log(`${this.name} adding child ${conn.name}`)
@@ -70,7 +70,7 @@ export class Node {
         return r
     }
 
-    bind (conn:Connection):Connection {
+    bind (conn: Connection): Connection {
         return conn
             .on('data', (data:Data) => {
                 //debug(`data from ${conn.name}`, data)
@@ -96,7 +96,7 @@ export class Node {
             })
     }
 
-    reconnect (ms:number = 1000):void {
+    reconnect (ms: number = 1000): void {
         this.status.emit('disconnect')
         setTimeout(() => {
             const conn = connection.createParentConnection()
@@ -121,7 +121,7 @@ export class Node {
         }, ms)
     }
 
-    _request (req:Req):void {
+    _request (req: Req): void {
         logRequest(req)
         const conn = this.route(req.path)
         if (conn) {
@@ -149,7 +149,7 @@ export class Node {
         }
     }
 
-    _response (res:Res):void {
+    _response (res: Res): void {
         const conn = this.route(res.path)
         if (conn)
             conn.send({res})
@@ -165,7 +165,7 @@ export class Node {
         }
     }
 
-    _signal (sig:Sig, from:?number):void {
+    _signal (sig: Sig, from: ?number): void {
         this.signals.emit(sig.name, sig.args)
         this.conns.filter(c => c && c.id !== from).forEach(c => {
             //log(`sigrouting ${name} from ${from} to ${c.id}`)
@@ -173,7 +173,7 @@ export class Node {
         })
     }
 
-    request (request:Request):Promise<mixed> {
+    request (request: Request): Promise<mixed> {
         return new Promise((r, j) => {
             const req = {...request, sender: this.name, id: this.reqid++}
             this.requests[req.id] = {r, j, req}
@@ -181,17 +181,17 @@ export class Node {
         })
     }
 
-    close ():void {
+    close (): void {
         this.closing = true
         this.conns.forEach(conn => conn && conn.close())
     }
 
-    registerObject (name:string, obj:any, intf:string[], meta:any):void {
+    registerObject (name: string, obj: any, intf: [string], meta: any): void {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf, meta}
     }
 
-    unregisterObject (name:string):void {
+    unregisterObject (name: string): void {
         log(`unRegisterObject ${name} at ${this.name}`)
         delete this.objects[name]
     }

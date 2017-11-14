@@ -1,6 +1,6 @@
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Connection} from 'connection'
+import type {Connection} from './types'
 
 export const parentStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
     constructor (...args:mixed[]) {
