@@ -52,15 +52,15 @@ class Server extends EventEmitter {
 }
 
 let context: Context
-const defaultUrl = process.env.BUS || 'ws://localhost:5453'
-const defaultAuth = process.env.AUTH
+const defaultUrl: string = process.env.BUS || 'ws://localhost:5453'
+const defaultAuth = (process.env.AUTH: any)
 
 export default {
-    create (value: Context|{} = {}) {
+    create (value: Context = {}) {
         const
             {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value
-        return Promise.resolve(auth)
-            .then((auth: string) => {
+        return (Promise.resolve(auth): Promise<any>)
+            .then((auth: string): void => {
                 const
                     children = server || host ? {server, host, port, check} : undefined,
                     parent = url || auth || !children ? {url: url || defaultUrl, auth: auth || defaultAuth} : undefined
@@ -68,7 +68,7 @@ export default {
             })
     },
 
-    get context () {
+    get context (): Context {
         if (!context) throw new Error('Invalid bus context')
         return context
     },
@@ -98,8 +98,8 @@ export default {
             options = Promise.resolve({host, port})
             log(`starting ws server on ${host}:${port}`)
         }
-        return options
-            .then(options =>
+        return (options: Promise<any>)
+            .then((options): Server =>
                 new Server(new WebSocketServer(options)))
     }
 }

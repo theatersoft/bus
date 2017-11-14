@@ -24,11 +24,11 @@ type Children = {
     server: any,
     host: string,
     port: number,
-    check: (string) => boolean
+    check: (string) => Promise<boolean>
 }
 
 export type ObjectEntry = {
     obj: Object,
-    intf?: [string],
+    intf?: string[],
     meta?: any
 }

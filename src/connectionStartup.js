@@ -1,13 +1,13 @@
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Connection} from './types'
+import type {Connection, ParentContext, ChildrenContext} from './types'
 
 export const parentStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
     constructor (...args:mixed[]) {
         super(...args)
         debug('parentStartup context', connection.context.parent)
         const
-            {parent: {auth}} = connection.context,
+            {parent: {auth}} = ((connection.context: any): ParentContext),
             onhello = ({hello}) => {
                 if (hello) {
                     debug('parentStartup onhello', hello)
@@ -30,7 +30,7 @@ export const parentStartup = (ConnectionBase:Connection) => class extends Connec
 export const childStartup = (ConnectionBase:Connection) => class extends ConnectionBase {
     constructor (...args:mixed[]) {
         super(...args)
-        const {children: {check} = {}} = connection.context
+        const {children: {check} = {}} = ((connection.context: any): ChildrenContext)
         debug('childStartup context', connection.context.children)
         Promise.resolve().then(() => {
             if (!check)

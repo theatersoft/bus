@@ -186,7 +186,7 @@ export class Node {
         this.conns.forEach(conn => conn && conn.close())
     }
 
-    registerObject (name: string, obj: any, intf: [string], meta: any): void {
+    registerObject (name: string, obj: any, intf: string[], meta: any): void {
         log(`registerObject ${name} at ${this.name} interface`, intf)
         this.objects[name] = {obj, intf, meta}
     }

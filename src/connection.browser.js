@@ -32,9 +32,10 @@ let context: ParentContext
 
 export default {
     create (value: ParentContext) {
-        const {parent: {url:string = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`, auth}} = value
-        return Promise.resolve(auth)
-            .then((auth: string) => {
+        const defaultUrl: string = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`
+        const {parent: {url = defaultUrl, auth}} = value
+        return (Promise.resolve(auth): Promise<any>)
+            .then((auth: string): void => {
                 context = {parent: {url, auth}}
             })
     },
