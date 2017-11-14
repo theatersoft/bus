@@ -17,7 +17,7 @@ export type ChildrenContext = {
 
 type Parent = {
     url: string,
-    auth?: string
+    auth: ?string
 }
 
 type Children = {

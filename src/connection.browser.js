@@ -1,7 +1,7 @@
 import EventEmitter from './EventEmitter'
 import {parentStartup} from './connectionStartup'
 import {log} from './log'
-import type {Context, ParentContext} from './types'
+import type {Context, ParentContext, Connection} from './types'
 
 class BrowserConnection extends EventEmitter {
     constructor (ws) {
@@ -28,32 +28,32 @@ class BrowserConnection extends EventEmitter {
 
 class ParentConnection extends parentStartup(BrowserConnection) {}
 
-let context: ParentContext
+let context :ParentContext
 
 export default {
-    create (value: ParentContext): Promise<void> {
-        const defaultUrl: string = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`
+    create (value :ParentContext) :Promise<void> {
+        const defaultUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`
         const {parent: {url = defaultUrl, auth}} = value
-        return (Promise.resolve(auth): Promise<any>)
-            .then((auth: string) => {
+        return Promise.resolve(auth)
+            .then(auth => {
                 context = {parent: {url, auth}}
             })
     },
 
-    get context () {
+    get context () :ParentContext {
         if (!context) throw new Error('Invalid bus context')
         return context
     },
 
-    get hasParent () {
+    get hasParent () :boolean {
         return this.context.parent && this.context.parent.url
     },
 
-    get hasChildren () {
+    get hasChildren () :boolean {
         return !!this.context.children
     },
 
-    createParentConnection () {
+    createParentConnection () :Connection {
         return new ParentConnection(new WebSocket(this.context.parent.url))
     },
 

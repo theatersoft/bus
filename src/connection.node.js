@@ -51,16 +51,16 @@ class Server extends EventEmitter {
     }
 }
 
-let context: Context
-const defaultUrl: string = process.env.BUS || 'ws://localhost:5453'
-const defaultAuth = (process.env.AUTH: any)
+let context :Context
+const defaultUrl = process.env.BUS || 'ws://localhost:5453'
+const defaultAuth :?string = process.env.AUTH
 
 export default {
-    create (value: Context = {}): Promise<void> {
+    create (value :Context = {}) :Promise<void> {
         const
             {parent: {url, auth} = {}, children: {server, host, port, check} = {}} = value
-        return (Promise.resolve(auth): Promise<any>)
-            .then((auth: string): void => {
+        return Promise.resolve(auth)
+            .then(auth => {
                 const
                     children = server || host ? {server, host, port, check} : undefined,
                     parent = url || auth || !children ? {url: url || defaultUrl, auth: auth || defaultAuth} : undefined
@@ -68,39 +68,35 @@ export default {
             })
     },
 
-    get context (): Context {
+    get context () :Context {
         if (!context) throw new Error('Invalid bus context')
         return context
     },
 
-    get hasParent ():boolean {
+    get hasParent () :boolean {
         return this.context.parent && this.context.parent.url
     },
 
-    get hasChildren ():boolean {
+    get hasChildren () :boolean {
         return !!this.context.children
     },
 
-    createParentConnection (): Connection {
+    createParentConnection () :Connection {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
         return new ParentConnection(new WebSocket(this.context.parent.url))
     },
 
-    createServer (): Promise<Server> {
+    createServer () :Promise<Server> {
         let options, {host, port, server} = this.context.children
         if (server) {
-            options = Promise.resolve(server)
-                .then(server => {
-                    log(`connecting ws server to http server`)
-                    return {server}
-                })
+            options = Promise.resolve(server).then(server => ({server}))
+            log(`connecting ws server to http server`)
         } else {
             options = Promise.resolve({host, port})
             log(`starting ws server on ${host}:${port}`)
         }
-        return (options: Promise<any>)
-            .then((options): Server =>
-                new Server(new WebSocketServer(options)))
+        return options.then(options =>
+            new Server(new WebSocketServer(options)))
     }
 }
 

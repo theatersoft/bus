@@ -43,13 +43,13 @@ class Bus {
 
     started () {return start.promise}
 
-    get root ():boolean {return node.root}
+    get root () :boolean {return node.root}
 
-    get name ():string {return node.name}
+    get name () :string {return node.name}
 
-    get proxy ():any {return proxy}
+    get proxy () :any {return proxy}
 
-    registerNodeObject (name:string, obj:any, intf:string[] = methods(obj)) {
+    registerNodeObject (name :string, obj :any, intf :string[] = methods(obj)) {
         node.registerObject(name, obj, intf)
         return {
             signal: (member:string, args:mixed[]) =>
@@ -57,20 +57,20 @@ class Bus {
         }
     }
 
-    registerObject (name:string, obj:any, intf:string[]) {
+    registerObject (name :string, obj :any, intf :string[]) {
         return manager.addName(name, this.name)
             .then(() =>
                 this.registerNodeObject(name, obj, intf))
     }
 
-    unregisterObject (name:string) {
+    unregisterObject (name :string) {
         return manager.removeName(name, this.name)
             .then(() =>
                 node.unregisterObject(name)
             )
     }
 
-    request (name:string, ...args:mixed[]) {
+    request (name :string, ...args :mixed[]) {
         log('request', name, args)
         const [, path, intf, member] = /^([/\d]+)(\w+).(\w+)$/.exec(name)
         return node.request({path, intf, member, args})
@@ -80,30 +80,30 @@ class Bus {
             })
     }
 
-    registerListener (name:string, cb:Listener) {
+    registerListener (name :string, cb :Listener) {
         node.signals.on(name, cb)
     }
 
-    unregisterListener (name:string, cb:Listener) {
+    unregisterListener (name :string, cb :Listener) {
         node.signals.off(name, cb)
     }
 
-    on (type:string, cb:Listener) {
+    on (type :string, cb :Listener) {
         node.status.on(type, cb)
         return this
     }
 
-    off (type:string, cb:Listener) {
+    off (type :string, cb :Listener) {
         node.status.off(type, cb)
     }
 
     close () {node.close()}
 
-    introspectNode (path:string) {
+    introspectNode (path :string) {
         return node.introspect(path)
     }
 
-    resolveName (name:string) {
+    resolveName (name :string) {
         return manager.resolveName(name)
     }
 }
