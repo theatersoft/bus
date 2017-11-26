@@ -49,18 +49,18 @@ class Bus {
 
     get proxy () :any {return proxy}
 
-    registerNodeObject (name :string, obj :any, intf :string[] = methods(obj)) {
-        node.registerObject(name, obj, intf)
+    registerNodeObject (name :string, obj :any, intf :string[] = methods(obj), meta :any) {
+        node.registerObject(name, obj, intf, node.root ? meta : undefined)
         return {
             signal: (member:string, args:mixed[]) =>
                 node._signal({name: `${name}.${member}`, args})
         }
     }
 
-    registerObject (name :string, obj :any, intf :string[]) {
+    registerObject (name :string, obj :any, intf :string[], meta :any) {
         return manager.addName(name, this.name)
             .then(() =>
-                this.registerNodeObject(name, obj, intf))
+                this.registerNodeObject(name, obj, intf, meta))
     }
 
     unregisterObject (name :string) {
