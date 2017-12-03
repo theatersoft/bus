@@ -192,7 +192,7 @@ export class Node {
     }
 
     unregisterObject (name :string) :void {
-        log(`unRegisterObject ${name} at ${this.name}`)
+        log(`unregisterObject ${name} at ${this.name}`)
         delete this.objects[name]
     }
 }
