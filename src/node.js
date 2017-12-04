@@ -139,11 +139,12 @@ export class Node {
                     if (meta.sender) args = args.concat(sender)
                     return obj[member](...args)
                 })
-                .then(
-                    res =>
-                        this._response({id: req.id, path: req.sender, res}),
-                    err =>
-                        this._response({id: req.id, path: req.sender, err}))
+                .then(res => ({res}), err => ({err}))
+                .then(result => {
+                    const res = {id: req.id, path: req.sender, ...result}
+                    logResponse(req, res)
+                    this._response(res)
+                })
         } else {
             log('_request connection error', req)
         }
