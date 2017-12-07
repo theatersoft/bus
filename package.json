@@ -48,7 +48,7 @@
     },
     "devDependencies": {},
     "scripts": {
-      "link": "npm link",
+      "link": "npm link --no-package-lock",
       "start": "node start.js"
     }
   },
@@ -59,6 +59,7 @@
     "build:watch": "DEBUG=true node build.js watch",
     "publish": "node build.js publish",
     "debug": "node --inspect-brk dist/start.js ",
+    "link": "# no link required",
     "flow:server": "flow server",
     "flow:status": "flow status",
     "flow:status:watch": "node build.js flow",
