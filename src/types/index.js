@@ -8,3 +8,7 @@ export type Executor<T> ={
 }
 
 export type Listener = (...args:mixed[]) => void
+
+export type BusObject = {
+    signal: (member:string, args:mixed[]) => void
+}

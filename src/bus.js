@@ -4,7 +4,7 @@ import {proxy, methods} from './proxy'
 import executor from './executor'
 import connection from 'connection'
 import {debug, log, error} from './log'
-import type {Context, Listener, Executor, Connection} from './types'
+import type {Context, Listener, Executor, Connection, BusObject} from './types'
 
 let
     start:Executor<Bus> = executor(),
@@ -49,25 +49,22 @@ class Bus {
 
     get proxy () :any {return proxy}
 
-    registerNodeObject (name :string, obj :any, intf :string[] = methods(obj), meta :any) {
-        node.registerObject(name, obj, intf, node.root ? meta : undefined)
-        return {
-            signal: (member:string, args:mixed[]) =>
-                node._signal({name: `${name}.${member}`, args})
-        }
+    registerObject (name :string, obj :any, intf :string[], meta :any) :Promise<BusObject> {
+        return (isBusName(name) ? manager.addName(name, this.name) : Promise.resolve())
+            .then(() => {
+                node.registerObject(name, obj, intf, node.root ? meta : undefined)
+                return {
+                    signal: (member:string, args:mixed[]) =>
+                        node._signal({name: `${name}.${member}`, args})
+                }
+            })
     }
 
-    registerObject (name :string, obj :any, intf :string[], meta :any) {
-        return manager.addName(name, this.name)
-            .then(() =>
-                this.registerNodeObject(name, obj, intf, meta))
-    }
-
-    unregisterObject (name :string) {
-        return manager.removeName(name, this.name)
-            .then(() =>
+    unregisterObject (name :string) :Promise<void> {
+        return (isBusName(name) ? manager.removeName(name, this.name) : Promise.resolve())
+            .then(() => {
                 node.unregisterObject(name)
-            )
+            })
     }
 
     request (name :string, ...args :mixed[]) {
@@ -109,3 +106,5 @@ class Bus {
 }
 
 export default new Bus()
+
+export const isBusName = (name :string) => name.charAt(0).toUpperCase() === name.charAt(0)
