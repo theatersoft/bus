@@ -9,7 +9,7 @@ const format = (...args) => ([
     ...args
 ])
 
-export const setTag = (val: string) => {tag = val}
+export const setTag = (val: string) => {tag = val.toUpperCase()}
 export const setTime = (val: number) => {time = val}
 
 export const debug = (...args: mixed[]) => console.log(...format(...args))
