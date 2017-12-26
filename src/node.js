@@ -9,7 +9,7 @@ import {nodeIntrospect} from './node.introspect'
 
 const
     logRequest = (req: Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (req: Req, res:Res) => res.hasOwnProperty('err') ? error(`<-${req.id}  `, res.err, 'FAILED') : log(`<-${req.id}  `, res.res)
+    logResponse = (res:Res) => res.hasOwnProperty('err') ? error(`<-${res.id}  `, res.err, 'FAILED') : log(`<-${res.id}  `, res.res)
 
 export class Node {
     name :string
@@ -75,7 +75,7 @@ export class Node {
             .on('data', (data:Data) => {
                 //debug(`data from ${conn.name}`, data)
                 data.req ? this._request(data.req)
-                    : data.res ? this._response(data.res)
+                    : data.res ? this._response(data.res, false)
                     : data.sig && this._signal(data.sig, conn.id)
             })
             .on('close', () => {
@@ -139,25 +139,24 @@ export class Node {
                     if (meta.sender) args = args.concat(sender)
                     return obj[member](...args)
                 })
-                .then(res => ({res}), err => ({err}))
-                .then(result => {
-                    const res = {id: req.id, path: req.sender, ...result}
-                    this._response(res, req)
-                })
+                .then(
+                    res => this._response({id: req.id, path: req.sender, res}),
+                    err => this._response({id: req.id, path: req.sender, err})
+                )
         } else {
             log('_request connection error', req)
         }
     }
 
-    _response (res :Res, req :?Req) :void {
+    _response (res :Res, log :?boolean = true) :void {
         const conn = this.route(res.path)
         if (conn) {
-            if (req) logResponse(req, res)
+            if (log) logResponse(res)
             conn.send({res})
         } else if (conn === null) {
             let {r, j, req} = this.requests[res.id]
             delete this.requests[res.id]
-            logResponse(req, res)
+            logResponse(res)
             if (res.hasOwnProperty('err')) j(res.err)
             else r(res.res)
         }
