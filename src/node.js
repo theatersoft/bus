@@ -142,19 +142,19 @@ export class Node {
                 .then(res => ({res}), err => ({err}))
                 .then(result => {
                     const res = {id: req.id, path: req.sender, ...result}
-                    logResponse(req, res)
-                    this._response(res)
+                    this._response(res, req)
                 })
         } else {
             log('_request connection error', req)
         }
     }
 
-    _response (res :Res) :void {
+    _response (res :Res, req :?Req) :void {
         const conn = this.route(res.path)
-        if (conn)
+        if (conn) {
+            if (req) logResponse(req, res)
             conn.send({res})
-        else if (conn === null) {
+        } else if (conn === null) {
             let {r, j, req} = this.requests[res.id]
             delete this.requests[res.id]
             logResponse(req, res)
