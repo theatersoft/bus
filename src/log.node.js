@@ -1,4 +1,5 @@
 import util from 'util'
+
 util.inspect.defaultOptions = {breakLength: Infinity}
 
 let time, tag
@@ -9,9 +10,9 @@ const format = (...args) => ([
     ...args
 ])
 
-export const setTag = (val: string) => {tag = val.toUpperCase()}
-export const setTime = (val: number) => {time = val}
+export const setTag = (val :string) => {tag = val.toUpperCase()}
+export const setTime = (val :number) => {time = val}
 
-export const debug = (...args: mixed[]) => console.log(...format(...args))
-export const log = (...args: mixed[]) => console.log(...format(...args))
-export const error = (...args: mixed[]) => console.error(...format(...args))
+export const debug = (...args :mixed[]) => console.log(...format(...args))
+export const log = (...args :mixed[]) => console.log(...format(...args))
+export const error = (...args :mixed[]) => console.error(...format(...args))

@@ -7,17 +7,17 @@ import {debug, log, error} from './log'
 import type {Context, Listener, Executor, Connection, BusObject} from './types'
 
 let
-    start:Executor<Bus> = executor(),
-    _started:boolean
+    start :Executor<Bus> = executor(),
+    _started :boolean
 
 class Bus {
-    start (context:Context) {
+    start (context :Context) {
         if (!_started) {
             _started = true
             connection.create(context)
                 .then(() => {
                     if (connection.hasParent) {
-                        const conn:Connection = connection.createParentConnection()
+                        const conn :Connection = connection.createParentConnection()
                             .on('open', () => {
                                 debug('parent open')
                             })
@@ -54,7 +54,7 @@ class Bus {
             .then(() => {
                 node.registerObject(name, obj, intf, node.root ? meta : undefined)
                 return {
-                    signal: (member:string, args:mixed[]) =>
+                    signal: (member :string, args :mixed[]) =>
                         node._signal({name: `${name}.${member}`, args})
                 }
             })

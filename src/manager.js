@@ -14,11 +14,11 @@ const
     missingName = () => Promise.reject('missing name')
 
 class Manager {
-    names:Map<Name, Path>
-    nodes:Map<Path, Name[]>
-    proxy:any
+    names :Map<Name, Path>
+    nodes :Map<Path, Name[]>
+    proxy :any
 
-    init (path:Path) {
+    init (path :Path) {
         //log(`manager.init as ${node.root ? 'root' : 'proxy'}`)
         if (node.root) {
             this.names = new Map()
@@ -29,7 +29,7 @@ class Manager {
         this.addNode(path)
     }
 
-    addNode (path:Path):Promise<void> {
+    addNode (path :Path) :Promise<void> {
         if (this.proxy) return this.proxy.addNode(path)
         log('manager.addNode', path)
         if (this.nodes.has(path)) return dupNode()
@@ -37,7 +37,7 @@ class Manager {
         return Promise.resolve()
     }
 
-    removeNode (path:Path):Promise<void> {
+    removeNode (path :Path) :Promise<void> {
         if (this.proxy) return this.proxy.removeNode(path)
         log('manager.removeNode', path)
         if (!this.nodes.has(path)) return missingNode()
@@ -46,13 +46,13 @@ class Manager {
                 .slice()
                 .map(name =>
                     this.removeName(name)) // TODO remove children
-            )
+        )
             .then(() => {
                 this.nodes.delete(path)
             })
     }
 
-    addName (name:Name, _sender:Path):Promise<void> {
+    addName (name :Name, _sender :Path) :Promise<void> {
         if (this.proxy) return this.proxy.addName(name)
         log('manager.addName', name)
         if (this.names.has(name)) return dupName()
@@ -63,14 +63,14 @@ class Manager {
         return Promise.resolve()
     }
 
-    resolveName (name:Name):Promise<Name|void> {
+    resolveName (name :Name) :Promise<Name | void> {
         if (this.proxy) return this.proxy.resolveName(name)
         if (!this.names.has(name)) return missingName()
         log('manager.resolveName', name, this.names.get(name))
         return Promise.resolve(this.names.get(name))
     }
 
-    removeName (name:Name, _sender?:Path):Promise<void> {
+    removeName (name :Name, _sender? :Path) :Promise<void> {
         if (this.proxy) return this.proxy.removeName(name)
         log('manager.removeName', name)
         if (!this.names.has(name)) return missingName()
@@ -87,7 +87,7 @@ class Manager {
         return Promise.resolve()
     }
 
-    check (auth:string) {
+    check (auth :string) {
         const {children: {check} = {}} = connection.context
         return check(auth)
     }

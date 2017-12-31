@@ -31,6 +31,7 @@ class NodeConnection extends EventEmitter {
 }
 
 class ChildConnection extends childStartup(NodeConnection) {}
+
 class ParentConnection extends parentStartup(NodeConnection) {}
 
 class Server extends EventEmitter {

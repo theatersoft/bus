@@ -2,7 +2,7 @@ import node from './node'
 import manager from './manager'
 import {log, error} from './log'
 
-export function proxy (name:string) {
+export function proxy (name :string) {
     let [__, path, intf] = /^([/\d]+)(\w+)$/.exec(name) || [undefined, undefined, name]
     return new Proxy({}, {
         get (_, member) {
@@ -17,8 +17,8 @@ export function proxy (name:string) {
     })
 }
 
-export function methods (obj:any) {
+export function methods (obj :any) {
     return Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
         .filter(p =>
-        typeof obj[p] === 'function' && p !== 'constructor')
+            typeof obj[p] === 'function' && p !== 'constructor')
 }

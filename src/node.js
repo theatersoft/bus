@@ -8,8 +8,8 @@ import type {Request, Req, Res, Sig, Data, Connection, ObjectEntry} from './type
 import {nodeIntrospect} from './node.introspect'
 
 const
-    logRequest = (req: Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
-    logResponse = (res:Res) => res.hasOwnProperty('err') ? error(`<-${res.id}  `, res.err, 'FAILED') : log(`<-${res.id}  `, res.res)
+    logRequest = (req :Req) => log(`  ${req.id}-> ${req.path}${req.intf}.${req.member}(`, ...req.args, `) from ${req.sender}`),
+    logResponse = (res :Res) => res.hasOwnProperty('err') ? error(`<-${res.id}  `, res.err, 'FAILED') : log(`<-${res.id}  `, res.res)
 
 export class Node {
     name :string
@@ -17,13 +17,13 @@ export class Node {
     closing :boolean
     server :any
     conns :Array<?Connection> = [undefined]
-    objects :{[name :string] :ObjectEntry} = {}
+    objects :{ [name :string] :ObjectEntry } = {}
     reqid = 0
     requests = {}
     signals = new EventEmitter()
     status = new EventEmitter()
 
-    init (name :string, parent ?:Connection) :void {
+    init (name :string, parent ? :Connection) :void {
         debug('node.init', name)
         this.objects['*'] = {obj: this}
         if (parent) {
@@ -39,10 +39,10 @@ export class Node {
             connection.createServer()
                 .then(server => {
                     this.server = server
-                        .on('child', (conn:Connection) => {
+                        .on('child', (conn :Connection) => {
                             this.addChild(this.bind(conn))
                         })
-                        .on('error', (err: any) => {
+                        .on('error', (err :any) => {
                             error('server error', err.message)
                         })
                 })
@@ -65,14 +65,14 @@ export class Node {
             p = path.slice(0, i + 1),
             r = p === this.name ? null
                 : p.startsWith((this.name)) ? this.conns[parseInt(p.slice(this.name.length))]
-                : this.conns[0]
+                    : this.conns[0]
         //log(`routing to ${path} from ${this.name} returns ${r && r.name}`)
         return r
     }
 
     bind (conn :Connection) :Connection {
         return conn
-            .on('data', (data:Data) => {
+            .on('data', (data :Data) => {
                 //debug(`data from ${conn.name}`, data)
                 data.req ? this._request(data.req)
                     : data.res ? this._response(data.res, false)
