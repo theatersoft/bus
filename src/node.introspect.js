@@ -12,8 +12,8 @@ export const nodeIntrospect = (Base :Class<Node>) => class extends Base {
             children: this.conns
                 .reduce((a, c, i) => (i && c && a.push(`${c.name}/`), a), []),
             objects: Object.entries(this.objects)
-                .filter(([k, v] :[string, ObjectEntry]) => k !== '*')
-                .reduce((o, [k, {intf, meta}]) => (o[k] = {intf, meta}, o), {})
+                .filter(([k] :[string, *]) => k !== '*')
+                .reduce((o, [k, {intf, meta}] :[string, *]) => (o[k] = {intf, meta}, o), {})
         }
     }
 }
