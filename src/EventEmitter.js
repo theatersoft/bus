@@ -9,7 +9,7 @@ export const mixinEventEmitter = (Base :any) => class Mixin extends Base {
     }
 
     // aka addListener
-    on (type :string, callback :Listener) /*:this*/ {
+    on (type :string, callback :Listener) :this {
         this.events.has(type) || this.events.set(type, [])
         // $FlowFixMe:possibly undefined
         this.events.get(type).push(callback)
@@ -17,7 +17,7 @@ export const mixinEventEmitter = (Base :any) => class Mixin extends Base {
     }
 
     // aka removeListener
-    off (type :string, callback :Listener) /*:this*/ {
+    off (type :string, callback :Listener) :this {
         const callbacks = this.events.get(type)
         if (callbacks && callbacks.length)
             this.events.set(type, callbacks.filter(cb => cb !== callback))
