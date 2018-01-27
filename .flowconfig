@@ -11,6 +11,6 @@
 
 [options]
 all=true
-#unsafe.enable_getters_and_setters=true
+unsafe.enable_getters_and_setters=true
 module.name_mapper='^connection' -> '<PROJECT_ROOT>/src/connection.node'
 module.name_mapper='^log' -> '<PROJECT_ROOT>/src/log.node'
