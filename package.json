@@ -18,7 +18,7 @@
   "browser": "dist/bus.browser.js",
   "module": "dist/bus.browser.es.js",
   "engines": {
-    "node": ">=7.6.0"
+    "node": ">=8.5.0"
   },
   "author": "Rob Huehn <rob@theatersoft.com>",
   "private": true,
