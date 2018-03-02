@@ -42,3 +42,9 @@ const Ping = bus.proxy('Ping')
 Ping.ping().then(value => console.log(value))
 ```
 PING!
+
+### Documentation and Support
+
+https://www.theatersoft.com/docs/developers/bus/
+
+https://www.theatersoft.com/community
