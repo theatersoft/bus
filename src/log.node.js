@@ -11,7 +11,7 @@ const format = (...args) => ([
 ])
 
 export const setTag = (val :string) => {tag = val.toUpperCase()}
-export const setTime = (val :number) => {time = val}
+export const setTime = (val :boolean) => {time = val}
 
 export const debug = (...args :mixed[]) => console.log(...format(...args))
 export const log = (...args :mixed[]) => console.log(...format(...args))
